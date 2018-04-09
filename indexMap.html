@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+		<style type="text/css">
+			body,
+			html,
+			#map {
+				width: 100%;
+				height: 100%;
+				overflow: hidden;
+				margin: 0;
+				font-family: "微软雅黑";
+			}
+		</style>
+		<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=1GFjszMOqSYX1Ny1Y5NPWE4G2wGB0Ghx"></script>
+		<title>地图展示</title>
+	</head>
+
+	<body>
+		<div id="map"></div>
+	</body>
+
+</html>
+<script type="text/javascript" src="js/jquery-3.3.1.min.js"></script>
+<script type="text/javascript">
+	// 百度地图API功能
+	var map = new BMap.Map("map"); // 创建Map实例
+	map.centerAndZoom(new BMap.Point(116.404, 39.915), 11); // 初始化地图,设置中心点坐标和地图级别
+	//添加地图类型控件
+	map.addControl(new BMap.MapTypeControl({
+		mapTypes: [
+			BMAP_NORMAL_MAP,
+			BMAP_HYBRID_MAP
+		]
+	}));
+	//map.setCurrentCity("北京"); // 设置地图显示的城市 此项是必须设置的
+	map.enableScrollWheelZoom(true); //开启鼠标滚轮缩放
+
+	//jquery ajax请求，获取该轨迹的数据
+	$.ajax({
+		url: "http://182.254.233.89:8080/test1/GetPathByIdServlet",
+		type: "GET",
+		dataType:"json",
+		data: "id=abc",
+		success: function(obj) {
+			//alert(obj);
+			//画轨迹
+			drawPath(obj);
+		}
+	});
+
+	function drawPath(obj){
+		var pointList=new Array();
+		var startPoint = new BMap.Point(obj[0].longitude,obj[0].latitude);
+		var endPoint = new BMap.Point(obj[obj.length-1].longitude,obj[obj.length-1].latitude);
+		var startMark =new BMap.Marker(startPoint);
+		var endMark =new BMap.Marker(endPoint);
+		map.addOverlay(startMark);
+		map.addOverlay(endMark);
+		
+		var labelStart = new BMap.Label("起点", {position : startPoint,offset: new BMap.Size(-12, -50) });
+		var labelEnd = new BMap.Label("终点", {position : endPoint,offset: new BMap.Size(-12, -50) });
+
+		/*labelStart.setStyle({
+			color: "red",
+			fontSize: "12px",
+			height: "20px",
+			lineHeight: "20px",
+			fontFamily: "微软雅黑"
+		});
+		*/
+		map.addOverlay(labelStart);
+		map.addOverlay(labelEnd);
+		
+		for(var i=0;i<obj.length;i++){
+			var p=new BMap.Point(obj[i].longitude,obj[i].latitude);
+			pointList.push(p);
+		}
+
+		
+		var polyline = new BMap.Polyline(pointList, {strokeColor:"blue", strokeWeight:2, strokeOpacity:0.8}); 
+		map.centerAndZoom(startPoint, 8);
+		map.addOverlay(polyline);
+	};
+</script>

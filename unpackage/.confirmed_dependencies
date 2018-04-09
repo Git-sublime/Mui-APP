@@ -1,0 +1,42 @@
+{
+	"main.html": {
+		"refer": [
+			"setting.html",
+			"login.html",
+			"sub3.html",
+			"sub2.html",
+			"sub1.html",
+			"weChat.html",
+			"chat.html"
+		],
+		"resources": [
+			"sub1.html"
+		]
+	},
+	"login.html": {
+		"refer": [
+			"main.html",
+			"reg.html",
+			"forget_password.html",
+			"unlock.html"
+		]
+	},
+	"sub3.html": {
+		"refer": [
+			"login.html"
+		]
+	},
+	"weChat.html": {
+		"refer": [
+			"main.html",
+			"setting.html",
+			"login.html",
+			"sub3.html",
+			"sub2.html",
+			"sub1.html"
+		],
+		"resources": [
+			"sub1.html"
+		]
+	}
+}
