@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title></title>
+		<link href="css/mui.min.css" rel="stylesheet" />
+		<link href="css/mui.indexedlist.css" rel="stylesheet" />
+		<style>
+			html,
+			body {
+				height: 100%;
+				overflow: hidden;
+			}
+			.mui-bar {
+				-webkit-box-shadow: none;
+				box-shadow: none;
+			}
+		</style>
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 class="mui-title">群聊</h1>
+		</header>
+		<div class="mui-content" id="app">
+			<div id='list' class="mui-indexed-list">
+				<div class="mui-indexed-list-search mui-input-row mui-search">
+					<input type="search" class="mui-input-clear mui-indexed-list-search-input" placeholder="搜索">
+				</div>
+				<div class="mui-indexed-list-bar" style="display: none;">
+					<a>A</a> <a>B</a> <a>C</a> <a>D</a> <a>E</a> <a>F</a> <a>G</a> <a>H</a> <a>I</a> <a>J</a> <a>K</a> <a>L</a> <a>M</a> <a>N</a> <a>O</a> <a>P</a> <a>Q</a> <a>R</a> <a>S</a> <a>T</a> <a>U</a> <a>V</a> <a>W</a> <a>X</a> <a>Y</a> <a>Z</a>
+				</div>
+				<div class="mui-indexed-list-alert"></div>
+				<div class="mui-indexed-list-inner">
+					<div class="mui-indexed-list-empty-alert">没有数据</div>
+					<ul class="mui-table-view">
+						<li v-for="item in groups" class="mui-table-view-cell mui-indexed-list-item mui-media" @click="gotoChat(item)">
+							<!--<a href="javascript:;">-->
+							<img class="mui-media-object mui-pull-left" :src="item.headImg" style="height: 35px;max-width: 35px;line-height: 35px;">
+							<div class="mui-media-body">
+								<span v-text="item.name" style="font-size: 16px; padding-top: 7px;display: inline-block;"></span>
+								<span class="" style="color: #666; font-size: 13px;margin-left: 3px;">({{item.Number}})</span>
+							</div>
+						</li>
+						
+					</ul>
+				</div>
+			</div>
+		</div>
+		<script src="js/mui.min.js"></script>
+		<script src="js/mui.indexedlist.js"></script>
+		<script src="js/vue.min.js"></script>
+		<script type="text/javascript" charset="utf-8">
+			var vm = new Vue({
+				el: "#app",
+				data: {
+					groups: [
+						{
+							name: "1舍203",
+							headImg: "images/cbd.jpg",
+							Number: 7,
+							groupOwner: "金大爷"
+						},
+						{
+							name: "时代大厦",
+							headImg: "images/shuijiao.jpg",
+							Number: 15,
+							groupOwner: "小李"
+						},
+						{
+							name: "东方明珠",
+							headImg: "images/cbd.jpg",
+							Number: 45,
+							groupOwner: "王哥"
+						}
+					]
+				},
+				mounted: function(){
+					
+				},
+				methods: {
+					gotoChat: function(item){
+//						console.log(JSON.stringify(item));
+						 mui.openWindow({
+						 	url: "chat.html",
+						 	id: "chat.html",
+						 	extras: {
+						 		chatObj: item
+						 	}
+						 })
+					}						
+				}
+			});
+			mui.init();
+			mui.ready(function() {
+				var header = document.querySelector('header.mui-bar');
+				var list = document.getElementById('list');
+				//calc hieght
+				list.style.height = (document.body.offsetHeight - header.offsetHeight) + 'px';
+				//create
+				window.indexedList = new mui.IndexedList(list);
+			});
+		</script>
+	</body>
+</html>
