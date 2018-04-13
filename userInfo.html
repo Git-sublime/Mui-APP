@@ -33,13 +33,19 @@
 								<a>账号<span class="mui-pull-right">Hbuilder</span></a>
 							</li>
 							<li class="mui-table-view-cell">
-								<a>性别<span class="mui-pull-right">男</span></a>
-							</li>
-							<li class="mui-table-view-cell">
-								<a>个性签名<span class="mui-pull-right">人生需要奋斗，奋斗本身就是...</span></a>
+								开启LBS服务
+								<div class="mui-switch mui-active mui-switch-mini">
+									<div class="mui-switch-handle"></div>
+								</div>
 							</li>
 						</ul>
 						<ul class="mui-table-view topHave">
+							<li class="mui-table-view-cell">
+								<a>个性签名<span class="mui-pull-right">人生需要奋斗，奋斗本身就是...</span></a>
+							</li>
+							<li class="mui-table-view-cell">
+								<a>性别<span class="mui-pull-right">男</span></a>
+							</li>
 							<li class="mui-table-view-cell">
 								<a>地址<span class="mui-pull-right">四川-成都</span></a>
 							</li>
@@ -95,7 +101,7 @@
 				plus.io.resolveLocalFileSystemURL(e, function(entry) {
 					var s = entry.toLocalURL() + "?version=" + new Date().getTime();
 					console.log(s);
-					document.getElementById("head-img").src = s;
+//					document.getElementById("head-img").src = s;
 					document.getElementById("head-img1").src = s;
 					//变更大图预览的src
 					//目前仅有一张图片，暂时如此处理，后续需要通过标准组件实现
@@ -120,7 +126,7 @@
 								console.log("file remove success");
 								entry.copyTo(root, 'head.jpg', function(e) {
 										var e = e.fullPath + "?version=" + new Date().getTime();
-										document.getElementById("head-img").src = e;
+//										document.getElementById("head-img").src = e;
 										document.getElementById("head-img1").src = e;
 										//变更大图预览的src
 										//目前仅有一张图片，暂时如此处理，后续需要通过标准组件实现
