@@ -205,7 +205,10 @@
 					"sub3.html",
 					"sub2.html",
 					"weChat.html",
-					"chat.html"
+					"chat.html",
+					"contact-list.html",
+					"group-list.html",
+					"userInfo.html"
 				],
 				"priority": 1
 			},
@@ -288,6 +291,20 @@
 					"login.html",
 					"sub3.html",
 					"sub2.html"
+				],
+				"priority": 0
+			},
+			"contact-list.html": {
+				"resources": [],
+				"refer": [
+					"chat.html"
+				],
+				"priority": 0
+			},
+			"group-list.html": {
+				"resources": [],
+				"refer": [
+					"chat.html"
 				],
 				"priority": 0
 			}

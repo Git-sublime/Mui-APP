@@ -159,8 +159,6 @@
 								mainPage.show("pop-in");
 							}
 						},20);
-						//==========================================start
-						//============================================end
 					};
 					//检查 "登录状态/锁屏状态" 开始
 					if (settings.autoLogin && state.token && settings.gestures) {
@@ -210,7 +208,7 @@
 									auth.getUserInfo(function() {
 										plus.nativeUI.toast("获取用户信息成功");
 										var name = auth.userInfo.nickname || auth.userInfo.name;
-										app.createState(name, function() {
+										app.createState(auth.userInfo, function() {
 											toMain();
 											console.log(JSON.stringify(auth.userInfo));
 										});

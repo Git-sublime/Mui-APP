@@ -60,7 +60,7 @@
 	<div id="app">
 		<header class="mui-bar mui-bar-nav">
 			<!--<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>-->
-			<h1 class="mui-title" id="account">微定位</h1>
+			<h1 class="mui-title">微定位</h1>
 		</header>
 		
 		<!--            底部导航                       -->
@@ -89,15 +89,15 @@
 			<!--           聊天界面                     -->
 			<div id="tabbar-with-contact" class="mui-control-content">
 				<ul class="mui-table-view topHave">
-					<li class="mui-table-view-cell">群聊</li>
-					<li class="mui-table-view-cell">通讯录</li>
+					<li class="mui-table-view-cell" id="group">群聊</li>
+					<li class="mui-table-view-cell" id="contact">通讯录</li>
 				</ul>
 				<ul class="mui-table-view topHave" >
 					<li class="mui-table-view-cell mui-media" v-for="item in chatList" @click="gotoChat(item)">
 						<a href="javascript:;">
-							<img class="mui-media-object mui-pull-left" :src="item.chatHead">
+							<img class="mui-media-object mui-pull-left" :src="item.headImg">
 							<div class="mui-media-body">
-								<span v-text="item.chat"></span>
+								<span v-text="item.name"></span>
 								<p class='mui-ellipsis'><span v-if="item.chatUser">{{item.chatUser}}：</span>{{item.lastAsk}}</p>
 							</div>
 						</a>
@@ -110,10 +110,10 @@
 				<!--头像-->
 				<ul class="mui-table-view topHave">
 					<li class="mui-table-view-cell mui-media">
-						<a href="javascript:;">
-							<img class="mui-media-object mui-pull-left header-img" src="images/shuijiao.jpg" style="height: 60px;max-width: 60px;line-height: 60px;">
+						<a href="#account">
+							<img id="head-img" class="mui-media-object mui-pull-left header-img" src="images/cc-head.png" style="height: 60px;max-width: 60px;line-height: 60px;">
 							<div class="mui-media-body" style="padding-top: 8px;">
-								<span id="nick_name">天涯游客</span>
+								<span id="account">天涯游客</span>
 								<p class='mui-ellipsis' style="margin-top: 2px;">人活着就是应该奋斗，奋斗本身就是一种幸福。</p>
 							</div>
 						</a>
@@ -121,7 +121,7 @@
 				</ul>				
 				
 				<ul class="mui-table-view topHave">
-				<li class="mui-table-view-cell">
+				<li class="mui-table-view-cell" id="userInfo">
 					<a class="mui-navigate-right">
 						个人信息
 					</a>
@@ -149,8 +149,8 @@
 					</a>
 				</li>
 			</ul>-->
-			<ul class="mui-table-view" style="margin-top: 25px;">
-				<li class="mui-table-view-cell" id="login">
+			<ul class="mui-table-view" style="margin-top: 25px;" id="login">
+				<li class="mui-table-view-cell">
 					<a style="text-align: center;color: #FF3B30;">
 						登录
 					</a>
@@ -165,7 +165,7 @@
 		<script src="js/h.min.js"></script>
 		<script src="js/vue.min.js"></script>
 		<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=1GFjszMOqSYX1Ny1Y5NPWE4G2wGB0Ghx"></script>
-<!--		<script type="text/javascript" src="js/jquery-3.3.1.min.js"></script>-->
+<!--	<script type="text/javascript" src="js/jquery-3.3.1.min.js"></script>-->
 		<script>
 			mui.init();
 //			Vue===
@@ -175,23 +175,23 @@
 					hello: "Hello World",
 					chatList:[
 						{
-							chat: "1舍203",
+							name: "1舍203",
 							chatUser: "露露",
-							chatHead: "images/cbd.jpg",
+							headImg: "images/cbd.jpg",
 							lastAsk: "儿豁",
 							lastAskDate: "22:19:53"
 						},
 						{
-							chat: "金大爷",
+							name: "金大爷",
 							chatUser: "",
-							chatHead: "images/shuijiao.jpg",
+							headImg: "images/shuijiao.jpg",
 							lastAsk: "快来吃火锅啊，速推",
 							lastAskDate: "22:19:53"
 						},
 						{
-							chat: "傻屌",
+							name: "傻屌",
 							chatUser: "",
-							chatHead: "images/muwu.jpg",
+							headImg: "images/muwu.jpg",
 							lastAsk: "马上回寝室来了，您们在寝室没得啊，真的啊的减肥啦",
 							lastAskDate: "22:19:53"
 						}
@@ -212,9 +212,9 @@
 						 })
 					}
 				}
-			});
-					
+			});					
 //			Vue===end============
+
 //			MUI init
 			(function($, doc) {
 				//百度地图调用===============================start
@@ -280,16 +280,40 @@
 					var polyline = new BMap.Polyline(pointList, {strokeColor:"blue", strokeWeight:2, strokeOpacity:0.8}); 
 					map.centerAndZoom(startPoint, 8);
 					map.addOverlay(polyline);
+					
+					//定位当前位置
+					var geolocation = new BMap.Geolocation();
+					// 开启SDK辅助定位
+					geolocation.enableSDKLocation();
+					geolocation.getCurrentPosition(function(r){
+						if(this.getStatus() == BMAP_STATUS_SUCCESS){
+							var mk = new BMap.Marker(r.point);
+							map.addOverlay(mk);
+							map.panTo(r.point);
+//							alert('您的位置：'+r.point.lng+','+r.point.lat);
+						}
+						else {
+							alert('failed'+this.getStatus());
+						}        
+					});
+					
 				};
 				//==============================================end
 //				$.init();
 				var settings = app.getSettings();
 				var account = doc.getElementById('account');
+				var headImg = doc.getElementById("head-img");
 				//
 				window.addEventListener('show', function() {
 					var state = app.getState();
-					account.innerText = state.account;
-					console.log(JSON.stringify(state.userinfo));
+					account.innerText = state.account.nickname;
+					//qq或微信头像
+					headImg.src = state.account.figureurl_qq_2 || state.account.headimgurl;
+					if(state.account){
+						doc.getElementById("login").style.display = 'none';
+					}else{
+						doc.getElementById("login").style.display = 'block';
+					}
 				}, false);
 				$.plusReady(function() {
 					var loginPage = doc.getElementById("login");
@@ -304,6 +328,32 @@
 						"id": 'setting',
 						"url": 'setting.html'
 					});
+					//========================打开新页面
+					//群聊
+					var groupBtn = doc.getElementById("group");
+					groupBtn.addEventListener('tap', function(){
+						$.openWindow({
+							id: "group-list.html",
+							url: "group-list.html"
+						})
+					});
+					//通讯录
+					var contactBtn = doc.getElementById("contact");
+					contactBtn.addEventListener('tap', function(){
+						$.openWindow({
+							id: "contact-list.html",
+							url: "contact-list.html"
+						})
+					});
+					//个人信息
+					var userInfo = doc.getElementById("userInfo");
+					userInfo.addEventListener('tap', function(){
+						$.openWindow({
+							id: "userInfo.html",
+							url: "userInfo.html"
+						})
+					});
+					
 					//设置
 					var settingButton = doc.getElementById('setting');
 					//settingButton.style.display = settings.autoLogin ? 'block' : 'none';

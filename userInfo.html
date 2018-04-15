@@ -58,7 +58,6 @@
 			</div>
 		</div>
 		
-
 	</body>
 		<script src="js/mui.min.js"></script>
 		<script src="js/mui.view.js"></script>
@@ -105,7 +104,7 @@
 					document.getElementById("head-img1").src = s;
 					//变更大图预览的src
 					//目前仅有一张图片，暂时如此处理，后续需要通过标准组件实现
-					document.querySelector("#__mui-imageview__group .mui-slider-item img").src = s + "?version=" + new Date().getTime();;;
+					document.querySelector("#__mui-imageview__group .mui-slider-item img").src = s + "?version=" + new Date().getTime();
 				}, function(e) {
 					console.log("读取拍照文件错误：" + e.message);
 				});

@@ -77,7 +77,7 @@
 			.mui-content {
 				height: 100%;
 				padding: 44px 0px 50px 0px;
-				overflow: auto;
+				overflow: hidden;
 				background-color: #eaeaea;
 			}
 			#msg-list {
@@ -295,9 +295,9 @@
 	</head>
 
 	<body contextmenu="return false;">
-		<header class="mui-bar mui-bar-nav">
+		<header class="mui-bar mui-bar-nav" style="display: block;">
 			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
-			<h1 class="mui-title" id="chatName">chat (聊天窗口)</h1>
+			<h1 class="mui-title" id="chatName"></h1>
 		</header>
 		<pre id='h'></pre>
 		<script id='msg-template' type="text/template">
@@ -326,7 +326,7 @@
 			<% } %>
 		</script>
 		<div class="mui-content">
-			<div id='msg-list'>
+			<div id='msg-list' style="padding-top: 44px;">
 			</div>
 		</div>
 		<footer>
@@ -368,7 +368,8 @@
 				$.plusReady(function() {
 					//显示和谁聊天
 					var sData = plus.webview.currentWebview();
-					document.getElementById("chatName").innerHTML = sData.chatObj.chat;
+					document.getElementById("chatName").innerHTML = sData.chatObj.name;
+//					document.getElementById("head-img").src = sData.chatObj.headImg;
 					//end======================
 					plus.webview.currentWebview().setStyle({
 						softinputMode: "adjustResize"
@@ -464,7 +465,7 @@
 							"info": info,
 							"userid": plus.device.uuid
 						}, function(data) {
-							//alert(JSON.stringify(data));
+							alert(JSON.stringify(data));
 							record.push({
 								sender: 'zs',
 								type: 'text',

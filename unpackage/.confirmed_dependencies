@@ -7,7 +7,10 @@
 			"sub2.html",
 			"sub1.html",
 			"weChat.html",
-			"chat.html"
+			"chat.html",
+			"contact-list.html",
+			"group-list.html",
+			"userInfo.html"
 		],
 		"resources": [
 			"sub1.html"
@@ -37,6 +40,16 @@
 		],
 		"resources": [
 			"sub1.html"
+		]
+	},
+	"contact-list.html": {
+		"refer": [
+			"chat.html"
+		]
+	},
+	"group-list.html": {
+		"refer": [
+			"chat.html"
 		]
 	}
 }
