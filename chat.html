@@ -457,7 +457,13 @@
 						record.push(msg);
 						bindMsgList();
 						toRobot(msg.content);
+						
+						//发送消息到后台
+						sendMessage("lcj", sData.chatObj.name, msg.content);
 					};
+					
+					
+					
 					var toRobot = function(info) {
 						var apiUrl = 'http://www.tuling123.com/openapi/api';
 						$.getJSON(apiUrl, {
@@ -465,7 +471,7 @@
 							"info": info,
 							"userid": plus.device.uuid
 						}, function(data) {
-							alert(JSON.stringify(data));
+						//	alert(JSON.stringify(data));
 							record.push({
 								sender: 'zs',
 								type: 'text',
@@ -474,6 +480,21 @@
 							bindMsgList();
 						});
 					};
+					
+					//发送消息到后台
+					function sendMessage(senderId, receiverId, content){
+						mui.ajax({
+				            url      : 'http://182.254.233.89:8080/test1/sendMsgServlet?senderId='+senderId+'&receiverId='+receiverId+'&content='+content,
+				            type     : 'GET',
+				            contentType: "application/x-www-form-urlencoded; charset=utf-8",
+				            success  : function(res){
+				            	
+				            },
+				            error    : function(xhr,type,errorThrown){
+				                console.log(errorThrown);
+				            }
+				        });
+					}
 
 					function msgTextFocus() {
 							ui.boxMsgText.focus();
