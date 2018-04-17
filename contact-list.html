@@ -36,14 +36,19 @@
 				<div class="mui-indexed-list-inner">
 					<div class="mui-indexed-list-empty-alert">没有数据</div>
 					<ul class="mui-table-view">
-						<li v-for="item in contacts" class="mui-table-view-cell mui-indexed-list-item mui-media" @click="gotoChat(item)">
-							<!--<a href="javascript:;">-->
+						<!--<li v-for="item in contacts" class="mui-table-view-cell mui-indexed-list-item mui-media" @click="gotoChat(item)">
 							<img class="mui-media-object mui-pull-left" :src="item.headImg" style="height: 35px;max-width: 35px;line-height: 35px;">
 							<div class="mui-media-body">
 								<span v-text="item.name" style="font-size: 16px; padding-top: 7px;display: block;"></span>
 							</div>
-						</li>
-						
+						</li>-->
+						<li v-for="item in contacts2" class="mui-table-view-cell mui-indexed-list-item mui-media" @click="gotoChat(item)">
+							<img class="mui-media-object mui-pull-left" :src="item.headImgUrl" style="height: 35px;max-width: 35px;line-height: 35px;">
+							<div class="mui-media-body">
+								<span v-text="item.name" style="font-size: 16px; padding-top: 7px;display: block;"></span>
+								<!--<p>{{item.age}}</p>-->
+							</div>
+						</li>						
 					</ul>
 				</div>
 			</div>
@@ -55,6 +60,7 @@
 			var vm = new Vue({
 				el: "#app",
 				data: {
+					test: "hello",
 					contacts: [
 						{
 							name: "金大爷",
@@ -80,10 +86,13 @@
 							dataTags: "ShaDiao",
 							dataValue: ""
 						}
-					]
+					],
+					contacts2: {}
 				},
 				mounted: function(){
-					
+					this.$nextTick(function(){
+						this.dataInit();
+					})
 				},
 				methods: {
 					gotoChat: function(item){
@@ -95,7 +104,41 @@
 						 		chatObj: item
 						 	}
 						 })
-					}						
+					},
+					dataInit: function(){
+						var _this = this;
+				        mui.ajax({
+				            url      : 'http://182.254.233.89:8080/test1/selectFriendsByIdServlet?id='+'123',
+				            type     : 'GET',
+				            contentType: "application/x-www-form-urlencoded; charset=utf-8",
+				            success  : function(res){
+				            	res = JSON.parse(res);
+				            	_this.contacts2 = res;
+//				                console.log(typeof res);
+				                console.log(typeof _this.contacts);
+				                console.log(typeof _this.contacts2);
+				                console.log(JSON.stringify(_this.contacts2));
+				                console.log(JSON.stringify(_this.contacts));
+				                console.log(_this.contacts[1].name)
+				                console.log(_this.contacts2[1].name)
+				            },
+				            error    : function(xhr,type,errorThrown){
+				                console.log(JSON.stringify(res));
+				            }
+				        });
+
+
+//						this.$http.get('http://182.254.233.89:8080/test1/selectFriendsByIdServlet?id=' + '123').then(function(data){
+//                  		var json=data.body;
+//                  		console.log(JSON.stringify(data.body));
+//                  		console.log(typeof data.body);
+//                  		this.data=eval("(" + json +")");
+//              			},function(response){
+//                  		console.info(response);
+//              		});
+                		
+                		
+					}
 				}
 			});
 			mui.init();
