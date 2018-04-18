@@ -46,7 +46,6 @@
 							<img class="mui-media-object mui-pull-left" :src="item.headImgUrl" style="height: 35px;max-width: 35px;line-height: 35px;">
 							<div class="mui-media-body">
 								<span v-text="item.name" style="font-size: 16px; padding-top: 7px;display: block;"></span>
-								<!--<p>{{item.age}}</p>-->
 							</div>
 						</li>						
 					</ul>
@@ -57,10 +56,10 @@
 		<script src="js/mui.indexedlist.js"></script>
 		<script src="js/vue.min.js"></script>
 		<script type="text/javascript" charset="utf-8">
+			var userId = '12343';
 			var vm = new Vue({
 				el: "#app",
 				data: {
-					test: "hello",
 					contacts: [
 						{
 							name: "金大爷",
@@ -106,49 +105,31 @@
 						 })
 					},
 					dataInit: function(){
+						mui.init();
+						mui.ready(function() {
+							var header = document.querySelector('header.mui-bar');
+							var list = document.getElementById('list');
+							//calc hieght
+							list.style.height = (document.body.offsetHeight - header.offsetHeight) + 'px';
+							//create
+							window.indexedList = new mui.IndexedList(list);
+						});		
+						//请求联系人数据
 						var _this = this;
 				        mui.ajax({
-				            url      : 'http://182.254.233.89:8080/test1/selectFriendsByIdServlet?id='+'123',
+				            url      : 'http://182.254.233.89:8080/test1/selectFriendsByIdServlet?id='+ userId,
 				            type     : 'GET',
 				            contentType: "application/x-www-form-urlencoded; charset=utf-8",
 				            success  : function(res){
 				            	res = JSON.parse(res);
 				            	_this.contacts2 = res;
-//				                console.log(typeof res);
-				                console.log(typeof _this.contacts);
-				                console.log(typeof _this.contacts2);
-				                console.log(JSON.stringify(_this.contacts2));
-				                console.log(JSON.stringify(_this.contacts));
-				                console.log(_this.contacts[1].name)
-				                console.log(_this.contacts2[1].name)
 				            },
 				            error    : function(xhr,type,errorThrown){
-				                console.log(JSON.stringify(res));
+				                console.log(JSON.stringify(type));
 				            }
-				        });
-
-
-//						this.$http.get('http://182.254.233.89:8080/test1/selectFriendsByIdServlet?id=' + '123').then(function(data){
-//                  		var json=data.body;
-//                  		console.log(JSON.stringify(data.body));
-//                  		console.log(typeof data.body);
-//                  		this.data=eval("(" + json +")");
-//              			},function(response){
-//                  		console.info(response);
-//              		});
-                		
-                		
+				        });             		
 					}
 				}
-			});
-			mui.init();
-			mui.ready(function() {
-				var header = document.querySelector('header.mui-bar');
-				var list = document.getElementById('list');
-				//calc hieght
-				list.style.height = (document.body.offsetHeight - header.offsetHeight) + 'px';
-				//create
-				window.indexedList = new mui.IndexedList(list);
 			});
 		</script>
 	</body>
