@@ -30,7 +30,7 @@
 								</a>
 							</li>
 							<li class="mui-table-view-cell">
-								<a>账号<span class="mui-pull-right">Hbuilder</span></a>
+								<a>账号<span class="mui-pull-right" id="accountInfo">Hbuilder</span></a>
 							</li>
 							<li class="mui-table-view-cell">
 								开启LBS服务
@@ -63,8 +63,8 @@
 		<script src="js/mui.view.js"></script>
 		<script src="js/feedback.js"></script>
 		<script type="text/javascript">
-			mui.init();
-			//更换头像
+		mui.init();
+		//更换头像
 		mui(".mui-table-view-cell").on("tap", "#head", function(e) {
 			if(mui.os.plus){
 				var a = [{
@@ -239,5 +239,12 @@
 		if(mui.os.stream){
 			document.getElementById("check_update").display = "none";
 		}
+		
+		mui.plusReady(function(){
+			var sData = plus.webview.currentWebview();
+//			console.log(JSON.stringify(sData.exInfo));
+			document.getElementById("head-img1").src = sData.exInfo.exHeadImg;
+			document.getElementById("accountInfo").innerHTML = sData.exInfo.exAccount;
+		})
 		</script>
 </html>

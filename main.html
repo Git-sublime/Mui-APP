@@ -61,7 +61,7 @@
 		<header class="mui-bar mui-bar-nav">
 			<!--<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>-->
 			<div v-show="showHeadImage" class="mui-pull-left m-headImg" style="width: 34px; height: 34px;margin-top: 5px;border-radius: 50%;overflow: hidden;">
-				<img id="headImage" src="images/logo.png" style="width: 34px; height: 34px;">
+				<img id="headImage" src="images/cc-head.png" style="width: 34px; height: 34px;">
 			</div>
 			<h1 class="mui-title" id="title">微定位</h1>
 		</header>
@@ -121,9 +121,9 @@
 			<div id="tabbar-with-map" class="mui-control-content">
 				<!--头像-->
 				<ul class="mui-table-view topHave">
-					<li class="mui-table-view-cell mui-media">
+					<li class="mui-table-view-cell mui-media" id="userInfo2">
 						<a href="#account">
-							<img id="head-img" class="mui-media-object mui-pull-left header-img" src="images/logo.png" style="height: 60px;max-width: 60px;line-height: 60px;">
+							<img id="head-img" class="mui-media-object mui-pull-left header-img" src="images/cc-head.png" style="height: 60px;max-width: 60px;line-height: 60px;">
 							<div class="mui-media-body" style="padding-top: 8px;">
 								<span id="account">天涯游客</span>
 								<p class='mui-ellipsis' style="margin-top: 2px;">人活着就是应该奋斗，奋斗本身就是一种幸福。</p>
@@ -414,10 +414,30 @@
 								});
 								//个人信息
 								var userInfo = doc.getElementById("userInfo");
+								var userInfo2 = doc.getElementById("userInfo2");
 								userInfo.addEventListener('tap', function(){
 									$.openWindow({
 										id: "userInfo.html",
-										url: "userInfo.html"
+										url: "userInfo.html",
+										extras: {
+											exInfo: {
+												exAccount: account.innerText,
+												exHeadImg: headImg.src
+											}
+										}
+									})
+								});
+								//头像账号处点击进去个人信息界面
+								userInfo2.addEventListener('tap', function(){
+									$.openWindow({
+										id: "userInfo.html",
+										url: "userInfo.html",
+										extras: {
+											exInfo: {
+												exAccount: account.innerText,
+												exHeadImg: headImg.src
+											}
+										}
 									})
 								});
 								//打开新页面===========================================end
