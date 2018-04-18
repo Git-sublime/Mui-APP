@@ -148,19 +148,14 @@
 						标记地址
 					</a>
 				</li>
+			</ul>
+			<ul class="mui-table-view" style="margin-top: 25px;">
 				<li class="mui-table-view-cell">
 					<a class="mui-navigate-right" id="setting">
 						设置
 					</a>
 				</li>
 			</ul>
-			<!--<ul class="mui-table-view" style="margin-top: 25px;">
-				<li class="mui-table-view-cell">
-					<a class="mui-navigate-right">
-						关于mui
-					</a>
-				</li>
-			</ul>-->
 			<ul class="mui-table-view" style="margin-top: 25px;" id="login">
 				<li class="mui-table-view-cell">
 					<a style="text-align: center;color: #FF3B30;">
@@ -213,7 +208,7 @@
 							name: "傻屌",
 							chatUser: "",
 							headImg: "images/muwu.jpg",
-							lastAsk: "马上回寝室来了，您们在寝室没得啊，真的啊的减肥啦",
+							lastAsk: "马上回寝室来了，您们在寝室没得啊，真的啊的减肥了",
 							lastAskDate: "22:19:53"
 						}
 					]
@@ -342,15 +337,16 @@
 									_this.logined = false;
 								}
 							}, false);
-							//底部导航按钮点击事件==============================================================
-								mui(".mui-bar-tab").on('tap','.mui-tab-item',function(){
-									var thisId = this.getAttribute("id");
-									switch(thisId){
-										case "meBtn": _this.showHeadImage = false;break;
-										case "loctionBtn" : _this.showHeadImage = true;break;
-										case "chatBtn" : _this.showHeadImage = true;break;
-									}
-								})
+
+							//底部导航按钮点击事件==================================
+							mui(".mui-bar-tab").on('tap','.mui-tab-item',function(){
+								var thisId = this.getAttribute("id");
+								switch(thisId){
+									case "meBtn": _this.showHeadImage = false;break;
+									case "loctionBtn" : _this.showHeadImage = true;break;
+									case "chatBtn" : _this.showHeadImage = true;break;
+								}
+							})
 							//手机文件加载完毕
 							$.plusReady(function() {
 								//预加载设置界面-login.html
