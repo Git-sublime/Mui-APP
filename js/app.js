@@ -12,21 +12,46 @@
 		loginInfo = loginInfo || {};
 		loginInfo.account = loginInfo.account || '';
 		loginInfo.password = loginInfo.password || '';
-		if (loginInfo.account.length < 5) {
+		if (loginInfo.account.length < 3) {
 			return callback('账号最短为 5 个字符');
 		}
-		if (loginInfo.password.length < 6) {
+		if (loginInfo.password.length < 3) {
 			return callback('密码最短为 6 个字符');
 		}
-		var users = JSON.parse(localStorage.getItem('$users') || '[]');
-		var authed = users.some(function(user) {
-			return loginInfo.account == user.account && loginInfo.password == user.password;
+//		users.push(loginInfo);
+//		localStorage.setItem('$users', JSON.stringify(users));
+//		console.log(JSON.stringify(users));
+		mui.ajax({
+			url: 'http://182.254.233.89:8080/test1/LoginServlet?id=' + loginInfo.account + '&password=' + loginInfo.password,
+			type: 'GET',
+			contentType: "application/x-www-form-urlencoded; charset=utf-8",
+			success: function(res) {
+				console.log(res);
+				//若启动页不是登录页，则需通过如下方式打开登录页		
+				if (res == 'true') {
+					plus.nativeUI.toast('登陆成功');
+					return owner.createState(loginInfo.account, callback);
+				} else {
+					return callback('用户名或密码错误!');
+				}
+			},
+			error: function(xhr, type, errorThrown) {
+//				console.log(errorThrown);
+				plus.nativeUI.toast('Error! 链接服务器失败');
+			}
 		});
-		if (authed) {
-			return owner.createState(loginInfo.account, callback);
-		} else {
-			return callback('用户名或密码错误');
-		}
+							
+		//判断用户是否在以后的本地缓存中
+//		var users = JSON.parse(localStorage.getItem('$users') || '[]');
+//		var authed = users.some(function(user) {
+//			return loginInfo.account == user.account && loginInfo.password == user.password;
+//		});
+//		console.log(JSON.stringify(authed));
+//		if (authed) {
+//			return owner.createState(loginInfo.account, callback);
+//		} else {
+//			return callback('用户名或密码错误');
+//		}
 	};
 
 	owner.createState = function(name, callback) {
@@ -45,10 +70,10 @@
 		regInfo = regInfo || {};
 		regInfo.account = regInfo.account || '';
 		regInfo.password = regInfo.password || '';
-		if (regInfo.account.length < 5) {
+		if (regInfo.account.length < 3) {
 			return callback('用户名最短需要 5 个字符');
 		}
-		if (regInfo.password.length < 6) {
+		if (regInfo.password.length < 3) {
 			return callback('密码最短需要 6 个字符');
 		}
 //		if (!checkEmail(regInfo.email)) {
