@@ -11,28 +11,33 @@
 			.area {
 				margin: 20px auto 0px auto;
 			}
+			
 			.mui-input-group:first-child {
 				margin-top: 20px;
 			}
+			
 			.mui-input-group label {
 				width: 22%;
 			}
+			
 			.mui-input-row label~input,
 			.mui-input-row label~select,
 			.mui-input-row label~textarea {
 				width: 78%;
 			}
+			
 			.mui-checkbox input[type=checkbox],
 			.mui-radio input[type=radio] {
 				top: 6px;
 			}
+			
 			.mui-content-padded {
 				margin-top: 25px;
 			}
+			
 			.mui-btn {
 				padding: 10px;
 			}
-			
 		</style>
 	</head>
 
@@ -78,20 +83,20 @@
 					var accountBox = doc.getElementById('account');
 					var passwordBox = doc.getElementById('password');
 					var passwordConfirmBox = doc.getElementById('password_confirm');
-//					var emailBox = doc.getElementById('email');
+					//					var emailBox = doc.getElementById('email');
 					regButton.addEventListener('tap', function(event) {
 						var regInfo = {
 							account: accountBox.value,
 							password: passwordBox.value,
-//							email: emailBox.value
+							//							email: emailBox.value
 						};
 						var passwordConfirm = passwordConfirmBox.value;
-						if (passwordConfirm != regInfo.password) {
+						if(passwordConfirm != regInfo.password) {
 							plus.nativeUI.toast('密码两次输入不一致');
 							return;
 						}
 						app.reg(regInfo, function(err) {
-							if (err) {
+							if(err) {
 								plus.nativeUI.toast(err);
 								return;
 							}
@@ -100,24 +105,15 @@
 							 * 1、因本示例应用启动页就是登录页面，因此注册成功后，直接显示登录页即可；
 							 * 2、如果真实案例中，启动页不是登录页，则需修改，使用mui.openWindow打开真实的登录页面
 							 */
-							mui.ajax('http://182.254.233.89:8080/test1/InsertUser?id=user777&name=test&sex=男&age=22&password=123456',{
-								data:{
-									id: regInfo.account,
-									name : '',
-									sex: '',
-									age: 0,
-									password: regInfo.password
-								},
-								type:'post',//HTTP请求类型
-								timeout:10000,//超时时间设置为10秒；              
-								success:function(res){
-									//服务器返回响应，根据响应结果，分析是否登录成功；
-									plus.nativeUI.toast('注册成功');
-									console.log(typeof res);
+							mui.ajax({
+								url: 'http://182.254.233.89:8080/test1/InsertUser?id='+regInfo.account+'&name=未填&sex=保密&age=0&password='+regInfo.password,
+								type: 'GET',
+								contentType: "application/x-www-form-urlencoded; charset=utf-8",
+								success: function(res) {
 									console.log(res);
+									plus.nativeUI.toast('注册成功');
 								},
-								error:function(xhr,type,errorThrown){
-									//异常处理；
+								error: function(xhr, type, errorThrown) {
 									console.log(errorThrown);
 								}
 							});
