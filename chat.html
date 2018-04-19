@@ -494,7 +494,57 @@
 				                console.log(errorThrown);
 				            }
 				        });
+					};
+					
+					//接收消息总数，用于轮询时从数据库筛选新消息
+					var messageNum = 0;
+					
+					//查询接收消息总数，进入聊天页面时会调用一次
+					function getMessageNum(senderId, receiverId){
+						mui.ajax({
+				            url      : 'http://182.254.233.89:8080/test1/GetMessageNum?senderId='+senderId+'&receiverId='+receiverId,
+				            type     : 'GET',
+				            contentType: "application/x-www-form-urlencoded; charset=utf-8",
+				            success  : function(res){
+				            	messageNum = res;
+				            	getNewMsg('lzs','lcj',messageNum);
+				            },
+				            error    : function(xhr,type,errorThrown){
+				                console.log(errorThrown);
+				            }
+				        });
 					}
+					//查询接收消息总数
+					getMessageNum('lzs','lcj');
+									
+					
+					//获取新消息
+					function getNewMsg(senderId, receiverId ,CurMessageNum){
+						console.log("当前消息数："+CurMessageNum);
+						mui.ajax({
+				            url      : 'http://182.254.233.89:8080/test1/GetNewMsg?senderId='+senderId+'&receiverId='+receiverId+'&CurMessageNum='+messageNum,
+				            type     : 'GET',
+				            contentType: "application/x-www-form-urlencoded; charset=utf-8",
+				            success  : function(res){
+				            	console.log(res);
+				            	var list = JSON.parse(res);
+				            	messageNum = Number(messageNum) + Number(list.length);
+				            	for(var i in list){
+				            		record.push({
+										sender: 'zs',
+										type: 'text',
+										content: list[i].content
+									});
+									bindMsgList();
+				            	}
+				            	getNewMsg('lzs','lcj',messageNum);
+				            },
+				            error    : function(xhr,type,errorThrown){
+				                console.log(errorThrown);
+				            }
+				        });
+					};
+					
 
 					function msgTextFocus() {
 							ui.boxMsgText.focus();
