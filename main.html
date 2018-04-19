@@ -324,10 +324,16 @@
 							//
 							window.addEventListener('show', function() {
 								var state = app.getState();
-								account.innerText = state.account.nickname;
-								//qq或微信头像
-								headImg.src = state.account.figureurl_qq_2 || state.account.headimgurl;
-								headImg2.src = state.account.figureurl_qq_2 || state.account.headimgurl;
+//								console.log(JSON.stringify(state));
+								account.innerText = state.account.nickname || state.account;
+								//第三方使用qq或微信头像，否则使用默认头像
+								if(state.account.figureurl_qq_2 || state.account.headimgurl){
+									headImg.src = state.account.figureurl_qq_2 || state.account.headimgurl;
+									headImg2.src = state.account.figureurl_qq_2 || state.account.headimgurl;
+								} else {
+									headImg.src = headImg.src;
+									headImg2.src = headImg2.src;
+								}
 								//用户已登陆，隐藏登陆按钮
 								if(state.account){
 									doc.getElementById("login").style.display = 'none';

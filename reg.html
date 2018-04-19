@@ -112,20 +112,21 @@
 								success: function(res) {
 									console.log(res);
 									plus.nativeUI.toast('注册成功');
+									//若启动页不是登录页，则需通过如下方式打开登录页
+									$.openWindow({
+										url: 'login.html',
+										id: 'login',
+										show: {
+											aniShow: 'pop-in'
+										}
+									});									
 								},
 								error: function(xhr, type, errorThrown) {
-									console.log(errorThrown);
+//									console.log(errorThrown);
+									plus.nativeUI.toast('Error! 链接服务器失败');
 								}
 							});
-
-							//若启动页不是登录页，则需通过如下方式打开登录页
-							$.openWindow({
-								url: 'login.html',
-								id: 'login',
-								show: {
-									aniShow: 'pop-in'
-								}
-							});
+							
 						});
 					});
 				});
