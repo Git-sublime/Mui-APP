@@ -326,15 +326,15 @@
 							var account = doc.getElementById('account');
 							var headImg = doc.getElementById("head-img");
 							var headImg2 = doc.getElementById("headImage");
-							//
+							//登陆成功跳转首页==============================================
 							window.addEventListener('show', function() {
 								var state = app.getState();
 //								console.log(JSON.stringify(state));
-								account.innerText = state.account.nickname || state.account;
+								account.innerText = state.account.userInfo.nickname || state.account;
 								//第三方使用qq或微信头像，否则使用默认头像
-								if(state.account.figureurl_qq_2 || state.account.headimgurl){
-									headImg.src = state.account.figureurl_qq_2 || state.account.headimgurl;
-									headImg2.src = state.account.figureurl_qq_2 || state.account.headimgurl;
+								if(state.account.userInfo.figureurl_qq_2 || state.account.userInfo.headimgurl){
+									headImg.src = state.account.userInfo.figureurl_qq_2 || state.account.headimgurl;
+									headImg2.src = state.account.userInfo.figureurl_qq_2 || state.account.headimgurl;
 								} else {
 									headImg.src = headImg.src;
 									headImg2.src = headImg2.src;
@@ -344,10 +344,29 @@
 									doc.getElementById("login").style.display = 'none';
 									_this.logined = true;
 									_this.loginID = state.account;
+									//第三方信息注册到数据库
+									var regAccount = state.account.authResult.openid || state.account.userInfo.unionid;
+									mui.ajax({
+										url: 'http://182.254.233.89:8080/test1/InsertUser?id='+regAccount+'&name=未填&sex=保密&age=0&password=000000',
+										type: 'GET',
+										contentType: "application/x-www-form-urlencoded; charset=utf-8",
+										success: function(res) {
+											console.log(res);
+											plus.nativeUI.toast('第三方注册成功');
+											//若启动页不是登录页，则需通过如下方式打开登录页								
+										},
+										error: function(xhr, type, errorThrown) {
+		//									console.log(errorThrown);
+											plus.nativeUI.toast('Error! 链接服务器失败');
+										}
+									});
+									
 								}else{
 									doc.getElementById("login").style.display = 'block';
 									_this.logined = false;
-								}
+								};
+								
+								
 							}, false);
 
 							//底部导航按钮点击事件==================================
