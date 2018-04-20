@@ -179,6 +179,7 @@
 			var vue = new Vue({
 				el:"#app",
 				data:{
+					loginID: '',
 					logined: false,
 					showHeadImage: true,
 					robot:{
@@ -187,7 +188,6 @@
 						headImg: "images/logo.png",
 						lastAsk: "Hi,我是MUI小管家",
 						lastAskDate: "22:19:53"
-						
 					},
 					chatList:[
 						{
@@ -196,8 +196,7 @@
 							headImg: "images/cbd.jpg",
 							lastAsk: "儿豁",
 							lastAskDate: "22:19:53",
-							senderId: "111",
-							receiver: '888'
+							receiverId: '888'
 						},
 						{
 							name: "金大爷",
@@ -205,8 +204,7 @@
 							headImg: "images/shuijiao.jpg",
 							lastAsk: "快来吃火锅啊，速推",
 							lastAskDate: "22:19:53",
-							senderId: "111",
-							receiver: '888'
+							receiverId: '777'
 						},
 						{
 							name: "傻屌",
@@ -214,8 +212,7 @@
 							headImg: "images/muwu.jpg",
 							lastAsk: "马上回寝室来了，您们在寝室没得啊，真的啊的减肥了",
 							lastAskDate: "22:19:53",
-							senderId: "111",
-							receiver: '888'
+							receiverId: '666'
 						}
 					]
 				},
@@ -228,11 +225,13 @@
 					//聊天界面跳转函数
 					gotoChat: function(item){
 //						 console.log(JSON.stringify(item));
+						var _this = this;
 						 mui.openWindow({
 						 	url: "chat.html",
 						 	id: "chat.html",
 						 	extras: {
-						 		chatObj: item
+						 		chatObj: item,
+						 		loginId: _this.loginID
 						 	}
 						 })
 					},
@@ -344,6 +343,7 @@
 								if(state.account){
 									doc.getElementById("login").style.display = 'none';
 									_this.logined = true;
+									_this.loginID = state.account;
 								}else{
 									doc.getElementById("login").style.display = 'block';
 									_this.logined = false;
@@ -406,8 +406,12 @@
 									if(_this.logined){
 										$.openWindow({
 											id: "contact-list.html",
-											url: "contact-list.html"
-										})										
+											url: "contact-list.html",
+											extras: {
+												loginId : _this.loginID
+											}
+										})		
+										console.log(_this.loginID);
 									}else{
 										mui.confirm('您还未登陆，是否前往登陆？',"提示",new Array('是','否'),function(e){
 											if(e.index == 0){

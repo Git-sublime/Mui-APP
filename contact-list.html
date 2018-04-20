@@ -60,27 +60,22 @@
 			var vm = new Vue({
 				el: "#app",
 				data: {
+					loginID: '',
 					contacts: [
 						{
 							name: "金大爷",
 							headImg: "images/cbd.jpg",
-							dataTags: "JinDaYe",
-							senderId: "111",
-							receiver: '888'
+							dataTags: "JinDaYe"
 						},
 						{
 							name: "露露",
 							headImg: "images/shuijiao.jpg",
-							dataTags: "LuLu",
-							senderId: "111",
-							receiver: '666'
+							dataTags: "LuLu"
 						},
 						{
 							name: "会飞的鱼",
 							headImg: "images/cbd.jpg",
-							dataTags: "HuiFeiDeYu",
-							senderId: "111",
-							receiver: '777'
+							dataTags: "HuiFeiDeYu"						
 						}
 					],
 					contacts2: {}
@@ -92,16 +87,20 @@
 				},
 				methods: {
 					gotoChat: function(item){
+						var _this = this;
 //						console.log(JSON.stringify(item));
 						 mui.openWindow({
 						 	url: "chat.html",
 						 	id: "chat.html",
 						 	extras: {
-						 		chatObj: item
+						 		chatObj: item,
+						 		loginId: _this.loginID
 						 	}
 						 })
+						 console.log("sss" + _this.loginID);
 					},
 					dataInit: function(){
+						var _this = this;
 						mui.init();
 						mui.ready(function() {
 							var header = document.querySelector('header.mui-bar');
@@ -124,7 +123,12 @@
 				            error    : function(xhr,type,errorThrown){
 				                console.log(JSON.stringify(type));
 				            }
-				        });             		
+				        });    
+				        
+				        mui.plusReady(function(){
+				        	var sData = plus.webview.currentWebview();
+				        	_this.loginID = sData.loginId;
+				        })
 					}
 				}
 			});
