@@ -6,7 +6,7 @@
 		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
 		<title></title>
 		<link href="css/mui.min.css" rel="stylesheet" />
-		<!--<link rel="stylesheet" href="css/app.css" />-->
+		<link rel="stylesheet" href="css/icons-extra.css" />
 		<style>
 			.mui-btn {
 				padding: 10px;
@@ -52,7 +52,25 @@
 				margin: 0;
 				font-family: "微软雅黑";
 			}
-			
+			.m-add-Dialog{
+				width: 130px;
+				/*height: 150px;*/
+				background: #f7f7f7;
+				margin-top: 44px;
+				position: absolute;
+				right: 10px;
+				font-size: 16px;
+				box-shadow: 2px 4px 2px #ccc;
+				border-bottom-left-radius: 5px;
+				color: #444;
+			}
+			.mui-icon-extra{
+				font-size: 22px;
+				position: absolute;
+				top: 10px;
+				left: 15px;
+				color: #929292;
+			}
 		</style>
 	</head>
 	
@@ -64,6 +82,17 @@
 				<img id="headImage" src="images/cc-head.png" style="width: 34px; height: 34px;">
 			</div>
 			<h1 class="mui-title" id="title">微定位</h1>
+			<span @click="addFriend()" id="addBtn" class="mui-icon mui-icon-plusempty mui-pull-right" style="font-size: 34px;padding-top: 6px;"></span>
+			<ul v-show="showAddFriend" class="mui-table-view mui-pull-right m-add-Dialog">
+    			<li @click="openAddFriendPage()" class="mui-table-view-cell">
+    				<span class="mui-icon-extra mui-icon-extra-addpeople"></span>
+    				<span style="margin-left: 35px;">添加朋友</span>
+    			</li>
+    			<li @click="openCreatGroupPage()" class="mui-table-view-cell">
+    				<span class="mui-icon-extra mui-icon-extra-peoples"></span>
+    				<span style="margin-left: 35px;">创建群聊</span>
+    			</li>
+			</ul>
 		</header>
 		
 		<!--            底部导航                       -->
@@ -169,7 +198,6 @@
 	</body>	
 		<script src="js/mui.min.js"></script>
 		<script src="js/app.js"></script>
-		<script src="js/h.min.js"></script>
 		<script src="js/vue.min.js"></script>
 		<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=1GFjszMOqSYX1Ny1Y5NPWE4G2wGB0Ghx"></script>
 <!--	<script type="text/javascript" src="js/jquery-3.3.1.min.js"></script>-->
@@ -182,6 +210,7 @@
 					loginID: '',
 					logined: false,
 					showHeadImage: true,
+					showAddFriend: false,
 					robot:{
 						name: 'MUI',
 						chatUser: "",
@@ -234,6 +263,36 @@
 						 		loginId: _this.loginID
 						 	}
 						 })
+					},
+					//右上角 加 按钮
+					addFriend: function(){
+						if (this.logined) {
+							this.showAddFriend = !this.showAddFriend;
+						}else{
+							mui.confirm('您还未登陆，是否前往登陆？',"提示",new Array('是','否'),function(e){
+								if(e.index == 0){
+									mui.openWindow({
+										url: 'login.html',
+										id: 'login.html'
+									})
+								}
+							});							
+						}
+					},
+					//打开添加朋友页面
+					openAddFriendPage: function(){
+						mui.openWindow({
+							url: 'add-friend.html',
+							id: 'add-friend.html'
+						});
+						this.showAddFriend = false;
+					},
+					openCreatGroupPage: function(){
+						mui.openWindow({
+							url: 'creat-group.html',
+							id: 'creat-group.html'
+						});
+						this.showAddFriend = false;
 					},
 					//初始化
 					InitMain: function(){
@@ -330,11 +389,11 @@
 							window.addEventListener('show', function() {
 								var state = app.getState();
 //								console.log(JSON.stringify(state));
-								account.innerText = state.account.userInfo.nickname || state.account;
+								account.innerText = state.account.nickname || state.account;
 								//第三方使用qq或微信头像，否则使用默认头像
-								if(state.account.userInfo.figureurl_qq_2 || state.account.userInfo.headimgurl){
-									headImg.src = state.account.userInfo.figureurl_qq_2 || state.account.headimgurl;
-									headImg2.src = state.account.userInfo.figureurl_qq_2 || state.account.headimgurl;
+								if(state.account.figureurl_qq_2 || state.account.headimgurl){
+									headImg.src = state.account.figureurl_qq_2 || state.account.headimgurl;
+									headImg2.src = state.account.figureurl_qq_2 || state.account.headimgurl;
 								} else {
 									headImg.src = headImg.src;
 									headImg2.src = headImg2.src;
@@ -344,29 +403,10 @@
 									doc.getElementById("login").style.display = 'none';
 									_this.logined = true;
 									_this.loginID = state.account;
-									//第三方信息注册到数据库
-									var regAccount = state.account.authResult.openid || state.account.userInfo.unionid;
-									mui.ajax({
-										url: 'http://182.254.233.89:8080/test1/InsertUser?id='+regAccount+'&name=未填&sex=保密&age=0&password=000000',
-										type: 'GET',
-										contentType: "application/x-www-form-urlencoded; charset=utf-8",
-										success: function(res) {
-											console.log(res);
-											plus.nativeUI.toast('第三方注册成功');
-											//若启动页不是登录页，则需通过如下方式打开登录页								
-										},
-										error: function(xhr, type, errorThrown) {
-		//									console.log(errorThrown);
-											plus.nativeUI.toast('Error! 链接服务器失败');
-										}
-									});
-									
 								}else{
 									doc.getElementById("login").style.display = 'block';
 									_this.logined = false;
-								};
-								
-								
+								}
 							}, false);
 
 							//底部导航按钮点击事件==================================

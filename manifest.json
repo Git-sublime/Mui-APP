@@ -195,6 +195,7 @@
 				"resources": [
 					"css/mui.min.css",
 					"fonts/mui.ttf",
+					"fonts/mui-icons-extra.ttf",
 					"js/mui.min.js",
 					"js/app.js",
 					"sub1.html"
@@ -208,7 +209,9 @@
 					"chat.html",
 					"contact-list.html",
 					"group-list.html",
-					"userInfo.html"
+					"userInfo.html",
+					"add-friend.html",
+					"creat-group.html"
 				],
 				"priority": 1
 			},

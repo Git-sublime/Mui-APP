@@ -208,7 +208,7 @@
 									auth.getUserInfo(function() {
 										plus.nativeUI.toast("获取用户信息成功");
 										var name = auth.userInfo.nickname || auth.userInfo.name;
-										app.createState(auth, function() {
+										app.createState(auth.userInfo, function() {
 											toMain();
 //											console.log(JSON.stringify(auth));
 										});
