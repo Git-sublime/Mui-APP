@@ -369,6 +369,8 @@
 					//显示和谁聊天
 					var sData = plus.webview.currentWebview();
 					document.getElementById("chatName").innerHTML = sData.chatObj.name;
+					var senderId = sData.chatObj.senderId;
+					var receiverId = sData.chatObj.receiver;
 //					document.getElementById("head-img").src = sData.chatObj.headImg;
 					//end======================
 					plus.webview.currentWebview().setStyle({
