@@ -539,6 +539,7 @@
 									});
 									bindMsgList();
 				            	}
+				            	//获取新消息后 递归再次获取新消息
 				            	getNewMsg('lzs','lcj',messageNum);
 				            },
 				            error    : function(xhr,type,errorThrown){
