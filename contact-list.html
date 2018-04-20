@@ -56,7 +56,6 @@
 		<script src="js/mui.indexedlist.js"></script>
 		<script src="js/vue.min.js"></script>
 		<script type="text/javascript" charset="utf-8">
-			var userId = '12343';
 			var vm = new Vue({
 				el: "#app",
 				data: {
@@ -112,23 +111,22 @@
 						});		
 						//请求联系人数据
 						var _this = this;
-				        mui.ajax({
-				            url      : 'http://182.254.233.89:8080/test1/selectFriendsByIdServlet?id='+ userId,
-				            type     : 'GET',
-				            contentType: "application/x-www-form-urlencoded; charset=utf-8",
-				            success  : function(res){
-				            	res = JSON.parse(res);
-				            	_this.contacts2 = res;
-				            },
-				            error    : function(xhr,type,errorThrown){
-				                console.log(JSON.stringify(type));
-				            }
-				        });    
-				        
 				        mui.plusReady(function(){
 				        	var sData = plus.webview.currentWebview();
 				        	_this.loginID = sData.loginId;
-				        })
+				        	mui.ajax({
+				            	url      : 'http://182.254.233.89:8080/test1/selectFriendsByIdServlet?id=' + sData.loginId,
+				            	type     : 'GET',
+				            	contentType: "application/x-www-form-urlencoded; charset=utf-8",
+				            	success  : function(res){
+				            		res = JSON.parse(res);
+				            		_this.contacts2 = res;
+				            	},
+				            	error    : function(xhr,type,errorThrown){
+				               		console.log(JSON.stringify(type));
+				            	}
+				        	}); 
+				        })  
 					}
 				}
 			});
