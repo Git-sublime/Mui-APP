@@ -369,8 +369,10 @@
 					//显示和谁聊天
 					var sData = plus.webview.currentWebview();
 					document.getElementById("chatName").innerHTML = sData.chatObj.name;
-					var senderId = sData.chatObj.senderId;
-					var receiverId = sData.chatObj.receiver;
+					var realSenderId = sData.loginId;
+					var realReceiverId = sData.chatObj.receiverId;
+					console.log(realSenderId);
+					console.log(realReceiverId);
 //					document.getElementById("head-img").src = sData.chatObj.headImg;
 					//end======================
 					plus.webview.currentWebview().setStyle({
@@ -458,10 +460,10 @@
 					var send = function(msg) {
 						record.push(msg);
 						bindMsgList();
-						toRobot(msg.content);
+					//	toRobot(msg.content);
 						
 						//发送消息到后台
-						sendMessage("lcj", sData.chatObj.name, msg.content);
+						sendMessage(realSenderId, realReceiverId, msg.content);
 					};
 					
 					
@@ -509,7 +511,7 @@
 				            contentType: "application/x-www-form-urlencoded; charset=utf-8",
 				            success  : function(res){
 				            	messageNum = res;
-				            	getNewMsg('lzs','lcj',messageNum);
+				            	getNewMsg(realReceiverId,realSenderId,messageNum);
 				            },
 				            error    : function(xhr,type,errorThrown){
 				                console.log(errorThrown);
@@ -517,7 +519,7 @@
 				        });
 					}
 					//查询接收消息总数
-					getMessageNum('lzs','lcj');
+					getMessageNum(realReceiverId,realSenderId);
 									
 					
 					//获取新消息
@@ -540,7 +542,7 @@
 									bindMsgList();
 				            	}
 				            	//获取新消息后 递归再次获取新消息
-				            	getNewMsg('lzs','lcj',messageNum);
+				            	getNewMsg(senderId,receiverId,messageNum);
 				            },
 				            error    : function(xhr,type,errorThrown){
 				                console.log(errorThrown);
