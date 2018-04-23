@@ -31,15 +31,16 @@
 		    <h1 class="mui-title mui-pull-left">添加朋友</h1>
 		</header>
 		<div class="mui-content" id="app">
+			<!--搜索框-->
 			<form class="mui-input-group topHave">
 			    <div class="mui-input-row">
 			        <span class="mui-icon mui-icon-search m-search"></span>
 			        <input v-model="searchVal" type="text" class="mui-input-clear" placeholder="朋友ID/姓名">
 			    </div>
 			</form>		
-			<ul v-show="searchVal" class="mui-table-view">
+			<!--双向绑定搜索结果-->
+			<ul v-show="searchVal" class="mui-table-view" @click="getData()">
 				<li class="mui-table-view-cell mui-indexed-list-item mui-media">
-					<!--<img class="mui-media-object mui-pull-left" src="images/cc-head.png" style="height: 35px;max-width: 35px;line-height: 35px;">-->
 					<div class="m-addBox">
 						<span class="mui-icon-extra mui-icon-extra-addpeople" style="color: #fff;text-align: center;margin-left: 5px;margin-top: 5px;"></span>
 					</div>
@@ -47,23 +48,103 @@
 						<span style="padding-top: 7px;display: inline-block;">搜索：
 							<span id="inputVal" v-text="searchVal" style="color: #007aff;"></span>
 						</span>
-						<!--<span style="font-size: 16px; padding-top: 7px;display: inline-block;"></span>-->
 					</div>
 				</li>
-				
-			</ul>			
-		</div>
-	
+			</ul>
+			<!--搜索结果-->
+			<ul v-show="searchList" class="mui-table-view topHave">
+				<li v-for="(item, index) in searchList" :key="index" class="mui-table-view-cell mui-indexed-list-item mui-media">
+					<img class="mui-media-object mui-pull-left" :src="item.headImgUrl" style="height: 35px;max-width: 35px;line-height: 35px;">
+							
+					<div class="mui-media-body" style="padding-left: 10px;">
+						<span v-text="item.id" style="padding-top: 7px;display: inline-block; color: #007aff;"></span>
+						<span v-show="item.name != '未填'" v-text="item.name" style="padding-top: 7px;display: inline-block; color: #007aff;"></span>
+						<span class="mui-btn mui-pull-right mui-btn-primary" @click="addFriend(item)" v-text="addBtn"></span>
+					</div>
+				</li>
+			</ul>
+			
+			
+		</div><!--mui-content #app-->
 		
 	</body>
 		<script src="js/mui.min.js"></script>
 		<script src="js/vue.min.js"></script>
 		<script type="text/javascript">
 			mui.init();
+			var mask = mui.createMask();
 			var Vm = new Vue({
 				el: '#app',
 				data: {
-					searchVal: ''
+					searchVal: '',
+					searchList: {},
+					loginID: '',
+					addBtn: '添加'
+				},
+				mounted: function(){
+					this.$nextTick(function(){
+						this.InitPage();
+					})
+				},
+				methods: {
+					InitPage: function(){
+						var _this = this;
+						mui.plusReady(function(){
+							var sData = plus.webview.currentWebview();
+							_this.loginID = sData.loginID;
+						})
+					},
+					getData: function(){
+						var _this = this;
+						var idOrName = this.searchVal;
+						mui.ajax({
+							url: 'http://182.254.233.89:8080/test1/SelectUsersByIdOrName?idOrName=' + idOrName,
+							type: 'GET',
+							contentType: "application/x-www-form-urlencoded; charset=utf-8",
+							beforeSend: function(){
+								mask.show();
+								plus.nativeUI.showWaiting("搜索中...");
+							},
+							complete: function(){
+								plus.nativeUI.closeWaiting("搜索中...");
+								mask.close();
+							},
+							success: function(res){
+								res = JSON.parse(res);
+								_this.searchList = res;
+							},
+				            error    : function(xhr,type,errorThrown){
+				               	mui.toast('数据请求失败!');
+				            }
+						})
+					},
+					addFriend: function(item){
+						var _this = this;
+						mui.ajax({
+							url: 'http://182.254.233.89:8080/test1/AddFriendApply?senderId=' + _this.loginID + '&receiverId=' + item.id,
+							type: 'GET',
+							contentType: "application/x-www-form-urlencoded; charset=utf-8",
+							beforeSend: function(){
+								mask.show();
+								plus.nativeUI.showWaiting("添加中...");
+							},
+							complete: function(){
+								plus.nativeUI.closeWaiting("添加中...");
+								mask.close();
+							},
+							success: function(res){
+								console.log(res);
+								if(res == 'true'){
+									mui.toast("已成功发送添加好友请求");
+								}else {
+									mui.toast("添加失败");
+								}
+							},
+							error: function(xhr,type,errorThrown){
+								mui.toast("数据请求失败");
+							}
+						})
+					}
 				}
 			})
 		</script>

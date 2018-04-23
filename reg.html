@@ -105,27 +105,6 @@
 							 * 1、因本示例应用启动页就是登录页面，因此注册成功后，直接显示登录页即可；
 							 * 2、如果真实案例中，启动页不是登录页，则需修改，使用mui.openWindow打开真实的登录页面
 							 */
-							mui.ajax({
-								url: 'http://182.254.233.89:8080/test1/InsertUser?id='+regInfo.account+'&name=未填&sex=保密&age=0&password='+regInfo.password,
-								type: 'GET',
-								contentType: "application/x-www-form-urlencoded; charset=utf-8",
-								success: function(res) {
-									console.log(res);
-									plus.nativeUI.toast('注册成功');
-									//若启动页不是登录页，则需通过如下方式打开登录页
-									$.openWindow({
-										url: 'login.html',
-										id: 'login',
-										show: {
-											aniShow: 'pop-in'
-										}
-									});									
-								},
-								error: function(xhr, type, errorThrown) {
-//									console.log(errorThrown);
-									plus.nativeUI.toast('Error! 链接服务器失败');
-								}
-							});
 							
 						});
 					});

@@ -115,7 +115,7 @@
 						var _this = this;
 				        mui.plusReady(function(){
 				        	var sData = plus.webview.currentWebview();
-				        	_this.loginID = sData.loginId;
+				        	_this.loginID = sData.loginedId;
 				        	mui.ajax({
 				            	url      : 'http://182.254.233.89:8080/test1/selectFriendsByIdServlet?id=' + sData.loginId,
 				            	type     : 'GET',

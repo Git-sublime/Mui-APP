@@ -281,9 +281,13 @@
 					},
 					//打开添加朋友页面
 					openAddFriendPage: function(){
+						var _this = this;
 						mui.openWindow({
 							url: 'add-friend.html',
-							id: 'add-friend.html'
+							id: 'add-friend.html',
+							extras: {
+								loginID : _this.loginID
+							}
 						});
 						this.showAddFriend = false;
 					},
