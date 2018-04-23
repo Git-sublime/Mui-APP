@@ -4,6 +4,8 @@
  * 请注意将相关方法调整成 “基于服务端Service” 的实现。
  **/
 (function($, owner) {
+	//创建遮罩层
+	var mask = mui.createMask();
 	/**
 	 * 用户登录
 	 **/
@@ -25,6 +27,14 @@
 			url: 'http://182.254.233.89:8080/test1/LoginServlet?id=' + loginInfo.account + '&password=' + loginInfo.password,
 			type: 'GET',
 			contentType: "application/x-www-form-urlencoded; charset=utf-8",
+			beforeSend: function(){
+				mask.show();
+				plus.nativeUI.showWaiting("登陆中...");
+			},
+			complete: function(){
+				plus.nativeUI.closeWaiting("登陆中...");
+				mask.close();
+			},
 			success: function(res) {
 				console.log(res);
 				//若启动页不是登录页，则需通过如下方式打开登录页		
@@ -79,10 +89,41 @@
 //		if (!checkEmail(regInfo.email)) {
 //			return callback('邮箱地址不合法');
 //		}
-		var users = JSON.parse(localStorage.getItem('$users') || '[]');
-		users.push(regInfo);
-		localStorage.setItem('$users', JSON.stringify(users));
-		return callback();
+		//注册接口
+		mui.ajax({
+			url: 'http://182.254.233.89:8080/test1/InsertUser?id='+regInfo.account+'&name=未填&sex=保密&age=0&password='+regInfo.password,
+			type: 'GET',
+			contentType: "application/x-www-form-urlencoded; charset=utf-8",
+			beforeSend: function(){
+				mask.show();
+				plus.nativeUI.showWaiting("注册中...");
+			},
+			complete: function(){
+				plus.nativeUI.closeWaiting("注册中...");
+				mask.close();
+			},
+			success: function(res) {
+				console.log(res);
+				plus.nativeUI.toast('注册成功');
+				//若启动页不是登录页，则需通过如下方式打开登录页
+				$.openWindow({
+					url: 'login.html',
+					id: 'login',
+					show: {
+						aniShow: 'pop-in'
+					}
+				});									
+			},
+			error: function(xhr, type, errorThrown) {
+//				console.log(errorThrown);
+				plus.nativeUI.toast('Error! 链接服务器失败');
+			}
+		});
+
+//		var users = JSON.parse(localStorage.getItem('$users') || '[]');
+//		users.push(regInfo);
+//		localStorage.setItem('$users', JSON.stringify(users));
+//		return callback();
 	};
 
 	/**

@@ -100,6 +100,8 @@
 					},
 					dataInit: function(){
 						var _this = this;
+						//遮罩层
+						var mask = mui.createMask();
 						mui.init();
 						mui.ready(function() {
 							var header = document.querySelector('header.mui-bar');
@@ -118,6 +120,14 @@
 				            	url      : 'http://182.254.233.89:8080/test1/selectFriendsByIdServlet?id=' + sData.loginId,
 				            	type     : 'GET',
 				            	contentType: "application/x-www-form-urlencoded; charset=utf-8",
+				            	beforeSend: function(){
+				            		mask.show();
+				            		plus.nativeUI.showWaiting("数据加载中...");
+				            	},
+				            	complete: function(){
+				            		plus.nativeUI.closeWaiting("数据加载中...");
+				            		mask.close();
+				            	},
 				            	success  : function(res){
 				            		res = JSON.parse(res);
 				            		_this.contacts2 = res;
