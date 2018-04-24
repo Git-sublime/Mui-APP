@@ -89,3 +89,13 @@ idOrName：String，
 返回参数：userList；类型：数组（数组元素类型：user）
 实例:
 http://182.254.233.89:8080/test1/SelectUsersByIdOrName?idOrName=李
+
+接口13：修改用户信息
+请求参数：
+id:：String，
+name：String，
+sex：String，
+age：int
+返回参数：isOk：bool
+实例:
+http://182.254.233.89:8080/test1/UpdateUser?id=qwe&name=拉拉&sex=女&age=77
