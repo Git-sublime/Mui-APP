@@ -22,7 +22,8 @@
 						<div class="mui-media-body">
 							<span v-text="item.name"></span>
 							<p class='mui-ellipsis'>对方请求添加你为朋友</p>
-							<span @click="agreeAdd(item)" class="mui-btn mui-btn-primary mui-pull-right" style="margin-top: -39px;">同意</span>
+							<span v-if="!item.added" @click="agreeAdd(item)" class="mui-btn mui-btn-primary mui-pull-right" style="margin-top: -39px;">同意</span>
+							<span v-if="item.added" @click="agreeAdd(item)" class="mui-btn mui-pull-right" style="margin-top: -39px;border: none;">已添加</span>
 						</div>
 					</a>
 				</li>
@@ -53,20 +54,19 @@
 						//获取main页面传过来的当前登陆ID
 						var sData = plus.webview.currentWebview();
 						this.loginID = sData.loginId;
-						console.log(this.loginID);
 						//请求消息数据
 						var _this = this;
 						var mask = mui.createMask();
 						mui.ajax({
-							url: 'http://182.254.233.89:8080/test1/GetFriendApplyById?id=' + _this.loginID,
+							url: 'http://118.24.34.244:8080/test1/GetFriendApplyById?id=' + _this.loginID,
 							type: 'GET',
 							beforeSend: function(){
-								mask.show();
+//								mask.show();
 								plus.nativeUI.showWaiting();
 							},
 							complete: function(){
 								plus.nativeUI.closeWaiting();
-								mask.close();
+//								mask.close();
 							},
 							success: function(res){
 								res = JSON.parse(res);
@@ -82,19 +82,21 @@
 						var _this = this;
 						var mask = mui.createMask();
 						mui.ajax({
-							url: 'http://182.254.233.89:8080/test1/UpdateFriendApply?applyerId=' + item.id + '&userId=' + _this.loginID + '&statue=' + _this.status,
+							url: 'http://118.24.34.244:8080/test1/UpdateFriendApply?applyerId=' + item.id + '&userId=' + _this.loginID + '&statue=' + _this.status,
 							type: 'GET',
 							beforeSend: function(){
-								mask.show();
+//								mask.show();
 								plus.nativeUI.showWaiting();
 							},
 							complete: function(){
 								plus.nativeUI.closeWaiting();
-								mask.close();
 							},
 							success: function(res){
 								console.log(res);
 								if(res == 'true' && _this.status == '同意'){
+									if(item.added != 'undefined'){
+										_this.$set(item, 'added', true);
+									};
 									mui.toast('已添加为好友');
 								}else if(res == 'true' && _this.status == '拒绝'){
 									mui.toast('已拒绝！');

@@ -59,7 +59,8 @@
 					<div class="mui-media-body" style="padding-left: 10px;">
 						<span v-text="item.id" style="padding-top: 7px;display: inline-block; color: #007aff;"></span>
 						<span v-show="item.name != '未填'" v-text="item.name" style="padding-top: 7px;display: inline-block; color: #007aff;"></span>
-						<span class="mui-btn mui-pull-right mui-btn-default" @click="addFriend(item, index)">添加</span>
+						<span class="mui-btn mui-pull-right mui-btn-default" @click="addFriend(item, index)" v-if="!item.added">添加</span>
+						<span class="mui-btn mui-pull-right" @click="addFriend(item, index)" v-if="item.added" style="border: none;">待回复</span>
 					</div>
 				</li>
 			</ul>
@@ -98,16 +99,16 @@
 						var _this = this;
 						var idOrName = this.searchVal;
 						mui.ajax({
-							url: 'http://182.254.233.89:8080/test1/SelectUsersByIdOrName?idOrName=' + idOrName,
+							url: 'http://118.24.34.244:8080/test1/SelectUsersByIdOrName?idOrName=' + idOrName,
 							type: 'GET',
 							contentType: "application/x-www-form-urlencoded; charset=utf-8",
 							beforeSend: function(){
-								mask.show();
+//								mask.show();
 								plus.nativeUI.showWaiting("搜索中...");
 							},
 							complete: function(){
 								plus.nativeUI.closeWaiting("搜索中...");
-								mask.close();
+//								mask.close();
 							},
 							success: function(res){
 								res = JSON.parse(res);
@@ -121,20 +122,23 @@
 					addFriend: function(item, index){
 						var _this = this;
 						mui.ajax({
-							url: 'http://182.254.233.89:8080/test1/AddFriendApply?senderId=' + _this.loginID + '&receiverId=' + item.id,
+							url: 'http://118.24.34.244:8080/test1/AddFriendApply?senderId=' + _this.loginID + '&receiverId=' + item.id,
 							type: 'GET',
 							contentType: "application/x-www-form-urlencoded; charset=utf-8",
 							beforeSend: function(){
-								mask.show();
-								plus.nativeUI.showWaiting("添加中...");
+//								mask.show();
+								plus.nativeUI.showWaiting();
 							},
 							complete: function(){
-								plus.nativeUI.closeWaiting("添加中...");
-								mask.close();
+								plus.nativeUI.closeWaiting();
+//								mask.close();
 							},
 							success: function(res){
 								console.log(res);
 								if(res == 'true'){
+									if(typeof item.added == 'undefined'){
+										_this.$set(item, 'added', true);
+									};
 									mui.toast("已成功发送添加好友请求");
 								}else {
 									mui.toast("添加失败");

@@ -24,7 +24,7 @@
 //		localStorage.setItem('$users', JSON.stringify(users));
 //		console.log(JSON.stringify(users));
 		mui.ajax({
-			url: 'http://182.254.233.89:8080/test1/LoginServlet?id=' + loginInfo.account + '&password=' + loginInfo.password,
+			url: 'http://118.24.34.244:8080/test1/LoginServlet?id=' + loginInfo.account + '&password=' + loginInfo.password,
 			type: 'GET',
 			contentType: "application/x-www-form-urlencoded; charset=utf-8",
 			beforeSend: function(){
@@ -91,7 +91,7 @@
 //		}
 		//注册接口
 		mui.ajax({
-			url: 'http://182.254.233.89:8080/test1/InsertUser?id='+regInfo.account+'&name=未填&sex=保密&age=0&password='+regInfo.password,
+			url: 'http://118.24.34.244:8080/test1/InsertUser?id='+regInfo.account+'&name=未填&sex=保密&age=0&password='+regInfo.password,
 			type: 'GET',
 			contentType: "application/x-www-form-urlencoded; charset=utf-8",
 			beforeSend: function(){
