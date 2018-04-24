@@ -538,7 +538,10 @@
 									bindMsgList();
 				            	}
 				            	//获取新消息后 递归再次获取新消息
-				            	getNewMsg(senderId,receiverId,messageNum);
+				            	setTimeout(function(){
+				            		getNewMsg(senderId,receiverId,messageNum);
+				            	},1000);
+				            	
 				            },
 				            error    : function(xhr,type,errorThrown){
 				                console.log(errorThrown);
