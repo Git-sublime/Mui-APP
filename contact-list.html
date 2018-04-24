@@ -122,12 +122,12 @@
 				            	type     : 'GET',
 				            	contentType: "application/x-www-form-urlencoded; charset=utf-8",
 				            	beforeSend: function(){
-				            		mask.show();
-				            		plus.nativeUI.showWaiting("数据加载中...");
+//				            		mask.show();
+				            		plus.nativeUI.showWaiting();
 				            	},
 				            	complete: function(){
-				            		plus.nativeUI.closeWaiting("数据加载中...");
-				            		mask.close();
+				            		plus.nativeUI.closeWaiting();
+//				            		mask.close();
 				            	},
 				            	success  : function(res){
 				            		res = JSON.parse(res);

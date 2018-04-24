@@ -23,11 +23,12 @@
 							<span v-text="item.name"></span>
 							<p class='mui-ellipsis'>对方请求添加你为朋友</p>
 							<span v-if="!item.added" @click="agreeAdd(item)" class="mui-btn mui-btn-primary mui-pull-right" style="margin-top: -39px;">同意</span>
-							<span v-if="item.added" @click="agreeAdd(item)" class="mui-btn mui-pull-right" style="margin-top: -39px;border: none;">已添加</span>
+							<span v-if="item.added" class="mui-btn mui-pull-right" style="margin-top: -39px;border: none;">已添加</span>
 						</div>
 					</a>
 				</li>
-			</ul>		    
+			</ul>	
+			<p class="nullData" v-if="!nullData" style="text-align: center;margin-top: 40px;">没有任何数据~</p>
 		</div>
 	</body>
 		<script src="js/mui.min.js"></script>
@@ -38,7 +39,8 @@
 				data: {
 					loginID: '',
 					newFriendList:{},
-					status: '同意'
+					status: '同意',
+					nullData: true
 				},
 				mounted: function(){
 					this.$nextTick(function(){
@@ -69,7 +71,11 @@
 //								mask.close();
 							},
 							success: function(res){
+								if(res == '[]'){ _this.nullData = false };
 								res = JSON.parse(res);
+								for( var i =0; i < res.length; i++){
+				            		res[i].headImgUrl = imgUrl + res[i].headImgUrl;
+				            	}
 								_this.newFriendList = res;
 							},
 							error: function(xhr,type,errorThrown){

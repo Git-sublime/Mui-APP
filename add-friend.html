@@ -60,7 +60,7 @@
 						<span v-text="item.id" style="padding-top: 7px;display: inline-block; color: #007aff;"></span>
 						<span v-show="item.name != '未填'" v-text="item.name" style="padding-top: 7px;display: inline-block; color: #007aff;"></span>
 						<span class="mui-btn mui-pull-right mui-btn-default" @click="addFriend(item, index)" v-if="!item.added">添加</span>
-						<span class="mui-btn mui-pull-right" @click="addFriend(item, index)" v-if="item.added" style="border: none;">待回复</span>
+						<span class="mui-btn mui-pull-right" v-if="item.added" style="border: none;">待回复</span>
 					</div>
 				</li>
 			</ul>
@@ -112,6 +112,9 @@
 							},
 							success: function(res){
 								res = JSON.parse(res);
+								for( var i =0; i < res.length; i++){
+				            		res[i].headImgUrl = imgUrl + res[i].headImgUrl;
+				            	}
 								_this.searchList = res;
 							},
 				            error    : function(xhr,type,errorThrown){
