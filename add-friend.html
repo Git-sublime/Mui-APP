@@ -98,7 +98,7 @@
 						var _this = this;
 						var idOrName = this.searchVal;
 						mui.ajax({
-							url: 'http://182.254.233.89:8080/test1/SelectUsersByIdOrName?idOrName=' + idOrName,
+							url: 'http://118.24.34.244:8080/test1/SelectUsersByIdOrName?idOrName=' + idOrName,
 							type: 'GET',
 							contentType: "application/x-www-form-urlencoded; charset=utf-8",
 							beforeSend: function(){
@@ -121,7 +121,7 @@
 					addFriend: function(item, index){
 						var _this = this;
 						mui.ajax({
-							url: 'http://182.254.233.89:8080/test1/AddFriendApply?senderId=' + _this.loginID + '&receiverId=' + item.id,
+							url: 'http://118.24.34.244:8080/test1/AddFriendApply?senderId=' + _this.loginID + '&receiverId=' + item.id,
 							type: 'GET',
 							contentType: "application/x-www-form-urlencoded; charset=utf-8",
 							beforeSend: function(){

@@ -484,7 +484,7 @@
 					//发送消息到后台
 					function sendMessage(senderId, receiverId, content){
 						mui.ajax({
-				            url      : 'http://182.254.233.89:8080/test1/sendMsgServlet?senderId='+senderId+'&receiverId='+receiverId+'&content='+content,
+				            url      : 'http://118.24.34.244:8080/test1/sendMsgServlet?senderId='+senderId+'&receiverId='+receiverId+'&content='+content,
 				            type     : 'GET',
 				            contentType: "application/x-www-form-urlencoded; charset=utf-8",
 				            success  : function(res){
@@ -502,7 +502,7 @@
 					//查询接收消息总数，进入聊天页面时会调用一次
 					function getMessageNum(senderId, receiverId){
 						mui.ajax({
-				            url      : 'http://182.254.233.89:8080/test1/GetMessageNum?senderId='+senderId+'&receiverId='+receiverId,
+				            url      : 'http://118.24.34.244:8080/test1/GetMessageNum?senderId='+senderId+'&receiverId='+receiverId,
 				            type     : 'GET',
 				            contentType: "application/x-www-form-urlencoded; charset=utf-8",
 				            success  : function(res){
@@ -522,7 +522,7 @@
 					function getNewMsg(senderId, receiverId ,CurMessageNum){
 						console.log("当前消息数："+CurMessageNum);
 						mui.ajax({
-				            url      : 'http://182.254.233.89:8080/test1/GetNewMsg?senderId='+senderId+'&receiverId='+receiverId+'&CurMessageNum='+messageNum,
+				            url      : 'http://118.24.34.244:8080/test1/GetNewMsg?senderId='+senderId+'&receiverId='+receiverId+'&CurMessageNum='+messageNum,
 				            type     : 'GET',
 				            contentType: "application/x-www-form-urlencoded; charset=utf-8",
 				            success  : function(res){
