@@ -59,7 +59,7 @@
 					<div class="mui-media-body" style="padding-left: 10px;">
 						<span v-text="item.id" style="padding-top: 7px;display: inline-block; color: #007aff;"></span>
 						<span v-show="item.name != '未填'" v-text="item.name" style="padding-top: 7px;display: inline-block; color: #007aff;"></span>
-						<span class="mui-btn mui-pull-right mui-btn-primary" @click="addFriend(item)" v-text="addBtn"></span>
+						<span class="mui-btn mui-pull-right mui-btn-default" @click="addFriend(item, index)">添加</span>
 					</div>
 				</li>
 			</ul>
@@ -70,6 +70,7 @@
 	</body>
 		<script src="js/mui.min.js"></script>
 		<script src="js/vue.min.js"></script>
+		<script src="js/jquery-3.3.1.min.js" type="text/javascript" charset="utf-8"></script>
 		<script type="text/javascript">
 			mui.init();
 			var mask = mui.createMask();
@@ -78,8 +79,7 @@
 				data: {
 					searchVal: '',
 					searchList: {},
-					loginID: '',
-					addBtn: '添加'
+					loginID: ''
 				},
 				mounted: function(){
 					this.$nextTick(function(){
@@ -114,11 +114,11 @@
 								_this.searchList = res;
 							},
 				            error    : function(xhr,type,errorThrown){
-				               	mui.toast('数据请求失败!');
+				               	mui.toast('数据请求失败,请检查网络！');
 				            }
 						})
 					},
-					addFriend: function(item){
+					addFriend: function(item, index){
 						var _this = this;
 						mui.ajax({
 							url: 'http://182.254.233.89:8080/test1/AddFriendApply?senderId=' + _this.loginID + '&receiverId=' + item.id,
@@ -141,9 +141,9 @@
 								}
 							},
 							error: function(xhr,type,errorThrown){
-								mui.toast("数据请求失败");
+								mui.toast("数据请求失败,请检查网络！");
 							}
-						})
+						})				
 					}
 				}
 			})

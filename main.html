@@ -121,11 +121,12 @@
 			<!--           聊天界面                     -->
 			<div id="tabbar-with-contact" class="mui-control-content">
 				<ul class="mui-table-view topHave">
+					<li class="mui-table-view-cell" id="newFriend">新的朋友</li>
 					<li class="mui-table-view-cell" id="group">群聊</li>
 					<li class="mui-table-view-cell" id="contact">通讯录</li>
 				</ul>
-				<ul class="mui-table-view topHave" >
-					<li v-if="logined" class="mui-table-view-cell mui-media" v-for="item in chatList" @click="gotoChat(item)">
+				<ul v-if="logined" class="mui-table-view topHave" >
+					<li class="mui-table-view-cell mui-media" v-for="(item, index) in chatList" :key="index" @click="gotoChat(item)">
 						<a href="javascript:;">
 							<img class="mui-media-object mui-pull-left" :src="item.headImg">
 							<div class="mui-media-body">
@@ -134,7 +135,9 @@
 							</div>
 						</a>
 					</li>
-					<li v-if="!logined" class="mui-table-view-cell mui-media" @click="gotoChat(robot)">
+				</ul>
+				<ul v-if="!logined" class="mui-table-view topHave" >
+					<li class="mui-table-view-cell mui-media" @click="gotoChat(robot)">
 						<a href="javascript:;">
 							<img class="mui-media-object mui-pull-left" :src="robot.headImg">
 							<div class="mui-media-body">
@@ -443,6 +446,29 @@
 										id: 'login.html'
 									});
 								});
+								//新的朋友
+								var newFriend = doc.getElementById("newFriend");
+								newFriend.addEventListener('tap', function(){
+									if(_this.logined){
+										$.openWindow({
+											id: "newFriend.html",
+											url: "newFriend.html",
+											extras: {
+												loginId : _this.loginID
+											}
+										})										
+									}else{
+										mui.confirm('您还未登陆，是否前往登陆？',"提示",new Array('是','否'),function(e){
+											if(e.index == 0){
+//												mui.toast('是');
+												mui.openWindow({
+													url: 'login.html',
+													id: 'login.html'
+												})
+											}
+										});
+									}
+								});
 								//群聊
 								var groupBtn = doc.getElementById("group");
 								groupBtn.addEventListener('tap', function(){
@@ -471,10 +497,9 @@
 											id: "contact-list.html",
 											url: "contact-list.html",
 											extras: {
-												loginId : _this.loginID
+												loginID : _this.loginID
 											}
-										})		
-										console.log(_this.loginID);
+										})
 									}else{
 										mui.confirm('您还未登陆，是否前往登陆？',"提示",new Array('是','否'),function(e){
 											if(e.index == 0){

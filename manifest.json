@@ -211,7 +211,8 @@
 					"group-list.html",
 					"userInfo.html",
 					"add-friend.html",
-					"creat-group.html"
+					"creat-group.html",
+					"newFriend.html"
 				],
 				"priority": 1
 			},
@@ -308,6 +309,13 @@
 				"resources": [],
 				"refer": [
 					"chat.html"
+				],
+				"priority": 0
+			},
+			"add-friend.html": {
+				"resources": [],
+				"refer": [
+					"add-friend.html"
 				],
 				"priority": 0
 			}

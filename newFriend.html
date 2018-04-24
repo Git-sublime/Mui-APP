@@ -1,0 +1,114 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="css/mui.min.css" rel="stylesheet" />
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav">
+		    <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+		    <h1 class="mui-title">新的朋友</h1>
+		</header>
+		
+		<div class="mui-content" id="app">
+			<ul class="mui-table-view topHave" >
+				<li class="mui-table-view-cell mui-media" v-for="(item, index) in newFriendList" :key="index">
+					<a href="javascript:;">
+						<img class="mui-media-object mui-pull-left" :src="item.headImgUrl">
+						<div class="mui-media-body">
+							<span v-text="item.name"></span>
+							<p class='mui-ellipsis'>对方请求添加你为朋友</p>
+							<span @click="agreeAdd(item)" class="mui-btn mui-btn-primary mui-pull-right" style="margin-top: -39px;">同意</span>
+						</div>
+					</a>
+				</li>
+			</ul>		    
+		</div>
+	</body>
+		<script src="js/mui.min.js"></script>
+		<script src="js/vue.min.js"></script>
+		<script type="text/javascript">
+			var Vm = new Vue({
+				el: "#app",
+				data: {
+					loginID: '',
+					newFriendList:{},
+					status: '同意'
+				},
+				mounted: function(){
+					this.$nextTick(function(){
+						var _this = this;
+						mui.plusReady(function(){
+							_this.InitPage();
+						})
+					})
+				},
+				methods: {
+					InitPage: function(){
+						mui.init();
+						//获取main页面传过来的当前登陆ID
+						var sData = plus.webview.currentWebview();
+						this.loginID = sData.loginId;
+						console.log(this.loginID);
+						//请求消息数据
+						var _this = this;
+						var mask = mui.createMask();
+						mui.ajax({
+							url: 'http://182.254.233.89:8080/test1/GetFriendApplyById?id=' + _this.loginID,
+							type: 'GET',
+							beforeSend: function(){
+								mask.show();
+								plus.nativeUI.showWaiting();
+							},
+							complete: function(){
+								plus.nativeUI.closeWaiting();
+								mask.close();
+							},
+							success: function(res){
+								res = JSON.parse(res);
+								_this.newFriendList = res;
+							},
+							error: function(xhr,type,errorThrown){
+								mui.toast("数据请求失败,请检查网络！");
+							}
+						})
+					},
+					//同意按钮
+					agreeAdd: function(item){
+						var _this = this;
+						var mask = mui.createMask();
+						mui.ajax({
+							url: 'http://182.254.233.89:8080/test1/UpdateFriendApply?applyerId=' + item.id + '&userId=' + _this.loginID + '&statue=' + _this.status,
+							type: 'GET',
+							beforeSend: function(){
+								mask.show();
+								plus.nativeUI.showWaiting();
+							},
+							complete: function(){
+								plus.nativeUI.closeWaiting();
+								mask.close();
+							},
+							success: function(res){
+								console.log(res);
+								if(res == 'true' && _this.status == '同意'){
+									mui.toast('已添加为好友');
+								}else if(res == 'true' && _this.status == '拒绝'){
+									mui.toast('已拒绝！');
+								}else {
+									mui.toast('添加失败！');
+								}
+							},
+							error: function(xhr,type,errorThrown){
+								mui.toast("数据请求失败,请检查网络！");
+							}
+						})						
+					}
+				}
+			})
+			
+		</script>
+</html>

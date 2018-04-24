@@ -12,7 +12,8 @@
 			"group-list.html",
 			"userInfo.html",
 			"add-friend.html",
-			"creat-group.html"
+			"creat-group.html",
+			"newFriend.html"
 		],
 		"resources": [
 			"sub1.html"
@@ -52,6 +53,11 @@
 	"group-list.html": {
 		"refer": [
 			"chat.html"
+		]
+	},
+	"add-friend.html": {
+		"refer": [
+			"add-friend.html"
 		]
 	}
 }
