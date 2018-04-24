@@ -77,7 +77,8 @@
 							dataTags: "HuiFeiDeYu"						
 						}
 					],
-					contacts2: {}
+					contacts2: {},
+					imgUrl: ''
 				},
 				mounted: function(){
 					this.$nextTick(function(){
@@ -130,6 +131,9 @@
 				            	},
 				            	success  : function(res){
 				            		res = JSON.parse(res);
+				            		for( var i =0; i < res.length; i++){
+				            			res[i].headImgUrl = imgUrl + res[i].headImgUrl;
+				            		}
 				            		_this.contacts2 = res;
 				            	},
 				            	error    : function(xhr,type,errorThrown){
