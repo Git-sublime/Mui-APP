@@ -158,6 +158,7 @@
 							success: function(res){
 								console.log(res);
 								if(res == 'true' && status == '同意'){
+									mui.toast("已添加为好友");
 									_this.isValidate = true;
 								}else if(res == 'true' && status == '拒绝'){
 									mui.toast("已加入黑名单");
