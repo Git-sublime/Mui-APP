@@ -38,10 +38,10 @@
 					<ul class="mui-table-view">
 						<li v-for="item in groups" class="mui-table-view-cell mui-indexed-list-item mui-media" @click="gotoChat(item)">
 							<!--<a href="javascript:;">-->
-							<img class="mui-media-object mui-pull-left" :src="item.headImg" style="height: 35px;max-width: 35px;line-height: 35px;">
+							<img class="mui-media-object mui-pull-left" :src="item.headImgUrl" style="height: 35px;max-width: 35px;line-height: 35px;">
 							<div class="mui-media-body">
 								<span v-text="item.name" style="font-size: 16px; padding-top: 7px;display: inline-block;"></span>
-								<span class="" style="color: #666; font-size: 13px;margin-left: 3px;">({{item.Number}})</span>
+								<span class="" style="color: #666; font-size: 13px;margin-left: 3px;">({{member}})</span>
 							</div>
 						</li>
 						
@@ -56,30 +56,16 @@
 			var vm = new Vue({
 				el: "#app",
 				data: {
-					groups: [
-						{
-							name: "1舍203",
-							headImg: "images/cbd.jpg",
-							Number: 7,
-							groupOwner: "金大爷"
-						},
-						{
-							name: "时代大厦",
-							headImg: "images/shuijiao.jpg",
-							Number: 15,
-							groupOwner: "小李"
-						},
-						{
-							name: "东方明珠",
-							headImg: "images/cbd.jpg",
-							Number: 45,
-							groupOwner: "王哥"
-						}
-					]
+					groups: [],
+					member: 1
 				},
 				mounted: function(){
 					this.$nextTick(function(){
-						this.groupInit();
+						mui.init();
+						var _this = this;
+						mui.plusReady(function(){
+							_this.groupInit();
+						})
 					})
 				},
 				methods: {
@@ -94,15 +80,35 @@
 						 })
 					},
 					groupInit: function(){
-						mui.init();
-						mui.ready(function() {
-							var header = document.querySelector('header.mui-bar');
-							var list = document.getElementById('list');
-							//calc hieght
-							list.style.height = (document.body.offsetHeight - header.offsetHeight) + 'px';
+						var _this = this;
+						var header = document.querySelector('header.mui-bar');
+						var list = document.getElementById('list');
+							//calc height
+						list.style.height = (document.body.offsetHeight - header.offsetHeight) + 'px';
 							//create
-							window.indexedList = new mui.IndexedList(list);
-						});						
+						window.indexedList = new mui.IndexedList(list);
+						//请求群聊数据
+						mui.ajax({
+							url: 'http://118.24.34.244:8080/test1/SelectGroupsByIdServlet?id=lcj',
+							type: 'GET',
+							timeout: 700,
+							beforeSend: function(){
+								plus.nativeUI.showWaiting();
+							},
+							complete: function(){
+								plus.nativeUI.closeWaiting();
+							},
+							success: function(res){
+								res = JSON.parse(res);
+								for(var i = 0; i < res.length; i++){
+									res[i].headImgUrl = imgUrl + res[i].headImgUrl;
+								};
+								_this.groups = res;
+							},
+							error: function(xhr, type, errorThrown){
+								mui.toast("Error: 服务器响应失败")
+							}
+						})
 					}
 				}
 			});

@@ -295,9 +295,13 @@
 						this.showAddFriend = false;
 					},
 					openCreatGroupPage: function(){
+						var _this = this;
 						mui.openWindow({
 							url: 'creat-group.html',
-							id: 'creat-group.html'
+							id: 'creat-group.html',
+							extras: {
+								loginID: _this.loginID
+							}
 						});
 						this.showAddFriend = false;
 					},

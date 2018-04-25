@@ -116,3 +116,32 @@ masterId：String
 返回参数：isOk：bool
 实例:
 http://118.24.34.244:8080/test1/AddGroup?id=g11&name=g999&masterId=lcj
+
+接口16：拉人进群
+请求参数：
+groupId：String，
+userIds：String，（JSON数组字符串）
+返回参数：isOk：bool
+实例:
+var id = 'group001';
+var obj = [{"id":"lcj"},{"id":"lulu"}];
+var userIdsStr = JSON.stringify(obj);
+$.ajax({
+	url: 'http://118.24.34.244:8080/test1/AddUsersToGroup',
+	type: 'GET',
+	data : {groupId:id,userIds:userIdsStr},
+	contentType: "application/x-www-form-urlencoded; charset=utf-8",
+	success: function(res) {
+	
+	},
+	error: function(xhr, type, errorThrown) {
+		console.log(errorThrown);
+	}
+});
+
+接口17：根据群id获取成员列表
+请求参数：
+groupId：String，
+返回参数：userList；类型：数组（数组元素类型：user）
+实例:
+http://118.24.34.244:8080/test1/SelectUsersByGroupId?groupId=group001

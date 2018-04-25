@@ -22,7 +22,7 @@
 						<div class="mui-media-body">
 							<span v-text="item.name"></span>
 							<p class='mui-ellipsis'>对方请求添加你为朋友</p>
-							<span v-if="!item.added" @click="agreeAdd(item)" class="mui-btn mui-btn-primary mui-pull-right" style="margin-top: -39px;">同意</span>
+							<span v-if="!item.added" @click.stop="agreeAdd(item)" class="mui-btn mui-btn-primary mui-pull-right" style="margin-top: -39px;">同意</span>
 							<span v-if="item.added" class="mui-btn mui-pull-right" style="margin-top: -39px;border: none;">已添加</span>
 						</div>
 					</a>
