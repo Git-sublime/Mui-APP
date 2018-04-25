@@ -315,7 +315,22 @@
 			"add-friend.html": {
 				"resources": [],
 				"refer": [
-					"add-friend.html"
+					"add-friend.html",
+					"user-info.html"
+				],
+				"priority": 0
+			},
+			"user-info.html": {
+				"resources": [],
+				"refer": [
+					"chat.html"
+				],
+				"priority": 0
+			},
+			"newFriend.html": {
+				"resources": [],
+				"refer": [
+					"user-info.html"
 				],
 				"priority": 0
 			}

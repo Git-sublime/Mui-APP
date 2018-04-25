@@ -16,7 +16,7 @@
 		<div class="mui-content" id="app">
 			<ul class="mui-table-view">
 				<li class="mui-table-view-cell mui-indexed-list-item mui-media">
-					<img class="mui-media-object mui-pull-right" src="images/cbd.jpg" style="height: 60px;max-width: 60px;line-height: 60px;">
+					<img class="mui-media-object mui-pull-right" :src="user.headImgUrl" style="height: 60px;max-width: 60px;line-height: 60px;">
 					<div class="mui-media-body">
 						<span style="font-size: 16px; padding-top: 17px;display: block;">头像</span>
 					</div>
@@ -24,20 +24,153 @@
 			</ul>
 			<ul class="mui-table-view topHave">
 				<li class="mui-table-view-cell">
-					<a>账号<span class="mui-pull-right" id="accountInfo">lzs</span></a>
+					<a>账号<span class="mui-pull-right" id="accountInfo" v-text="user.id"></span></a>
 				</li>
 				<li class="mui-table-view-cell">
-					<a>姓名<span class="mui-pull-right" id="accountInfo">李忠胜</span></a>
+					<a>姓名<span class="mui-pull-right" id="accountInfo" v-text="user.name"></span></a>
 				</li>
 				<li class="mui-table-view-cell">
-					<a>性别<span class="mui-pull-right" id="accountInfo">男</span></a>
+					<a>性别<span class="mui-pull-right" id="accountInfo" v-text="user.sex"></span></a>
+				</li>
+				<li class="mui-table-view-cell">
+					<a>年龄<span class="mui-pull-right" id="accountInfo" v-text="user.age"></span></a>
 				</li>
 			</ul>
+			<!--搜索添加好友跳转过来-->
+			<ul v-if="flag == 1" class="topHave" style="padding: 0 15px;">
+				<li v-if="!isFriend && !addContact" @click="addFriend()" class="mui-btn mui-btn-block mui-btn-primary" style="padding: 11px 0;">添加到通讯录</li>
+				<li v-if="!isFriend && addContact" class="mui-btn mui-btn-block mui-btn-default" style="padding: 11px 0;">等待验证</li>
+				<li v-if="isFriend" @click="openChatPage()" class="mui-btn mui-btn-block mui-btn-primary" style="padding: 11px 0;">发消息</li>
+			</ul>
+			<!--同意好友添加请求跳转过来-->
+			<ul v-if="flag == 2" class="topHave" style="padding: 0 15px;">
+				<li v-if="!isValidate" @click="agreeAdd(agree)" class="mui-btn mui-btn-block mui-btn-primary" style="padding: 11px 0;">通过验证</li>
+				<li v-if="!isValidate" @click="agreeAdd(refuse)" class="mui-btn mui-btn-block mui-btn-default" style="padding: 11px 0;">加入黑名单</li>
+				<li v-if="isValidate" @click="openChatPage()" class="mui-btn mui-btn-block mui-btn-primary" style="padding: 11px 0;">发消息</li>
+			</ul>			
 		</div>
 	</body>
 		<script src="js/mui.min.js"></script>
+		<script src="js/vue.min.js"></script>
 		<script type="text/javascript">
-			mui.init()
+			new Vue({
+				el: "#app",
+				data: {
+					loginID: '',
+					user: {},
+					isFriend: false,
+					flag: 0,
+					addContact: false,
+					isValidate: false,
+					agree: '同意',
+					refuse: '拒绝'
+				},
+				mounted: function(){
+					this.$nextTick(function(){
+						mui.init();
+						var _this = this;
+						mui.plusReady(function(){
+							_this.InitPage();
+						})
+					})
+				},
+				methods: {
+					InitPage:function(){
+						var _this = this;
+						//获取传入该页面的数据
+						var sData = plus.webview.currentWebview();
+						this.user = sData.user;
+						this.loginID = sData.loginID;
+						this.flag = sData.flag;
+						//如果用户信息为本人
+						if(sData.user.id == sData.loginID){
+							_this.flag = 0;
+						};
+						//请求接口判断该用户是否已经是我的好友
+						mui.ajax({
+							url: 'http://118.24.34.244:8080/test1/IsFriend?id1=' + _this.loginID +'&id2=' + _this.user.id,
+							type: 'GET',
+							timeout: 700,
+				            contentType: "application/x-www-form-urlencoded; charset=utf-8",
+				            beforeSend: function(){
+				            	plus.nativeUI.showWaiting();
+				            },
+				            complete: function(){
+				            	plus.nativeUI.closeWaiting();
+				            },
+				            success: function(res){
+				            	if(res == 'true'){
+				            		_this.isFriend = true;
+				            	}
+				            },
+				            error: function(){
+				            	mui.toast("Error: 服务器响应失败");
+				            }
+						})
+					},//InitPage
+					addFriend: function(){
+						var _this = this;
+						mui.ajax({
+							url: 'http://118.24.34.244:8080/test1/AddFriendApply?senderId=' + _this.loginID + '&receiverId=' + _this.user.id,
+							type: 'GET',
+							contentType: "application/x-www-form-urlencoded; charset=utf-8",
+							beforeSend: function(){
+								plus.nativeUI.showWaiting();
+							},
+							complete: function(){
+								plus.nativeUI.closeWaiting();
+							},
+							success: function(res){
+								console.log(res);
+								if(res == 'true'){
+									_this.addContact = true;
+								}else {
+									mui.toast("添加失败");
+								}
+							},
+							error: function(xhr,type,errorThrown){
+								mui.toast("数据请求失败,请检查网络！");
+							}
+						})				
+					},//addFriend
+					openChatPage: function(){
+						var _this = this;
+						mui.openWindow({
+							url: 'chat.html',
+							id: 'chat.html',
+							extras: {
+								chatObj: _this.user,
+								loginId: _this.loginID
+							}
+						})
+					},
+					agreeAdd: function(status){
+						var _this = this;
+						mui.ajax({
+							url: 'http://118.24.34.244:8080/test1/UpdateFriendApply?applyerId=' + _this.user.id + '&userId=' + _this.loginID + '&statue=' + status,
+							type: 'GET',
+							beforeSend: function(){
+								plus.nativeUI.showWaiting();
+							},
+							complete: function(){
+								plus.nativeUI.closeWaiting();
+							},
+							success: function(res){
+								console.log(res);
+								if(res == 'true' && status == '同意'){
+									_this.isValidate = true;
+								}else if(res == 'true' && status == '拒绝'){
+									mui.toast("已加入黑名单");
+								}
+							},
+							error: function(xhr,type,errorThrown){
+								mui.toast("数据请求失败,请检查网络！");
+							}
+						})
+					}
+					
+				}//methods
+			})
 		</script>
 
 </html>

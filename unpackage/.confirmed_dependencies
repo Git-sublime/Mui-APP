@@ -57,7 +57,18 @@
 	},
 	"add-friend.html": {
 		"refer": [
-			"add-friend.html"
+			"add-friend.html",
+			"user-info.html"
+		]
+	},
+	"user-info.html": {
+		"refer": [
+			"chat.html"
+		]
+	},
+	"newFriend.html": {
+		"refer": [
+			"user-info.html"
 		]
 	}
 }

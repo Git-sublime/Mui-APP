@@ -17,7 +17,7 @@
 		<div class="mui-content" id="app">
 			<ul class="mui-table-view topHave" >
 				<li class="mui-table-view-cell mui-media" v-for="(item, index) in newFriendList" :key="index">
-					<a href="javascript:;">
+					<a href="javascript:;" @click="openUserInfoPage(item)">
 						<img class="mui-media-object mui-pull-left" :src="item.headImgUrl">
 						<div class="mui-media-body">
 							<span v-text="item.name"></span>
@@ -58,17 +58,14 @@
 						this.loginID = sData.loginId;
 						//请求消息数据
 						var _this = this;
-						var mask = mui.createMask();
 						mui.ajax({
 							url: 'http://118.24.34.244:8080/test1/GetFriendApplyById?id=' + _this.loginID,
 							type: 'GET',
 							beforeSend: function(){
-//								mask.show();
 								plus.nativeUI.showWaiting();
 							},
 							complete: function(){
 								plus.nativeUI.closeWaiting();
-//								mask.close();
 							},
 							success: function(res){
 								if(res == '[]'){ _this.nullData = false };
@@ -86,12 +83,10 @@
 					//同意按钮
 					agreeAdd: function(item){
 						var _this = this;
-						var mask = mui.createMask();
 						mui.ajax({
 							url: 'http://118.24.34.244:8080/test1/UpdateFriendApply?applyerId=' + item.id + '&userId=' + _this.loginID + '&statue=' + _this.status,
 							type: 'GET',
 							beforeSend: function(){
-//								mask.show();
 								plus.nativeUI.showWaiting();
 							},
 							complete: function(){
@@ -114,6 +109,19 @@
 								mui.toast("数据请求失败,请检查网络！");
 							}
 						})						
+					},
+					//打开用户详情页面
+					openUserInfoPage: function(item){
+						var _this = this;
+						mui.openWindow({
+							url: 'user-info.html',
+							id: 'user-info.html',
+							extras: {
+								user: item,
+								loginID: _this.loginID,
+								flag: 2
+							}
+						})
 					}
 				}
 			})

@@ -53,14 +53,14 @@
 			</ul>
 			<!--搜索结果-->
 			<ul v-show="searchList" class="mui-table-view topHave">
-				<li v-for="(item, index) in searchList" :key="index" class="mui-table-view-cell mui-indexed-list-item mui-media">
+				<li v-for="(item, index) in searchList" :key="index" @click="openUserInfoPage(item)" class="mui-table-view-cell mui-indexed-list-item mui-media">
 					<img class="mui-media-object mui-pull-left" :src="item.headImgUrl" style="height: 35px;max-width: 35px;line-height: 35px;">
 							
 					<div class="mui-media-body" style="padding-left: 10px;">
 						<span v-text="item.id" style="padding-top: 7px;display: inline-block; color: #007aff;"></span>
 						<span v-show="item.name != '未填'" v-text="item.name" style="padding-top: 7px;display: inline-block; color: #007aff;"></span>
-						<span class="mui-btn mui-pull-right mui-btn-default" @click="addFriend(item, index)" v-if="!item.added">添加</span>
-						<span class="mui-btn mui-pull-right" v-if="item.added" style="border: none;">待回复</span>
+						<!--<span class="mui-btn mui-pull-right mui-btn-default" @click="addFriend(item, index)" v-if="!item.added">添加</span>
+						<span class="mui-btn mui-pull-right" v-if="item.added" style="border: none;">待回复</span>-->
 					</div>
 				</li>
 			</ul>
@@ -101,6 +101,7 @@
 						mui.ajax({
 							url: 'http://118.24.34.244:8080/test1/SelectUsersByIdOrName?idOrName=' + idOrName,
 							type: 'GET',
+							timeout: 700,
 							contentType: "application/x-www-form-urlencoded; charset=utf-8",
 							beforeSend: function(){
 //								mask.show();
@@ -151,8 +152,21 @@
 								mui.toast("数据请求失败,请检查网络！");
 							}
 						})				
+					},
+					//打开用户详细信息页面
+					openUserInfoPage: function(item){
+						var _this = this;
+						mui.openWindow({
+							url: 'user-info.html',
+							id: 'user-info.html',
+							extras: {
+								user: item,
+								loginID: _this.loginID,
+								flag : 1
+							}
+						})
 					}
-				}
+				}//methods
 			})
 		</script>
 </html>
