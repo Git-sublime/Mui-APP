@@ -32,14 +32,15 @@
 	</head>
 
 	<body>
+		<div id="app">
 		<header class="mui-bar mui-bar-nav">
 			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
 			<h1 class="mui-title">选择好友</h1>
-			<a id='done' class="mui-btn mui-btn-link mui-pull-right mui-btn-blue mui-disabled">创建</a>
+			<a v-show="!creatGroup" id='done' class="mui-btn mui-btn-link mui-pull-right mui-btn-blue mui-disabled">创建</a>
 		</header>
-		<div class="mui-content" id="app">
+		<div class="mui-content">
 			<div id='list' class="mui-indexed-list">
-				<div class="mui-indexed-list-search mui-input-row mui-search">
+				<div class="mui-indexed-list-search mui-input-row mui-search" style="display: none;">
 					<input type="search" class="mui-input-clear mui-indexed-list-search-input" placeholder="搜索好友">
 				</div>
 				<div class="mui-indexed-list-bar" style="display: none;">
@@ -48,24 +49,30 @@
 				<div class="mui-indexed-list-alert"></div>
 				<div class="mui-indexed-list-inner">
 					<div class="mui-indexed-list-empty-alert">没有数据</div>
-					<ul class="mui-table-view">
+					<ul class="mui-table-view topHave" v-if="!creatGroup">
 						<li v-for="item in contacts" class="mui-table-view-cell mui-indexed-list-item mui-checkbox mui-left">
 							<span style="padding-top: 7px;display: inline-block;" v-text="item.name"></span>
 							<input type="checkbox" style="position:absolute;right: 10px;"/>
 							<img class="mui-media-object mui-pull-left" :src="item.headImgUrl" style="height: 35px;width: 35px;max-width: 35px;line-height: 35px;">
 							<span style="padding-top: 7px;display: inline-block;opacity: 0;" v-text="item.id"></span>
 						</li>
-						
-						<!--<li data-value="AKU" data-tags="AKeSu" class="mui-table-view-cell mui-indexed-list-item mui-checkbox mui-right">
-							<input type="checkbox" />阿克苏机场</li>
-						<li data-value="BPL" data-tags="ALaShanKou" class="mui-table-view-cell mui-indexed-list-item mui-checkbox mui-left">
-							<input type="checkbox" />阿拉山口机场</li>
-						<li data-value="BSD" data-tags="BaoShan" class="mui-table-view-cell mui-indexed-list-item mui-checkbox mui-left">
-							<input type="checkbox" />保山机场</li>-->
 					</ul>
+					<!--输入群名称-->
+					<form v-if="creatGroup" class="mui-input-group topHave">
+					    <div class="mui-input-row">
+					        <label>群名称</label>
+					    <input type="text" class="mui-input-clear" placeholder="请输入群名称">
+					    </div>
+					    <div class="mui-button-row">
+					        <button type="button" class="mui-btn mui-btn-primary" >确认</button>
+					        <button type="button" class="mui-btn mui-btn-danger" >取消</button>
+					    </div>
+					</form>						
 				</div>
+			
 			</div>
 		</div>
+	</div>
 		<script src="js/mui.min.js"></script>
 		<script src="js/mui.indexedlist.js"></script>
 		<script src="js/vue.min.js"></script>
@@ -75,7 +82,8 @@
 				data: {
 					contacts: [],
 					loginID: '',
-					checkedValues: []
+					checkedValues: [],
+					creatGroup: false
 				},
 				mounted: function(){
 					this.$nextTick(function(){
@@ -105,6 +113,7 @@
 								});
 								if (_this.checkedValues.length > 0) {
 									mui.alert('你选择了: ' + _this.checkedValues);
+									_this.creatGroup = true;
 								} else {
 									mui.alert('你没选择任何好友');
 								}
