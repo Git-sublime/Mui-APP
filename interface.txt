@@ -137,7 +137,6 @@ $.ajax({
 	error: function(xhr, type, errorThrown) {
 		console.log(errorThrown);
 	}
-<<<<<<< HEAD:interface.txt
 });
 
 接口17：根据群id获取成员列表
@@ -146,6 +145,4 @@ groupId：String，
 返回参数：userList；类型：数组（数组元素类型：user）
 实例:
 http://118.24.34.244:8080/test1/SelectUsersByGroupId?groupId=group001
-=======
-});
->>>>>>> 168c8fa8c75eaab4e2763bdf3478f4c818fe6803:鎺ュ彛.txt
+
