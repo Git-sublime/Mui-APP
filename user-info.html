@@ -193,6 +193,9 @@
 										url: 'contact-list.html',
 										id: 'contact-list.html'
 									});
+									//刷新通讯录页面
+									var wobj = plus.webview.getWebviewById('contact-list.html');
+									wobj.reload(true);
 								}
 							},
 							error: function(xhr, type, errorThrown){
