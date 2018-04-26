@@ -47,6 +47,10 @@
 				<li v-if="!isValidate" @click="agreeAdd(agree)" class="mui-btn mui-btn-block mui-btn-primary" style="padding: 11px 0;">通过验证</li>
 				<li v-if="!isValidate" @click="agreeAdd(refuse)" class="mui-btn mui-btn-block mui-btn-default" style="padding: 11px 0;">加入黑名单</li>
 				<li v-if="isValidate" @click="openChatPage()" class="mui-btn mui-btn-block mui-btn-primary" style="padding: 11px 0;">发消息</li>
+			</ul>	
+			<!--聊天界面跳转过来个人信息-->
+			<ul v-if="flag == 3" class="topHave" style="padding: 0 15px;">
+				<li @click="deleteFriend()" class="mui-btn mui-btn-block mui-btn-danger" style="padding: 11px 0;">删除好友</li>
 			</ul>			
 		</div>
 	</body>
@@ -166,6 +170,33 @@
 							},
 							error: function(xhr,type,errorThrown){
 								mui.toast("数据请求失败,请检查网络！");
+							}
+						})
+					},
+					//删除好友
+					deleteFriend: function(){
+						var _this = this;
+						mui.ajax({
+							url: 'http://118.24.34.244:8080/test1/DeleteFriend?senderId=' + _this.loginID + '&receiverId=' + _this.user.id,
+							type: 'GET',
+							timeout: 700,
+							beforeSend: function(){
+								plus.nativeUI.showWaiting();
+							},
+							complete: function(){
+								plus.nativeUI.closeWaiting();
+							},
+							success: function(res){
+								if(res == 'true'){
+									mui.toast("删除成功");
+									mui.openWindow({
+										url: 'contact-list.html',
+										id: 'contact-list.html'
+									});
+								}
+							},
+							error: function(xhr, type, errorThrown){
+								mui.toast('服务器响应失败');
 							}
 						})
 					}

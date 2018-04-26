@@ -8,6 +8,7 @@
 		<link href="css/mui.min.css" rel="stylesheet" />
 		<link rel="stylesheet" type="text/css" href="css/app.css" />
 		<link href="css/mui.imageviewer.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="css/icons-extra.css"/>
 		<style>
 			html,
 			body {
@@ -298,6 +299,7 @@
 		<header class="mui-bar mui-bar-nav" style="display: block;">
 			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
 			<h1 class="mui-title" id="chatName"></h1>
+			<span id="userBtn" class="mui-icon mui-icon-person mui-pull-right" style="font-size: 24px;padding-top: 11px; font-weight: bold;color: #757474;"></span>
 		</header>
 		<pre id='h'></pre>
 		<script id='msg-template' type="text/template">
@@ -374,7 +376,20 @@
 					console.log(realSenderId);
 					console.log(realReceiverId);
 //					document.getElementById("head-img").src = sData.chatObj.headImg;
-					//end======================
+
+					//查看好友个人信息
+					doc.getElementById('userBtn').addEventListener('tap', function(){
+						$.openWindow({
+							url: 'user-info.html',
+							id: 'user-info.html',
+							extras: {
+								user: sData.chatObj,
+								loginID : realSenderId,
+								flag: 3
+							}
+						})
+					});
+					
 					plus.webview.currentWebview().setStyle({
 						softinputMode: "adjustResize"
 					});

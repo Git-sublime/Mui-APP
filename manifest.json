@@ -324,11 +324,19 @@
 			"user-info.html": {
 				"resources": [],
 				"refer": [
-					"chat.html"
+					"chat.html",
+					"main.html"
 				],
 				"priority": 0
 			},
 			"newFriend.html": {
+				"resources": [],
+				"refer": [
+					"user-info.html"
+				],
+				"priority": 0
+			},
+			"chat.html": {
 				"resources": [],
 				"refer": [
 					"user-info.html"
