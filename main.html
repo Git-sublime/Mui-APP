@@ -540,7 +540,10 @@
 									if(_this.logined){
 										$.openWindow({
 											id: "group-list.html",
-											url: "group-list.html"
+											url: "group-list.html",
+											extras: {
+												loginID: _this.loginID
+											}
 										})										
 									}else{
 										mui.confirm('您还未登陆，是否前往登陆？',"提示",new Array('是','否'),function(e){
