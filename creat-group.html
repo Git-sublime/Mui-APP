@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html>
-
 	<head>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
@@ -58,14 +57,14 @@
 						</li>
 					</ul>
 					<!--输入群名称-->
-					<form v-if="creatGroup" class="mui-input-group topHave">
+					<form v-show="creatGroup" class="mui-input-group topHave">
 					    <div class="mui-input-row">
 					        <label>群名称</label>
-					    <input type="text" class="mui-input-clear" placeholder="请输入群名称">
+					    <input v-model="creatVal" type="text" class="mui-input-clear" placeholder="请输入群名称">
 					    </div>
 					    <div class="mui-button-row">
-					        <button type="button" class="mui-btn mui-btn-primary" >确认</button>
-					        <button type="button" class="mui-btn mui-btn-danger" >取消</button>
+					        <button id="confirm" type="button" class="mui-btn mui-btn-primary" >确认</button>
+					        <button id="cancel" @click="cancelBtn()" type="button" class="mui-btn mui-btn-danger" >取消</button>
 					    </div>
 					</form>						
 				</div>
@@ -83,7 +82,8 @@
 					contacts: [],
 					loginID: '',
 					checkedValues: [],
-					creatGroup: false
+					creatGroup: false,
+					creatVal: ''
 				},
 				mounted: function(){
 					this.$nextTick(function(){
@@ -106,14 +106,19 @@
 							done.addEventListener('tap', function() {
 								var checkboxArray = [].slice.call(list.querySelectorAll('input[type="checkbox"]'));
 //								var checkedValues = [];
+								var LoginUser = {id : _this.loginID};
+								_this.checkedValues.push(LoginUser);
 								checkboxArray.forEach(function(box) {
 									if (box.checked) {
-										_this.checkedValues.push(box.parentNode.lastChild.innerText);
+										var userItem = {id : ''};
+										userItem.id = box.parentNode.lastChild.innerText;
+										_this.checkedValues.push(userItem);
 									}
 								});
 								if (_this.checkedValues.length > 0) {
-									mui.alert('你选择了: ' + _this.checkedValues);
 									_this.creatGroup = true;
+
+									
 								} else {
 									mui.alert('你没选择任何好友');
 								}
@@ -131,8 +136,10 @@
 										done.classList.add("mui-disabled");
 									}
 								}
-							});
-						});		
+							});		
+						});	//mui.ready()	
+
+						//请求通讯录数据
 						mui.plusReady(function(){
 							var sData = plus.webview.currentWebview();
 							_this.loginID = sData.loginID;
@@ -157,8 +164,57 @@
 									mui.toast("Error: 服务器响应失败");
 									console.log(errorThrown);
 								}								
-							})
-						})
+							});
+							//确认按钮创建群
+							var confirmBtn = document.getElementById('confirm');
+							confirmBtn.addEventListener('tap', function(){
+								if(_this.creatVal != ''){
+									mui.ajax({
+										url: 'http://118.24.34.244:8080/test1/AddGroup?id=&name=' + _this.creatVal + '&masterId=' + _this.loginID,
+										type: 'GET',
+										timeout: 700,
+										beforeSend: function(){
+											plus.nativeUI.showWaiting();
+										},
+										complete: function(){
+											plus.nativeUI.closeWaiting();
+										},
+										success: function(res){
+											var groupID = res;
+											var userList = JSON.stringify(_this.checkedValues);
+											console.log(userList);
+											mui.ajax({
+												url: 'http://118.24.34.244:8080/test1/AddUsersToGroup',
+												type: 'GET',
+												timeout: 700,
+												data : {groupId:groupID, userIds:userList},
+												contentType: "application/x-www-form-urlencoded; charset=utf-8",
+												beforeSend: function(){
+													plus.nativeUI.showWaiting();
+												},
+												complete: function(){
+													plus.nativeUI.closeWaiting();
+												},
+												success: function(res) {
+													console.log(res);
+													mui.toast("建群成功");
+													mui.back();
+												},
+												error: function(xhr, type, errorThrown) {
+													console.log(errorThrown);
+												}
+											});
+										},
+										error: function(xhr, type, errorThrown){
+											mui.toast("Error: 服务器响应失败");
+										}
+									})
+								}
+							})							
+						})//mui.plusReady
+					},
+					cancelBtn: function(){
+						mui.back();
 					}
 				}
 			})

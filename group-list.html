@@ -66,7 +66,6 @@
 						var _this = this;
 						mui.plusReady(function(){
 							var sData = plus.webview.currentWebview();
-							console.log(sData.loginID)
 				        	_this.loginID = sData.loginID;
 							_this.groupInit();
 						})
@@ -95,7 +94,7 @@
 						window.indexedList = new mui.IndexedList(list);
 						//请求群聊数据
 						mui.ajax({
-							url: 'http://118.24.34.244:8080/test1/SelectGroupsByIdServlet?id=lcj',
+							url: 'http://118.24.34.244:8080/test1/SelectGroupsByIdServlet?id=' + _this.loginID,
 							type: 'GET',
 							timeout: 700,
 							beforeSend: function(){

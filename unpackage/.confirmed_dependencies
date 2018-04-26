@@ -1,75 +1,75 @@
 {
-	"main.html": {
-		"refer": [
-			"setting.html",
-			"login.html",
-			"sub3.html",
-			"sub2.html",
-			"sub1.html",
-			"weChat.html",
-			"chat.html",
-			"contact-list.html",
-			"group-list.html",
-			"userInfo.html",
-			"add-friend.html",
-			"creat-group.html",
-			"newFriend.html"
-		],
-		"resources": [
-			"sub1.html"
-		]
-	},
-	"login.html": {
-		"refer": [
-			"main.html",
-			"reg.html",
-			"forget_password.html",
-			"unlock.html"
-		]
-	},
-	"sub3.html": {
-		"refer": [
-			"login.html"
-		]
-	},
-	"weChat.html": {
-		"refer": [
-			"main.html",
-			"setting.html",
-			"login.html",
-			"sub3.html",
-			"sub2.html",
-			"sub1.html"
-		],
-		"resources": [
-			"sub1.html"
-		]
-	},
-	"contact-list.html": {
-		"refer": [
-			"chat.html"
-		]
-	},
-	"group-list.html": {
-		"refer": [
-			"chat.html",
-			"group-chat.html"
-		]
-	},
-	"add-friend.html": {
-		"refer": [
-			"add-friend.html",
-			"user-info.html"
-		]
-	},
-	"user-info.html": {
-		"refer": [
-			"chat.html"
-		]
-	},
-	"newFriend.html": {
-		"refer": [
-			"user-info.html"
-		]
-	}
+  "main.html": {
+    "refer": [
+      "setting.html",
+      "login.html",
+      "sub3.html",
+      "sub2.html",
+      "sub1.html",
+      "weChat.html",
+      "chat.html",
+      "contact-list.html",
+      "group-list.html",
+      "userInfo.html",
+      "add-friend.html",
+      "creat-group.html",
+      "newFriend.html"
+    ],
+    "resources": [
+      "sub1.html"
+    ]
+  },
+  "login.html": {
+    "refer": [
+      "main.html",
+      "reg.html",
+      "forget_password.html",
+      "unlock.html"
+    ]
+  },
+  "sub3.html": {
+    "refer": [
+      "login.html"
+    ]
+  },
+  "weChat.html": {
+    "refer": [
+      "main.html",
+      "setting.html",
+      "login.html",
+      "sub3.html",
+      "sub2.html",
+      "sub1.html"
+    ],
+    "resources": [
+      "sub1.html"
+    ]
+  },
+  "contact-list.html": {
+    "refer": [
+      "chat.html"
+    ]
+  },
+  "group-list.html": {
+    "refer": [
+      "chat.html",
+      "group-chat.html"
+    ]
+  },
+  "add-friend.html": {
+    "refer": [
+      "add-friend.html",
+      "user-info.html"
+    ]
+  },
+  "user-info.html": {
+    "refer": [
+      "chat.html"
+    ]
+  },
+  "newFriend.html": {
+    "refer": [
+      "user-info.html"
+    ]
+  }
 }
