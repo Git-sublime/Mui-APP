@@ -1,0 +1,130 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="css/mui.min.css" rel="stylesheet" />
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav">
+		    <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+		    <h1 class="mui-title">新的朋友</h1>
+		</header>
+		
+		<div class="mui-content" id="app">
+			<ul class="mui-table-view topHave" >
+				<li class="mui-table-view-cell mui-media" v-for="(item, index) in newFriendList" :key="index">
+					<a href="javascript:;" @click="openUserInfoPage(item)">
+						<img class="mui-media-object mui-pull-left" :src="item.headImgUrl">
+						<div class="mui-media-body">
+							<span v-text="item.name"></span>
+							<p class='mui-ellipsis'>对方请求添加你为朋友</p>
+							<span v-if="!item.added" @click.stop="agreeAdd(item)" class="mui-btn mui-btn-primary mui-pull-right" style="margin-top: -39px;">同意</span>
+							<span v-if="item.added" class="mui-btn mui-pull-right" style="margin-top: -39px;border: none;">已添加</span>
+						</div>
+					</a>
+				</li>
+			</ul>	
+			<p class="nullData" v-if="!nullData" style="text-align: center;margin-top: 40px;">没有任何数据~</p>
+		</div>
+	</body>
+		<script src="js/mui.min.js"></script>
+		<script src="js/vue.min.js"></script>
+		<script type="text/javascript">
+			var Vm = new Vue({
+				el: "#app",
+				data: {
+					loginID: '',
+					newFriendList:{},
+					status: '同意',
+					nullData: true
+				},
+				mounted: function(){
+					this.$nextTick(function(){
+						var _this = this;
+						mui.plusReady(function(){
+							_this.InitPage();
+						})
+					})
+				},
+				methods: {
+					InitPage: function(){
+						mui.init();
+						//获取main页面传过来的当前登陆ID
+						var sData = plus.webview.currentWebview();
+						this.loginID = sData.loginId;
+						//请求消息数据
+						var _this = this;
+						mui.ajax({
+							url: 'http://118.24.34.244:8080/test1/GetFriendApplyById?id=' + _this.loginID,
+							type: 'GET',
+							beforeSend: function(){
+								plus.nativeUI.showWaiting();
+							},
+							complete: function(){
+								plus.nativeUI.closeWaiting();
+							},
+							success: function(res){
+								if(res == '[]'){ _this.nullData = false };
+								res = JSON.parse(res);
+								for( var i =0; i < res.length; i++){
+				            		res[i].headImgUrl = imgUrl + res[i].headImgUrl;
+				            	}
+								_this.newFriendList = res;
+							},
+							error: function(xhr,type,errorThrown){
+								mui.toast("数据请求失败,请检查网络！");
+							}
+						})
+					},
+					//同意按钮
+					agreeAdd: function(item){
+						var _this = this;
+						mui.ajax({
+							url: 'http://118.24.34.244:8080/test1/UpdateFriendApply?applyerId=' + item.id + '&userId=' + _this.loginID + '&statue=' + _this.status,
+							type: 'GET',
+							beforeSend: function(){
+								plus.nativeUI.showWaiting();
+							},
+							complete: function(){
+								plus.nativeUI.closeWaiting();
+							},
+							success: function(res){
+								console.log(res);
+								if(res == 'true' && _this.status == '同意'){
+									if(item.added != 'undefined'){
+										_this.$set(item, 'added', true);
+									};
+									mui.toast('已添加为好友');
+								}else if(res == 'true' && _this.status == '拒绝'){
+									mui.toast('已拒绝！');
+								}else {
+									mui.toast('添加失败！');
+								}
+							},
+							error: function(xhr,type,errorThrown){
+								mui.toast("数据请求失败,请检查网络！");
+							}
+						})						
+					},
+					//打开用户详情页面
+					openUserInfoPage: function(item){
+						var _this = this;
+						mui.openWindow({
+							url: 'user-info.html',
+							id: 'user-info.html',
+							extras: {
+								user: item,
+								loginID: _this.loginID,
+								flag: 2
+							}
+						})
+					}
+				}
+			})
+			
+		</script>
+</html>

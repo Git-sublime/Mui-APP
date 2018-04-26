@@ -370,9 +370,9 @@
 					var sData = plus.webview.currentWebview();
 					document.getElementById("chatName").innerHTML = sData.chatObj.name;
 					var realSenderId = sData.loginId;
-					var realReceiverId = sData.chatObj.id;
+					var realGroupId = sData.chatObj.id;
 					console.log(realSenderId);
-					console.log(realReceiverId);
+					console.log(realGroupId);
 //					document.getElementById("head-img").src = sData.chatObj.headImg;
 					//end======================
 					plus.webview.currentWebview().setStyle({
@@ -459,7 +459,7 @@
 					//	toRobot(msg.content);
 						
 						//发送消息到后台
-						sendMessage(realSenderId, realReceiverId, msg.content);
+						sendMessage(realSenderId, realGroupId, msg.content);
 					};
 					
 					
@@ -482,9 +482,9 @@
 					};
 					
 					//发送消息到后台
-					function sendMessage(senderId, receiverId, content){
+					function sendMessage(senderId, groupId, content){
 						mui.ajax({
-				            url      : 'http://118.24.34.244:8080/test1/sendMsgServlet?senderId='+senderId+'&receiverId='+receiverId+'&content='+content,
+				            url      : 'http://118.24.34.244:8080/test1/SendGroupMsg?senderId='+senderId+'&groupId='+groupId+'&content='+content,
 				            type     : 'GET',
 				            contentType: "application/x-www-form-urlencoded; charset=utf-8",
 				            success  : function(res){
@@ -500,14 +500,14 @@
 					var messageNum = 0;
 					
 					//查询接收消息总数，进入聊天页面时会调用一次
-					function getMessageNum(senderId, receiverId){
+					function getMessageNum(groupId){
 						mui.ajax({
-				            url      : 'http://118.24.34.244:8080/test1/GetMessageNum?senderId='+senderId+'&receiverId='+receiverId,
+				            url      : 'http://118.24.34.244:8080/test1/GetGroupMessageNum?groupId='+groupId,
 				            type     : 'GET',
 				            contentType: "application/x-www-form-urlencoded; charset=utf-8",
 				            success  : function(res){
 				            	messageNum = res;
-				            	getNewMsg(realReceiverId,realSenderId,messageNum);
+				            	getNewMsg(realGroupId, messageNum);
 				            },
 				            error    : function(xhr,type,errorThrown){
 				                console.log(errorThrown);
@@ -515,21 +515,27 @@
 				        });
 					}
 					//查询接收消息总数
-					getMessageNum(realReceiverId,realSenderId);
+					getMessageNum(realGroupId);
 									
 					
 					//获取新消息
-					function getNewMsg(senderId, receiverId ,CurMessageNum){
-						console.log("当前消息数："+CurMessageNum);
+					function getNewMsg(groupId, CurMessageNum){
+						
 						mui.ajax({
-				            url      : 'http://118.24.34.244:8080/test1/GetNewMsg?senderId='+senderId+'&receiverId='+receiverId+'&CurMessageNum='+messageNum,
+				            url      : 'http://118.24.34.244:8080/test1/GetGroupNewMsg?groupId=' + groupId + '&CurMessageNum='+messageNum,
 				            type     : 'GET',
 				            contentType: "application/x-www-form-urlencoded; charset=utf-8",
 				            success  : function(res){
 				            	console.log(res);
 				            	var list = JSON.parse(res);
+				            	console.log("新消息数："+list.length);
 				            	messageNum = Number(messageNum) + Number(list.length);
 				            	for(var i in list){
+				            		//自己的消息不显示
+				            		if(list[i].senderId == realSenderId){
+				            			continue;
+				            		}
+				            		
 				            		record.push({
 										sender: 'zs',
 										type: 'text',
@@ -539,7 +545,7 @@
 				            	}
 				            	//获取新消息后 递归再次获取新消息
 				            	setTimeout(function(){
-				            		getNewMsg(senderId,receiverId,messageNum);
+				            		getNewMsg(groupId, messageNum);
 				            	},1000);
 				            	
 				            },

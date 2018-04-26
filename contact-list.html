@@ -36,12 +36,6 @@
 				<div class="mui-indexed-list-inner">
 					<div class="mui-indexed-list-empty-alert">没有数据</div>
 					<ul class="mui-table-view">
-						<!--<li v-for="item in contacts" class="mui-table-view-cell mui-indexed-list-item mui-media" @click="gotoChat(item)">
-							<img class="mui-media-object mui-pull-left" :src="item.headImg" style="height: 35px;max-width: 35px;line-height: 35px;">
-							<div class="mui-media-body">
-								<span v-text="item.name" style="font-size: 16px; padding-top: 7px;display: block;"></span>
-							</div>
-						</li>-->
 						<li v-for="item in contacts2" class="mui-table-view-cell mui-indexed-list-item mui-media" @click="gotoChat(item)">
 							<img class="mui-media-object mui-pull-left" :src="item.headImgUrl" style="height: 35px;max-width: 35px;line-height: 35px;">
 							<div class="mui-media-body">
@@ -77,7 +71,8 @@
 							dataTags: "HuiFeiDeYu"						
 						}
 					],
-					contacts2: {}
+					contacts2: {},
+					imgUrl: ''
 				},
 				mounted: function(){
 					this.$nextTick(function(){
@@ -100,6 +95,8 @@
 					},
 					dataInit: function(){
 						var _this = this;
+						//遮罩层
+						var mask = mui.createMask();
 						mui.init();
 						mui.ready(function() {
 							var header = document.querySelector('header.mui-bar');
@@ -113,17 +110,28 @@
 						var _this = this;
 				        mui.plusReady(function(){
 				        	var sData = plus.webview.currentWebview();
-				        	_this.loginID = sData.loginId;
+				        	_this.loginID = sData.loginID;
 				        	mui.ajax({
-				            	url      : 'http://182.254.233.89:8080/test1/selectFriendsByIdServlet?id=' + sData.loginId,
+				            	url      : 'http://118.24.34.244:8080/test1/selectFriendsByIdServlet?id=' + _this.loginID,
 				            	type     : 'GET',
 				            	contentType: "application/x-www-form-urlencoded; charset=utf-8",
+				            	beforeSend: function(){
+//				            		mask.show();
+				            		plus.nativeUI.showWaiting();
+				            	},
+				            	complete: function(){
+				            		plus.nativeUI.closeWaiting();
+//				            		mask.close();
+				            	},
 				            	success  : function(res){
 				            		res = JSON.parse(res);
+				            		for( var i =0; i < res.length; i++){
+				            			res[i].headImgUrl = imgUrl + res[i].headImgUrl;
+				            		}
 				            		_this.contacts2 = res;
 				            	},
 				            	error    : function(xhr,type,errorThrown){
-				               		console.log(JSON.stringify(type));
+				               		mui.toast("Error! 链接服务器失败");
 				            	}
 				        	}); 
 				        })  
