@@ -52,7 +52,8 @@
 	},
 	"group-list.html": {
 		"refer": [
-			"chat.html"
+			"chat.html",
+			"group-chat.html"
 		]
 	},
 	"add-friend.html": {
