@@ -77,5 +77,10 @@
 		"refer": [
 			"user-info.html"
 		]
+	},
+	"group-chat.html": {
+		"refer": [
+			"group-info.html"
+		]
 	}
 }

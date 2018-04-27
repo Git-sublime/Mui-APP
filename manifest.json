@@ -342,6 +342,13 @@
 					"user-info.html"
 				],
 				"priority": 0
+			},
+			"group-chat.html": {
+				"resources": [],
+				"refer": [
+					"group-info.html"
+				],
+				"priority": 0
 			}
 		},
 		"idle": {
