@@ -86,12 +86,12 @@
 		if (regInfo.password.length < 3) {
 			return callback('密码最短需要 6 个字符');
 		}
-//		if (!checkEmail(regInfo.email)) {
-//			return callback('邮箱地址不合法');
-//		}
+		if (regInfo.name == '') {
+			return callback('请填写姓名');
+		}
 		//注册接口
 		mui.ajax({
-			url: 'http://118.24.34.244:8080/test1/InsertUser?id='+regInfo.account+'&name=未填&sex=保密&age=0&password='+regInfo.password,
+			url: 'http://118.24.34.244:8080/test1/InsertUser?id='+regInfo.account+'&name=' + regInfo.name + '&sex=保密&age=0&password='+regInfo.password,
 			type: 'GET',
 			contentType: "application/x-www-form-urlencoded; charset=utf-8",
 			beforeSend: function(){
