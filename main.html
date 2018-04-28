@@ -75,14 +75,14 @@
 	</head>
 	
 	<body>
-	<div id="app">
+	<div id="app" @click="showAddFriend = false">
 		<header class="mui-bar mui-bar-nav">
 			<!--<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>-->
 			<div v-show="showHeadImage" class="mui-pull-left m-headImg" style="width: 34px; height: 34px;margin-top: 5px;border-radius: 50%;overflow: hidden;">
 				<img id="headImage" src="images/cc-head.png" style="width: 34px; height: 34px;">
 			</div>
 			<h1 class="mui-title" id="title">微定位</h1>
-			<span @click="addFriend()" id="addBtn" class="mui-icon mui-icon-plusempty mui-pull-right" style="font-size: 34px;padding-top: 6px;"></span>
+			<span @click.stop="addFriend()" id="addBtn" class="mui-icon mui-icon-plusempty mui-pull-right" style="font-size: 34px;padding-top: 6px;"></span>
 			<ul v-show="showAddFriend" class="mui-table-view mui-pull-right m-add-Dialog">
     			<li @click="openAddFriendPage()" class="mui-table-view-cell">
     				<span class="mui-icon-extra mui-icon-extra-addpeople"></span>

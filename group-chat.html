@@ -8,6 +8,7 @@
 		<link href="css/mui.min.css" rel="stylesheet" />
 		<link rel="stylesheet" type="text/css" href="css/app.css" />
 		<link href="css/mui.imageviewer.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="css/icons-extra.css"/>
 		<style>
 			html,
 			body {
@@ -298,6 +299,7 @@
 		<header class="mui-bar mui-bar-nav" style="display: block;">
 			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
 			<h1 class="mui-title" id="chatName"></h1>
+			<span id="openGroupMemberInfo" class="mui-icon-extra mui-icon-extra-peoples mui-pull-right" style="font-size: 22px;padding-top: 12px; font-weight: bold;color: #757474;"></span>
 		</header>
 		<pre id='h'></pre>
 		<script id='msg-template' type="text/template">
@@ -374,6 +376,18 @@
 					console.log(realSenderId);
 					console.log(realGroupId);
 //					document.getElementById("head-img").src = sData.chatObj.headImg;
+					//打开群详细信息
+					doc.getElementById("openGroupMemberInfo").addEventListener('tap', function(){
+						mui.openWindow({
+							url: 'group-info.html',
+							id: 'group-info.html',
+							extras: {
+								groupID : realGroupId,
+								groupName: sData.chatObj.name,
+								loginID: sData.loginId
+							}
+						})
+					});
 					//end======================
 					plus.webview.currentWebview().setStyle({
 						softinputMode: "adjustResize"
