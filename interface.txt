@@ -146,3 +146,19 @@ groupId：String，
 实例:
 http://118.24.34.244:8080/test1/SelectUsersByGroupId?groupId=group001
 
+接口18：删除好友
+请求参数：
+senderId：String，
+receiverId：String
+返回参数：isOk：bool
+实例:
+http://118.24.34.244:8080/test1/DeleteFriend?senderId=lulu&receiverId=lcj
+
+接口19：退群
+请求参数：
+userId：String，
+groupId：String
+返回参数：isOk：bool
+实例:
+http://118.24.34.244:8080/test1/QuitGroup?userId=lulu&groupId=g11
+
