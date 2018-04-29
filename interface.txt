@@ -1,3 +1,7 @@
+服务器：118.24.34.244
+用户名：Administrator
+密码：  Lcj3.1415926
+
 后台代码：
 git@github.com:changjiuxiong/test1.git
 
