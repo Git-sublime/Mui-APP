@@ -128,10 +128,12 @@
 				<ul v-if="logined" class="mui-table-view topHave" >
 					<li class="mui-table-view-cell mui-media" v-for="(item, index) in chatList" :key="index" @click="gotoChat(item)">
 						<a href="javascript:;">
-							<img class="mui-media-object mui-pull-left" :src="item.headImg">
+							<img class="mui-media-object mui-pull-left" :src="item.headImgUrl">
 							<div class="mui-media-body">
 								<span v-text="item.name"></span>
-								<p class='mui-ellipsis'><span v-if="item.chatUser">{{item.chatUser}}：</span>{{item.lastAsk}}</p>
+								<span v-if="item.lastRecordDay == nowDay" v-text="item.lastRecordTime" class="mui-pull-right" style="font-size: 14px;color: #8f8f94;"></span>
+								<span v-if="item.lastRecordDay != nowDay" v-text="item.lastRecordDay" class="mui-pull-right" style="font-size: 14px;color: #8f8f94;"></span>
+								<p class='mui-ellipsis'><span v-if="item.chatUser">last：</span>{{item.lastRecord}}</p>
 							</div>
 						</a>
 					</li>
@@ -142,6 +144,8 @@
 							<img class="mui-media-object mui-pull-left" :src="robot.headImg">
 							<div class="mui-media-body">
 								<span v-text="robot.name"></span>
+								<span v-if="robot.dataDay == nowDay" v-text="robot.dataTime" class="mui-pull-right" style="font-size: 14px;color: #8f8f94;"></span>
+								<span v-if="robot.dataDay != nowDay" v-text="robot.dataDay" class="mui-pull-right" style="font-size: 14px;color: #8f8f94;"></span>
 								<p class='mui-ellipsis'><span v-if="robot.chatUser">{{robot.chatUser}}：</span>{{robot.lastAsk}}</p>
 							</div>
 						</a>
@@ -203,7 +207,6 @@
 		<script src="js/app.js"></script>
 		<script src="js/vue.min.js"></script>
 		<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=1GFjszMOqSYX1Ny1Y5NPWE4G2wGB0Ghx"></script>
-<!--	<script type="text/javascript" src="js/jquery-3.3.1.min.js"></script>-->
 		<script>
 			mui.init();
 //			Vue===
@@ -219,34 +222,13 @@
 						chatUser: "",
 						headImg: "images/logo.png",
 						lastAsk: "Hi,我是MUI小管家",
-						lastAskDate: "22:19:53"
+						dataTime: "12:31",
+						dataDay: '04-29'
 					},
-					chatList:[
-						{
-							name: "1舍203",
-							chatUser: "露露",
-							headImg: "images/cbd.jpg",
-							lastAsk: "儿豁",
-							lastAskDate: "22:19:53",
-							receiverId: '888'
-						},
-						{
-							name: "金大爷",
-							chatUser: "",
-							headImg: "images/shuijiao.jpg",
-							lastAsk: "快来吃火锅啊，速推",
-							lastAskDate: "22:19:53",
-							receiverId: '777'
-						},
-						{
-							name: "傻屌",
-							chatUser: "",
-							headImg: "images/muwu.jpg",
-							lastAsk: "马上回寝室来了，您们在寝室没得啊，真的啊的减肥了",
-							lastAskDate: "22:19:53",
-							receiverId: '666'
-						}
-					]
+					chatList: [],
+					recordList: [],
+					lastChatList: [],
+					nowDay: ''
 				},
 				mounted: function(){
 					this.$nextTick(function(){
@@ -307,15 +289,13 @@
 					},
 					//初始化
 					InitMain: function(){
-			//			MUI init
 						var _this = this;
 						(function($, doc) {
 							//百度地图调用===============================start
 							//设置地图宽高
 							var winWidth = document.documentElement.clientWidth;
 							var winHeight = document.documentElement.clientHeight;
-							document.getElementById('map').style.height = (winHeight - 97)+'px';	
-													
+							document.getElementById('map').style.height = (winHeight - 97)+'px';
 							// 百度地图API功能
 							var map = new BMap.Map("map"); // 创建Map实例
 							map.centerAndZoom(new BMap.Point(116.404, 39.915), 11); // 初始化地图,设置中心点坐标和地图级别
@@ -327,69 +307,7 @@
 								]
 							}));
 							//map.setCurrentCity("北京"); // 设置地图显示的城市 此项是必须设置的
-							map.enableScrollWheelZoom(true); //开启鼠标滚轮缩放
-//
-//							//jquery ajax请求，获取该轨迹的数据
-//							$.ajax({
-//								url: "http://118.24.34.244:8080/test1/GetPathByIdServlet",
-//								type: "GET",
-//								dataType:"json",
-//								data: "id=abc",
-//								success: function(obj) {
-//									//画轨迹
-//									drawPath(obj);
-//								}
-//							});
-//
-//							function drawPath(obj){
-//								var pointList=new Array();
-//								var startPoint = new BMap.Point(obj[0].longitude,obj[0].latitude);
-//								var endPoint = new BMap.Point(obj[obj.length-1].longitude,obj[obj.length-1].latitude);
-//								var startMark =new BMap.Marker(startPoint);
-//								var endMark =new BMap.Marker(endPoint);
-//								map.addOverlay(startMark);
-//								map.addOverlay(endMark);
-//								
-//								var labelStart = new BMap.Label("起点", {position : startPoint,offset: new BMap.Size(-12, -50) });
-//								var labelEnd = new BMap.Label("终点", {position : endPoint,offset: new BMap.Size(-12, -50) });
-//
-//								/*labelStart.setStyle({
-//									color: "red",
-//									fontSize: "12px",
-//									height: "20px",
-//									lineHeight: "20px",
-//									fontFamily: "微软雅黑"
-//								});
-//								*/
-//								map.addOverlay(labelStart);
-//								map.addOverlay(labelEnd);
-//								
-//								for(var i=0;i<obj.length;i++){
-//									var p=new BMap.Point(obj[i].longitude,obj[i].latitude);
-//									pointList.push(p);
-//								}
-//
-//								var polyline = new BMap.Polyline(pointList, {strokeColor:"blue", strokeWeight:2, strokeOpacity:0.8}); 
-//								map.centerAndZoom(startPoint, 8);
-//								map.addOverlay(polyline);
-//																
-//							};
-//								//定位当前位置
-//								var geolocation = new BMap.Geolocation();
-//								// 开启SDK辅助定位
-//								geolocation.enableSDKLocation();
-//								geolocation.getCurrentPosition(function(r){
-//									if(this.getStatus() == BMAP_STATUS_SUCCESS){
-//										var mk = new BMap.Marker(r.point);
-//										map.addOverlay(mk);
-//										map.panTo(r.point);
-//			//							alert('您的位置：'+r.point.lng+','+r.point.lat);
-//									}
-//									else {
-//										alert('failed'+this.getStatus());
-//									}        
-//								});							
-
+							map.enableScrollWheelZoom(true); //开启鼠标滚轮缩放					
 							//jquery ajax请求，获取该轨迹的数据
 							$.ajax({
 								url: "http://118.24.34.244:8080/test1/GetPathByIdServlet",
@@ -414,14 +332,6 @@
 								var labelStart = new BMap.Label("起点", {position : startPoint,offset: new BMap.Size(-12, -50) });
 								var labelEnd = new BMap.Label("终点", {position : endPoint,offset: new BMap.Size(-12, -50) });
 
-								/*labelStart.setStyle({
-									color: "red",
-									fontSize: "12px",
-									height: "20px",
-									lineHeight: "20px",
-									fontFamily: "微软雅黑"
-								});
-								*/
 								map.addOverlay(labelStart);
 								map.addOverlay(labelEnd);
 								
@@ -452,11 +362,22 @@
 								
 							};
 							//调用百度地图==============================================end
-			//				$.init();
 							var settings = app.getSettings();
 							var account = doc.getElementById('account');
 							var headImg = doc.getElementById("head-img");
 							var headImg2 = doc.getElementById("headImage");
+							//获取当前时间
+							var nowDate = new Date();
+							var monthStr = (nowDate.getMonth() + 1).toString();
+							if(monthStr.length == 1){
+								monthStr = '0' + monthStr;
+							};
+							var dateStr = (nowDate.getDate()).toString();
+							if(dateStr.length == 1){
+								dateStr = '0' + monthStr;
+							};
+							_this.nowDay = monthStr + '-' + dateStr;
+								
 							//登陆成功跳转首页==============================================
 							window.addEventListener('show', function() {
 								var state = app.getState();
@@ -479,6 +400,58 @@
 									doc.getElementById("login").style.display = 'block';
 									_this.logined = false;
 								}
+								//获取当前时间
+								//请求最近聊天列表
+								mui.ajax({
+									url: 'http://118.24.34.244:8080/test1/SelectChatListById?id=' + _this.loginID,
+									type: 'GET',
+									timeout: 700,
+									beforeSend: function(){
+										plus.nativeUI.showWaiting();
+									},
+									complete: function(){
+										plus.nativeUI.closeWaiting();
+									},
+									success: function(res){
+										res = JSON.parse(res);
+										for(var i =0; i<res.length; i++){
+											res[i].headImgUrl = imgUrl + res[i].headImgUrl; 										
+										}
+										_this.chatList = res;
+										_this.chatList.reverse();
+										var k = 0;
+										for(var j = 0; j<_this.chatList.length; j++){
+											var tempID = _this.chatList[j].id;
+											mui.ajax({
+												url: 'http://118.24.34.244:8080/test1/GetLastMsgByTwoId?id1=' + _this.loginID + '&id2=' + tempID,
+												type: 'GET',
+												timeout: 700,
+												async: false,
+												beforeSend: function(){
+													plus.nativeUI.showWaiting();
+												},
+												success: function(data){
+													data = JSON.parse(data);
+													_this.$set(_this.chatList[k], 'record', data);
+													_this.$set(_this.chatList[k], 'lastRecord', data[0].content);
+													_this.$set(_this.chatList[k], 'lastRecordDay', (data[0].dateTime).slice(5,10));
+													_this.$set(_this.chatList[k], 'lastRecordTime', (data[0].dateTime).slice(11,16));
+//													console.log(JSON.stringify(data));
+													k++;
+												},
+												error: function(xhr, type, errorThrown){
+													mui.toast('服务器响应失败');
+												},
+												complete: function(){
+													plus.nativeUI.closeWaiting();
+												}
+											})	
+										}
+									},
+									error: function(xhr, type, errorThrown){
+										mui.toast('服务器响应失败');
+									}
+								});
 							}, false);
 
 							//底部导航按钮点击事件==================================
@@ -501,7 +474,7 @@
 									"id": 'setting',
 									"url": 'setting.html'
 								});
-
+								
 								//打开新页面===========================================strat
 								//登陆
 								var loginPage = doc.getElementById("login");
