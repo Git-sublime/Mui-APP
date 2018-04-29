@@ -166,11 +166,19 @@ groupId：String
 实例:
 http://118.24.34.244:8080/test1/QuitGroup?userId=lulu&groupId=g11
 
+<<<<<<< HEAD
 接口20：根据2个用户id，查询最后一条聊天记录
 请求参数：
 id1：String，
 id2：String，
 返回参数：chartRecord 类型：chartRecord
+=======
+接口20：根据2个用户id，查询最后20条聊天记录
+请求参数：
+id1：String，
+id2：String，
+返回参数：chartRecordList；类型：数组（数组元素类型：chartRecord）
+>>>>>>> 55851ae66af8df2af7cb3961fb4d9c9656d7b874
 实例:
 http://118.24.34.244:8080/test1/GetLastMsgByTwoId?id1=lcj&id2=lzs
 
