@@ -40,7 +40,10 @@
 		"Payment": {},
 		"Contacts": {},
 		"Statistic": {},
-		"Messaging": {},"Webview":{},"NativeUI":{},"Navigator":{}
+		"Messaging": {},"Webview":{},"NativeUI":{},"Navigator":{},
+        "Orientation": {
+			"description": "方向传感器"
+		}
 	},
 	"plus": {
 		"splashscreen": {
@@ -49,7 +52,7 @@
 		},
 		"runmode": "liberate",/*应用的首次启动运行模式，可取liberate或normal，liberate模式在第一次启动时将解压应用资源（Android平台File API才可正常访问_www目录）*/
 		"signature": "Sk9JTiBVUyBtYWlsdG86aHIyMDEzQGRjbG91ZC5pbw==",/*可选，保留给应用签名，暂不使用*/
-		"distribute": {
+		"distribute": {"plugins":{"maps":{"baidu":{"appkey_ios":"q","appkey_android":"1GFjszMOqSYX1Ny1Y5NPWE4G2wGB0Ghx","appkey":"","description":""}}},
 			"apple": {
 				"appid": "",/*iOS应用标识，苹果开发网站申请的appid，如io.dcloud.HelloH5*/
 				"mobileprovision": "",/*iOS应用打包配置文件*/
