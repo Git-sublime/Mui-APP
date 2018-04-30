@@ -82,5 +82,10 @@
 		"refer": [
 			"group-info.html"
 		]
+	},
+	"group-info.html": {
+		"refer": [
+			"user-info.html"
+		]
 	}
 }
