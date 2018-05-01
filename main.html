@@ -7,76 +7,52 @@
 		<title></title>
 		<link href="css/mui.min.css" rel="stylesheet" />
 		<link rel="stylesheet" href="css/icons-extra.css" />
-		<link rel="stylesheet" href="css/font-awesome.css" />
-		<link rel="stylesheet" href="http://api.map.baidu.com/library/SearchInfoWindow/1.5/src/SearchInfoWindow_min.css" />
-
-		<script src="js/mui.min.js"></script>
-		<script src="js/app.js"></script>
-		<script src="js/vue.min.js"></script>
-		<script type="text/javascript" src="js/jquery-3.3.1.min.js"></script>
-
-		<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=1GFjszMOqSYX1Ny1Y5NPWE4G2wGB0Ghx"></script>
-		<script type="text/javascript" src="http://api.map.baidu.com/library/SearchInfoWindow/1.5/src/SearchInfoWindow_min.js"></script>
-
 		<style>
 			.mui-btn {
 				padding: 10px;
 			}
-			
-			.title {
+			.title{
 				margin: 20px 15px 10px;
 				color: #6d6d72;
 				font-size: 15px;
 			}
-			
 			.oa-contact-cell.mui-table .mui-table-cell {
 				padding: 11px 0;
 				vertical-align: middle;
 			}
-			
 			.oa-contact-cell {
 				position: relative;
 				margin: -11px 0;
 			}
-			
 			.oa-contact-avatar {
 				width: 75px;
 			}
-			
 			.oa-contact-avatar img {
 				border-radius: 50%;
 			}
-			
 			.oa-contact-content {
 				width: 100%;
 			}
-			
 			.oa-contact-name {
 				margin-right: 20px;
 			}
-			
-			.oa-contact-name,
-			oa-contact-position {
+			.oa-contact-name, oa-contact-position {
 				float: left;
 			}
-			
-			.hide {
+			.hide{
 				display: none;
 			}
-			
-			.null {
+			.null{
 				height: 45px;
 			}
-			
-			#allmap {
-				height: 500px;
-				/*width: 100%;
+			#map {
+				width: 100%;
+				/*height: 100%;*/
 				overflow: hidden;
 				margin: 0;
-				font-family: "微软雅黑";*/
+				font-family: "微软雅黑";
 			}
-			
-			.m-add-Dialog {
+			.m-add-Dialog{
 				width: 130px;
 				/*height: 150px;*/
 				background: #f7f7f7;
@@ -88,8 +64,7 @@
 				border-bottom-left-radius: 5px;
 				color: #444;
 			}
-			
-			.mui-icon-extra {
+			.mui-icon-extra{
 				font-size: 22px;
 				position: absolute;
 				top: 10px;
@@ -98,312 +73,294 @@
 			}
 		</style>
 	</head>
-
+	
 	<body>
-		<div id="app" @click="showAddFriend = false">
-			<header class="mui-bar mui-bar-nav">
-				<!--<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>-->
-				<div v-show="showHeadImage" class="mui-pull-left m-headImg" style="width: 34px; height: 34px;margin-top: 5px;border-radius: 50%;overflow: hidden;">
-					<img id="headImage" src="images/cc-head.png" style="width: 34px; height: 34px;">
-				</div>
-				<h1 class="mui-title" id="title">微定位</h1>
-				<span @click.stop="addFriend()" id="addBtn" class="mui-icon mui-icon-plusempty mui-pull-right" style="font-size: 34px;padding-top: 6px;"></span>
-				<ul v-show="showAddFriend" class="mui-table-view mui-pull-right m-add-Dialog">
-					<li @click="openAddFriendPage()" class="mui-table-view-cell">
-						<span class="mui-icon-extra mui-icon-extra-addpeople"></span>
-						<span style="margin-left: 35px;">添加朋友</span>
-					</li>
-					<li @click="openCreatGroupPage()" class="mui-table-view-cell">
-						<span class="mui-icon-extra mui-icon-extra-peoples"></span>
-						<span style="margin-left: 35px;">创建群聊</span>
+	<div id="app" @click="showAddFriend = false">
+		<header class="mui-bar mui-bar-nav">
+			<!--<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>-->
+			<div v-show="showHeadImage" class="mui-pull-left m-headImg" style="width: 34px; height: 34px;margin-top: 5px;border-radius: 50%;overflow: hidden;">
+				<img id="headImage" src="images/cc-head.png" style="width: 34px; height: 34px;">
+			</div>
+			<h1 class="mui-title" id="title">微定位</h1>
+			<span @click.stop="addFriend()" id="addBtn" class="mui-icon mui-icon-plusempty mui-pull-right" style="font-size: 34px;padding-top: 6px;"></span>
+			<ul v-show="showAddFriend" class="mui-table-view mui-pull-right m-add-Dialog">
+    			<li @click="openAddFriendPage()" class="mui-table-view-cell">
+    				<span class="mui-icon-extra mui-icon-extra-addpeople"></span>
+    				<span style="margin-left: 35px;">添加朋友</span>
+    			</li>
+    			<li @click="openCreatGroupPage()" class="mui-table-view-cell">
+    				<span class="mui-icon-extra mui-icon-extra-peoples"></span>
+    				<span style="margin-left: 35px;">创建群聊</span>
+    			</li>
+			</ul>
+		</header>
+		
+		<!--            底部导航                       -->
+		<nav class="mui-bar mui-bar-tab">
+			<a class="mui-tab-item mui-active" href="#tabbar" id="loctionBtn">
+				<span class="mui-icon mui-icon-location"></span>
+				<span class="mui-tab-label">定位</span>
+			</a>
+			<a class="mui-tab-item" href="#tabbar-with-contact" id="chatBtn">
+				<span class="mui-icon mui-icon-chatbubble"></span>
+				<span class="mui-tab-label">聊天</span>
+			</a>
+			<a class="mui-tab-item" href="#tabbar-with-map" id="meBtn">
+				<span class="mui-icon mui-icon-person"></span>
+				<span class="mui-tab-label">我的</span>
+			</a>
+		</nav>
+		
+		<!-- 内容区  -->
+		<div class="mui-content">
+			<!--             首页                       -->
+			<div id="tabbar" class="mui-control-content mui-active">
+				<div id="map"></div>
+			</div>
+			
+			<!--           聊天界面                     -->
+			<div id="tabbar-with-contact" class="mui-control-content">
+				<ul class="mui-table-view topHave">
+					<li class="mui-table-view-cell" id="newFriend">新的朋友</li>
+					<li class="mui-table-view-cell" id="group">群聊</li>
+					<li class="mui-table-view-cell" id="contact">通讯录</li>
+				</ul>
+				<ul v-if="logined" class="mui-table-view topHave" >
+					<li class="mui-table-view-cell mui-media" v-for="(item, index) in chatList" :key="index" @click="gotoChat(item)">
+						<a href="javascript:;">
+							<img class="mui-media-object mui-pull-left" :src="item.headImgUrl">
+							<div class="mui-media-body">
+								<span v-text="item.name"></span>
+								<span v-if="item.lastRecordDay == nowDay" v-text="item.lastRecordTime" class="mui-pull-right" style="font-size: 14px;color: #8f8f94;"></span>
+								<span v-if="item.lastRecordDay != nowDay" v-text="item.lastRecordDay" class="mui-pull-right" style="font-size: 14px;color: #8f8f94;"></span>
+								<p class='mui-ellipsis'><span v-if="item.chatUser">last：</span>{{item.lastRecord}}</p>
+							</div>
+						</a>
 					</li>
 				</ul>
-			</header>
-
-			<!--            底部导航                       -->
-			<nav class="mui-bar mui-bar-tab">
-				<a class="mui-tab-item mui-active" href="#tabbar" id="loctionBtn">
-					<span class="mui-icon mui-icon-location"></span>
-					<span class="mui-tab-label">定位</span>
-				</a>
-				<a class="mui-tab-item" href="#tabbar-with-contact" id="chatBtn">
-					<span class="mui-icon mui-icon-chatbubble"></span>
-					<span class="mui-tab-label">聊天</span>
-				</a>
-				<a class="mui-tab-item" href="#tabbar-with-map" id="meBtn">
-					<span class="mui-icon mui-icon-person"></span>
-					<span class="mui-tab-label">我的</span>
-				</a>
-			</nav>
-
-			<!-- 内容区  -->
-			<div class="mui-content">
-				<!--             首页                       -->
-				<div id="tabbar" class="mui-control-content mui-active">
-					<div id="allmap"></div>
-				</div>
-
-				<!--           聊天界面                     -->
-				<div id="tabbar-with-contact" class="mui-control-content">
-					<ul class="mui-table-view topHave">
-						<li class="mui-table-view-cell" id="newFriend">新的朋友</li>
-						<li class="mui-table-view-cell" id="group">群聊</li>
-						<li class="mui-table-view-cell" id="contact">通讯录</li>
-					</ul>
-					<ul v-if="logined" class="mui-table-view topHave">
-						<li class="mui-table-view-cell mui-media" v-for="(item, index) in chatList" :key="index" @click="gotoChat(item)">
-							<a href="javascript:;">
-								<img class="mui-media-object mui-pull-left" :src="item.headImgUrl">
-								<div class="mui-media-body">
-									<span v-text="item.name"></span>
-									<span v-if="item.lastRecordDay == nowDay" v-text="item.lastRecordTime" class="mui-pull-right" style="font-size: 14px;color: #8f8f94;"></span>
-									<span v-if="item.lastRecordDay != nowDay" v-text="item.lastRecordDay" class="mui-pull-right" style="font-size: 14px;color: #8f8f94;"></span>
-									<p class='mui-ellipsis'><span v-if="item.chatUser">last：</span>{{item.lastRecord}}</p>
-								</div>
-							</a>
-						</li>
-					</ul>
-					<ul v-if="!logined" class="mui-table-view topHave">
-						<li class="mui-table-view-cell mui-media" @click="gotoChat(robot)">
-							<a href="javascript:;">
-								<img class="mui-media-object mui-pull-left" :src="robot.headImg">
-								<div class="mui-media-body">
-									<span v-text="robot.name"></span>
-									<span v-if="robot.dataDay == nowDay" v-text="robot.dataTime" class="mui-pull-right" style="font-size: 14px;color: #8f8f94;"></span>
-									<span v-if="robot.dataDay != nowDay" v-text="robot.dataDay" class="mui-pull-right" style="font-size: 14px;color: #8f8f94;"></span>
-									<p class='mui-ellipsis'><span v-if="robot.chatUser">{{robot.chatUser}}：</span>{{robot.lastAsk}}</p>
-								</div>
-							</a>
-						</li>
-					</ul>
-				</div>
-
-				<!--           我的页面                            -->
-				<div id="tabbar-with-map" class="mui-control-content">
-					<!--头像-->
-					<ul class="mui-table-view topHave">
-						<li class="mui-table-view-cell mui-media" id="userInfo2">
-							<a href="#account">
-								<img id="head-img" class="mui-media-object mui-pull-left header-img" src="images/cc-head.png" style="height: 60px;max-width: 60px;line-height: 60px;">
-								<div class="mui-media-body" style="padding-top: 8px;">
-									<span id="account">天涯游客</span>
-									<p class='mui-ellipsis' style="margin-top: 2px;">人活着就是应该奋斗，奋斗本身就是一种幸福。</p>
-								</div>
-							</a>
-						</li>
-					</ul>
-
-					<ul class="mui-table-view topHave">
-						<li class="mui-table-view-cell" id="userInfo">
-							<a class="mui-navigate-right">
-								个人信息
-							</a>
-						</li>
-						<li class="mui-table-view-cell">
-							<a class="mui-navigate-right">
-								我的轨迹
-							</a>
-						</li>
-						<li class="mui-table-view-cell">
-							<a class="mui-navigate-right">
-								标记地址
-							</a>
-						</li>
-					</ul>
-					<ul class="mui-table-view" style="margin-top: 25px;">
-						<li class="mui-table-view-cell">
-							<a class="mui-navigate-right" id="setting">
-								设置
-							</a>
-						</li>
-					</ul>
-					<ul class="mui-table-view" style="margin-top: 25px;" id="login">
-						<li class="mui-table-view-cell">
-							<a style="text-align: center;color: #FF3B30;">
-								登录
-							</a>
-						</li>
-					</ul>
-				</div>
+				<ul v-if="!logined" class="mui-table-view topHave" >
+					<li class="mui-table-view-cell mui-media" @click="gotoChat(robot)">
+						<a href="javascript:;">
+							<img class="mui-media-object mui-pull-left" :src="robot.headImg">
+							<div class="mui-media-body">
+								<span v-text="robot.name"></span>
+								<span v-if="robot.dataDay == nowDay" v-text="robot.dataTime" class="mui-pull-right" style="font-size: 14px;color: #8f8f94;"></span>
+								<span v-if="robot.dataDay != nowDay" v-text="robot.dataDay" class="mui-pull-right" style="font-size: 14px;color: #8f8f94;"></span>
+								<p class='mui-ellipsis'><span v-if="robot.chatUser">{{robot.chatUser}}：</span>{{robot.lastAsk}}</p>
+							</div>
+						</a>
+					</li>
+				</ul>			
+			</div>
+			
+			<!--           我的页面                            -->
+			<div id="tabbar-with-map" class="mui-control-content">
+				<!--头像-->
+				<ul class="mui-table-view topHave">
+					<li class="mui-table-view-cell mui-media" id="userInfo2">
+						<a href="#account">
+							<img id="head-img" class="mui-media-object mui-pull-left header-img" src="images/cc-head.png" style="height: 60px;max-width: 60px;line-height: 60px;">
+							<div class="mui-media-body" style="padding-top: 8px;">
+								<span id="account">天涯游客</span>
+								<p class='mui-ellipsis' style="margin-top: 2px;">人活着就是应该奋斗，奋斗本身就是一种幸福。</p>
+							</div>
+						</a>
+					</li>
+				</ul>				
+				
+				<ul class="mui-table-view topHave">
+				<li class="mui-table-view-cell" id="userInfo">
+					<a class="mui-navigate-right">
+						个人信息
+					</a>
+				</li>
+				<li class="mui-table-view-cell">
+					<a class="mui-navigate-right">
+						我的轨迹
+					</a>
+				</li>
+				<li class="mui-table-view-cell">
+					<a class="mui-navigate-right">
+						标记地址
+					</a>
+				</li>
+			</ul>
+			<ul class="mui-table-view" style="margin-top: 25px;">
+				<li class="mui-table-view-cell">
+					<a class="mui-navigate-right" id="setting">
+						设置
+					</a>
+				</li>
+			</ul>
+			<ul class="mui-table-view" style="margin-top: 25px;" id="login">
+				<li class="mui-table-view-cell">
+					<a style="text-align: center;color: #FF3B30;">
+						登录
+					</a>
+				</li>
+			</ul>
 			</div>
 		</div>
-		<!--#app-->
-	</body>
-	<!--<script type="text/javascript" src="js/myNavi.js"></script>-->
-
-	<script>
-		mui.init();
-		//			Vue===
-		var vue = new Vue({
-			el: "#app",
-			data: {
-				loginID: '',
-				logined: false,
-				showHeadImage: true,
-				showAddFriend: false,
-				robot: {
-					name: 'MUI',
-					chatUser: "",
-					headImg: "images/logo.png",
-					lastAsk: "Hi,我是MUI小管家",
-					dataTime: "12:31",
-					dataDay: '04-29'
+	</div><!--#app-->
+	</body>	
+		<script src="js/mui.min.js"></script>
+		<script src="js/app.js"></script>
+		<script src="js/vue.min.js"></script>
+		<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=1GFjszMOqSYX1Ny1Y5NPWE4G2wGB0Ghx"></script>
+		<script>
+			mui.init();
+//			Vue===
+			var vue = new Vue({
+				el:"#app",
+				data:{
+					loginID: '',
+					logined: false,
+					showHeadImage: true,
+					showAddFriend: false,
+					robot:{
+						name: 'MUI',
+						chatUser: "",
+						headImg: "images/logo.png",
+						lastAsk: "Hi,我是MUI小管家",
+						dataTime: "12:31",
+						dataDay: '04-29'
+					},
+					chatList: [],
+					recordList: [],
+					lastChatList: [],
+					nowDay: ''
 				},
-				chatList: [],
-				recordList: [],
-				lastChatList: [],
-				nowDay: ''
-			},
-			mounted: function() {
-				this.$nextTick(function() {
-					this.InitMain();
-				})
-			},
-			methods: {
-				//聊天界面跳转函数
-				gotoChat: function(item) {
-					//						 console.log(JSON.stringify(item));
-					var _this = this;
-					mui.openWindow({
-						url: "chat.html",
-						id: "chat.html",
-						extras: {
-							chatObj: item,
-							loginId: _this.loginID
-						}
+				mounted: function(){
+					this.$nextTick(function(){
+						this.InitMain();
 					})
 				},
-				//右上角 加 按钮
-				addFriend: function() {
-					if(this.logined) {
-						this.showAddFriend = !this.showAddFriend;
-					} else {
-						mui.confirm('您还未登陆，是否前往登陆？', "提示", new Array('是', '否'), function(e) {
-							if(e.index == 0) {
-								mui.openWindow({
-									url: 'login.html',
-									id: 'login.html'
-								})
-							}
-						});
-					}
-				},
-				//打开添加朋友页面
-				openAddFriendPage: function() {
-					var _this = this;
-					mui.openWindow({
-						url: 'add-friend.html',
-						id: 'add-friend.html',
-						extras: {
-							loginID: _this.loginID
-						}
-					});
-					this.showAddFriend = false;
-				},
-				openCreatGroupPage: function() {
-					var _this = this;
-					mui.openWindow({
-						url: 'creat-group.html',
-						id: 'creat-group.html',
-						extras: {
-							loginID: _this.loginID
-						}
-					});
-					this.showAddFriend = false;
-				},
-				//初始化
-				InitMain: function() {
-					var _this = this;
-					(function($, doc) {
-						//百度地图调用===============================start
-						document.getElementById("allmap").style.height = document.documentElement.clientHeight - 100 + "px";
-
-						var map = new BMap.Map('allmap');
-						var MyPoi = new BMap.Point(104, 30);
-						map.centerAndZoom(MyPoi, 18);
-						map.enableScrollWheelZoom();
-						var marker = new BMap.Marker(MyPoi);
-						marker.getIcon().setImageUrl("img/point.png");
-						marker.getIcon().setSize(new BMap.Size(33, 33));
-						marker.getShadow().setSize(new BMap.Size(0, 0));
-						marker.disableMassClear();
-						map.addOverlay(marker); //在地图中添加marker
-						var geolocation = new BMap.Geolocation();
-
-						function moveToMyPoi() {
-							map.setZoom(18);
-							map.panTo(MyPoi);
-						};
-
-						geolocation.getCurrentPosition(function(r) {
-							if(this.getStatus() == BMAP_STATUS_SUCCESS) {
-								MyPoi = r.point;
-								marker.setPosition(MyPoi);
-								moveToMyPoi();
-							} else {
-								alert('failed' + this.getStatus());
-							}
-						}, {
-							enableHighAccuracy: true
-						});
-
-						//获取定位
-						function getMyPosition() {
-							geolocation.getCurrentPosition(function(r) {
-								if(this.getStatus() == BMAP_STATUS_SUCCESS) {
-									MyPoi = r.point;
-									marker.setPosition(MyPoi);
-									//	map.panTo(MyPoi);
-									//	alert('您的位置：' + r.point.lng + ',' + r.point.lat);
-
-									//定时再获取位置
-									setTimeout(function() {
-										getMyPosition();
-									}, 5000);
-								} else {
-									alert('failed' + this.getStatus());
+				methods:{
+					//聊天界面跳转函数
+					gotoChat: function(item){
+//						 console.log(JSON.stringify(item));
+						var _this = this;
+						 mui.openWindow({
+						 	url: "chat.html",
+						 	id: "chat.html",
+						 	extras: {
+						 		chatObj: item,
+						 		loginId: _this.loginID
+						 	}
+						 })
+					},
+					//右上角 加 按钮
+					addFriend: function(){
+						if (this.logined) {
+							this.showAddFriend = !this.showAddFriend;
+						}else{
+							mui.confirm('您还未登陆，是否前往登陆？',"提示",new Array('是','否'),function(e){
+								if(e.index == 0){
+									mui.openWindow({
+										url: 'login.html',
+										id: 'login.html'
+									})
 								}
-							}, {
-								enableHighAccuracy: true
-							})
-						};
-
-						getMyPosition();
-
-						function onPlusReady() {
-							plus.orientation.watchOrientation(function(o) {
-								//	console.log(o.alpha);
-								marker.setRotation(o.alpha);
-							}, function(e) {
-								alert("Orientation error: " + e.message);
-							}, {
-								frequency: 1
+							});							
+						}
+					},
+					//打开添加朋友页面
+					openAddFriendPage: function(){
+						var _this = this;
+						mui.openWindow({
+							url: 'add-friend.html',
+							id: 'add-friend.html',
+							extras: {
+								loginID : _this.loginID
+							}
+						});
+						this.showAddFriend = false;
+					},
+					openCreatGroupPage: function(){
+						var _this = this;
+						mui.openWindow({
+							url: 'creat-group.html',
+							id: 'creat-group.html',
+							extras: {
+								loginID: _this.loginID
+							}
+						});
+						this.showAddFriend = false;
+					},
+					//初始化
+					InitMain: function(){
+						var _this = this;
+						(function($, doc) {
+							//百度地图调用===============================start
+							//设置地图宽高
+							var winWidth = document.documentElement.clientWidth;
+							var winHeight = document.documentElement.clientHeight;
+							document.getElementById('map').style.height = (winHeight - 97)+'px';
+							// 百度地图API功能
+							var map = new BMap.Map("map"); // 创建Map实例
+							map.centerAndZoom(new BMap.Point(116.404, 39.915), 11); // 初始化地图,设置中心点坐标和地图级别
+							//添加地图类型控件
+							map.addControl(new BMap.MapTypeControl({
+								mapTypes: [
+									BMAP_NORMAL_MAP,
+									BMAP_HYBRID_MAP
+								]
+							}));
+							//map.setCurrentCity("北京"); // 设置地图显示的城市 此项是必须设置的
+							map.enableScrollWheelZoom(true); //开启鼠标滚轮缩放					
+							//jquery ajax请求，获取该轨迹的数据
+							$.ajax({
+								url: "http://118.24.34.244:8080/test1/GetPathByIdServlet",
+								type: "GET",
+								dataType:"json",
+								data: "id=abc",
+								success: function(obj) {
+									//画轨迹
+									drawPath(obj);
+								}
 							});
-						}
-						document.addEventListener("plusready", onPlusReady, false);
 
-						function SearchControl(posIndex, left, top) {
-							var position = [BMAP_ANCHOR_TOP_LEFT, BMAP_ANCHOR_TOP_RIGHT, BMAP_ANCHOR_BOTTOM_LEFT, BMAP_ANCHOR_BOTTOM_RIGHT];
-							this.defaultAnchor = position[posIndex];
-							this.defaultOffset = new BMap.Size(left, top);
-						}
-						SearchControl.prototype = new BMap.Control();
-						SearchControl.prototype.initialize = function(map) {
-							var div = document.createElement("div");
-							div.style.width = "80%";
-							div.innerHTML = "<input id='suggestId' type='search' class='mui-search' placeholder='请输入关键字'>";
-							map.getContainer().appendChild(div);
-							return div;
-						}
+							function drawPath(obj){
+								var pointList=new Array();
+								var startPoint = new BMap.Point(obj[0].longitude,obj[0].latitude);
+								var endPoint = new BMap.Point(obj[obj.length-1].longitude,obj[obj.length-1].latitude);
+								var startMark =new BMap.Marker(startPoint);
+								var endMark =new BMap.Marker(endPoint);
+								map.addOverlay(startMark);
+								map.addOverlay(endMark);
+								
+								var labelStart = new BMap.Label("起点", {position : startPoint,offset: new BMap.Size(-12, -50) });
+								var labelEnd = new BMap.Label("终点", {position : endPoint,offset: new BMap.Size(-12, -50) });
 
-						var searchCtrl = new SearchControl(0, 30, 10);
-						map.addControl(searchCtrl);
-						
+								map.addOverlay(labelStart);
+								map.addOverlay(labelEnd);
+								
+								for(var i=0;i<obj.length;i++){
+									var p=new BMap.Point(obj[i].longitude,obj[i].latitude);
+									pointList.push(p);
+								}
+
 								var polyline = new BMap.Polyline(pointList, {strokeColor:"blue", strokeWeight:2, strokeOpacity:0.8}); 
 								map.centerAndZoom(startPoint, 8);
-								map.addOverlay(polyline);							
+								map.addOverlay(polyline);
 								
-							
+								//定位当前位置
+								var geolocation = new BMap.Geolocation();
+								// 开启SDK辅助定位
+								geolocation.enableSDKLocation();
+								geolocation.getCurrentPosition(function(r){
+									if(this.getStatus() == BMAP_STATUS_SUCCESS){
+										var mk = new BMap.Marker(r.point);
+										map.addOverlay(mk);
+										map.panTo(r.point);
+			//							alert('您的位置：'+r.point.lng+','+r.point.lat);
+									}
+									else {
+										alert('failed'+this.getStatus());
+									}        
+								});
+								
+							};
 							//调用百度地图==============================================end
 							var settings = app.getSettings();
 							var account = doc.getElementById('account');
@@ -421,93 +378,92 @@
 							};
 							_this.nowDay = monthStr + '-' + dateStr;
 								
-							//登陆成功跳转首页==============================================
-							window.addEventListener('show', function() {
-								var state = app.getState();
-//								console.log(JSON.stringify(state));
-								account.innerText = state.account.nickname || state.account;
-								//第三方使用qq或微信头像，否则使用默认头像
-								if(state.account.figureurl_qq_2 || state.account.headimgurl){
-									headImg.src = state.account.figureurl_qq_2 || state.account.headimgurl;
-									headImg2.src = state.account.figureurl_qq_2 || state.account.headimgurl;
-								} else {
-									headImg.src = headImg.src;
-									headImg2.src = headImg2.src;
-								}
-								//用户已登陆，隐藏登陆按钮
-								if(state.account){
-									doc.getElementById("login").style.display = 'none';
-									_this.logined = true;
-									_this.loginID = state.account;
-								}else{
-									doc.getElementById("login").style.display = 'block';
-									_this.logined = false;
-								}
-								//获取当前时间
-								//请求最近聊天列表
-								mui.ajax({
-									url: 'http://118.24.34.244:8080/test1/SelectChatListById?id=' + _this.loginID,
-									type: 'GET',
-									timeout: 700,
-									beforeSend: function(){
-										plus.nativeUI.showWaiting();
-									},
-									complete: function(){
-										plus.nativeUI.closeWaiting();
-									},
-									success: function(res){
-										res = JSON.parse(res);
-										for(var i =0; i<res.length; i++){
-											res[i].headImgUrl = imgUrl + res[i].headImgUrl; 										
-										}
-										_this.chatList = res;
-										_this.chatList.reverse();
-										var k = 0;
-										for(var j = 0; j<_this.chatList.length; j++){
-											var tempID = _this.chatList[j].id;
-											mui.ajax({
-												url: 'http://118.24.34.244:8080/test1/GetLastMsgByTwoId?id1=' + _this.loginID + '&id2=' + tempID,
-												type: 'GET',
-												timeout: 700,
-												async: false,
-												beforeSend: function(){
-													plus.nativeUI.showWaiting();
-												},
-												success: function(data){
-													data = JSON.parse(data);
-													_this.$set(_this.chatList[k], 'record', data);
-													_this.$set(_this.chatList[k], 'lastRecord', data[0].content);
-													_this.$set(_this.chatList[k], 'lastRecordDay', (data[0].dateTime).slice(5,10));
-													_this.$set(_this.chatList[k], 'lastRecordTime', (data[0].dateTime).slice(11,16));
-//													console.log(JSON.stringify(data));
-													k++;
-												},
-												error: function(xhr, type, errorThrown){
-													mui.toast('服务器响应失败');
-												},
-												complete: function(){
-													plus.nativeUI.closeWaiting();
-												}
-											})	
-										}
-									},
-									error: function(xhr, type, errorThrown){
-										mui.toast('服务器响应失败');
-									}
-								});
-							}, false);
-
-							//底部导航按钮点击事件==================================
-							mui(".mui-bar-tab").on('tap','.mui-tab-item',function(){
-								var thisId = this.getAttribute("id");
-								switch(thisId){
-									case "meBtn": _this.showHeadImage = false;break;
-									case "loctionBtn" : _this.showHeadImage = true;break;
-									case "chatBtn" : _this.showHeadImage = true;break;
-								}
-							})
 							//手机文件加载完毕
 							$.plusReady(function() {
+								//登陆成功跳转首页==============================================
+								window.addEventListener('show', function() {
+									var state = app.getState();
+	//								console.log(JSON.stringify(state));
+									account.innerText = state.account.nickname || state.account;
+									//第三方使用qq或微信头像，否则使用默认头像
+									if(state.account.figureurl_qq_2 || state.account.headimgurl){
+										headImg.src = state.account.figureurl_qq_2 || state.account.headimgurl;
+										headImg2.src = state.account.figureurl_qq_2 || state.account.headimgurl;
+									} else {
+										headImg.src = headImg.src;
+										headImg2.src = headImg2.src;
+									}
+									//用户已登陆，隐藏登陆按钮
+									if(state.account){
+										doc.getElementById("login").style.display = 'none';
+										_this.logined = true;
+										_this.loginID = state.account;
+									}else{
+										doc.getElementById("login").style.display = 'block';
+										_this.logined = false;
+									}
+									//获取当前时间
+									//请求最近聊天列表
+									mui.ajax({
+										url: 'http://118.24.34.244:8080/test1/SelectChatListById?id=' + _this.loginID,
+										type: 'GET',
+										timeout: 700,
+										beforeSend: function(){
+											plus.nativeUI.showWaiting();
+										},
+										complete: function(){
+											plus.nativeUI.closeWaiting();
+										},
+										success: function(res){
+											res = JSON.parse(res);
+											for(var i =0; i<res.length; i++){
+												res[i].headImgUrl = imgUrl + res[i].headImgUrl; 										
+											}
+											_this.chatList = res;
+											_this.chatList.reverse();
+											var k = 0;
+											for(var j = 0; j<_this.chatList.length; j++){
+												var tempID = _this.chatList[j].id;
+												mui.ajax({
+													url: 'http://118.24.34.244:8080/test1/GetLastMsgByTwoId?id1=' + _this.loginID + '&id2=' + tempID,
+													type: 'GET',
+													timeout: 700,
+													async: false,
+													beforeSend: function(){
+														plus.nativeUI.showWaiting();
+													},
+													success: function(data){
+														data = JSON.parse(data);
+														_this.$set(_this.chatList[k], 'record', data);
+														_this.$set(_this.chatList[k], 'lastRecord', data[0].content);
+														_this.$set(_this.chatList[k], 'lastRecordDay', (data[0].dateTime).slice(5,10));
+														_this.$set(_this.chatList[k], 'lastRecordTime', (data[0].dateTime).slice(11,16));
+	//													console.log(JSON.stringify(data));
+														k++;
+													},
+													error: function(xhr, type, errorThrown){
+														mui.toast('服务器响应失败');
+													},
+													complete: function(){
+														plus.nativeUI.closeWaiting();
+													}
+												})	
+											}
+										},
+										error: function(xhr, type, errorThrown){
+											mui.toast('服务器响应失败');
+										}
+									});
+								}, false);
+								//底部导航按钮点击事件==================================
+								mui(".mui-bar-tab").on('tap','.mui-tab-item',function(){
+									var thisId = this.getAttribute("id");
+									switch(thisId){
+										case "meBtn": _this.showHeadImage = false;break;
+										case "loctionBtn" : _this.showHeadImage = true;break;
+										case "chatBtn" : _this.showHeadImage = true;break;
+									}
+								})								
 								//预加载设置界面-login.html
 								var settingPage = $.preload({
 									"id": 'login',
@@ -571,296 +527,98 @@
 												})
 											}
 										});
-						function abc() {
-							alert("abc")
-						};
-
-						function MyLoControl(posIndex, left, top) {
-							var position = [BMAP_ANCHOR_TOP_LEFT, BMAP_ANCHOR_TOP_RIGHT, BMAP_ANCHOR_BOTTOM_LEFT, BMAP_ANCHOR_BOTTOM_RIGHT];
-							this.defaultAnchor = position[posIndex];
-							this.defaultOffset = new BMap.Size(left, top);
-						}
-						MyLoControl.prototype = new BMap.Control();
-						MyLoControl.prototype.initialize = function(map) {
-							var div = document.createElement("div");
-							div.style.color = "#0861E7";
-							div.style.padding = "0 4px 0 4px";
-							div.style.border = "1px solid black";
-							div.style.opacity = "0.5";
-
-							div.innerHTML = "<i onclick='alert()' class='fa fa-location-arrow fa-2x'></i>";
-
-							map.getContainer().appendChild(div);
-							return div;
-						}
-						var myLoControl = new MyLoControl(2, 10, 50);
-						map.addControl(myLoControl);
-
-						//调用百度地图==============================================end
-						var settings = app.getSettings();
-						var account = doc.getElementById('account');
-						var headImg = doc.getElementById("head-img");
-						var headImg2 = doc.getElementById("headImage");
-						//获取当前时间
-						var nowDate = new Date();
-						var monthStr = (nowDate.getMonth() + 1).toString();
-						if(monthStr.length == 1) {
-							monthStr = '0' + monthStr;
-						};
-						var dateStr = (nowDate.getDate()).toString();
-						if(dateStr.length == 1) {
-							dateStr = '0' + monthStr;
-						};
-						_this.nowDay = monthStr + '-' + dateStr;
-
-						//登陆成功跳转首页==============================================
-						window.addEventListener('show', function() {
-							var state = app.getState();
-							//								console.log(JSON.stringify(state));
-							account.innerText = state.account.nickname || state.account;
-							//第三方使用qq或微信头像，否则使用默认头像
-							if(state.account.figureurl_qq_2 || state.account.headimgurl) {
-								headImg.src = state.account.figureurl_qq_2 || state.account.headimgurl;
-								headImg2.src = state.account.figureurl_qq_2 || state.account.headimgurl;
-							} else {
-								headImg.src = headImg.src;
-								headImg2.src = headImg2.src;
-							}
-							//用户已登陆，隐藏登陆按钮
-							if(state.account) {
-								doc.getElementById("login").style.display = 'none';
-								_this.logined = true;
-								_this.loginID = state.account;
-							} else {
-								doc.getElementById("login").style.display = 'block';
-								_this.logined = false;
-							}
-							//获取当前时间
-							//请求最近聊天列表
-							mui.ajax({
-								url: 'http://118.24.34.244:8080/test1/SelectChatListById?id=' + _this.loginID,
-								type: 'GET',
-								timeout: 700,
-								beforeSend: function() {
-									plus.nativeUI.showWaiting();
-								},
-								complete: function() {
-									plus.nativeUI.closeWaiting();
-								},
-								success: function(res) {
-									res = JSON.parse(res);
-									for(var i = 0; i < res.length; i++) {
-										res[i].headImgUrl = imgUrl + res[i].headImgUrl;
 									}
-									_this.chatList = res;
-									_this.chatList.reverse();
-									var k = 0;
-									for(var j = 0; j < _this.chatList.length; j++) {
-										var tempID = _this.chatList[j].id;
-										mui.ajax({
-											url: 'http://118.24.34.244:8080/test1/GetLastMsgByTwoId?id1=' + _this.loginID + '&id2=' + tempID,
-											type: 'GET',
-											timeout: 700,
-											async: false,
-											beforeSend: function() {
-												plus.nativeUI.showWaiting();
-											},
-											success: function(data) {
-												data = JSON.parse(data);
-												_this.$set(_this.chatList[k], 'record', data);
-												_this.$set(_this.chatList[k], 'lastRecord', data[0].content);
-												_this.$set(_this.chatList[k], 'lastRecordDay', (data[0].dateTime).slice(5, 10));
-												_this.$set(_this.chatList[k], 'lastRecordTime', (data[0].dateTime).slice(11, 16));
-												//													console.log(JSON.stringify(data));
-												k++;
-											},
-											error: function(xhr, type, errorThrown) {
-												mui.toast('服务器响应失败');
-											},
-											complete: function() {
-												plus.nativeUI.closeWaiting();
+								});
+								//通讯录
+								var contactBtn = doc.getElementById("contact");
+								contactBtn.addEventListener('tap', function(){
+									if(_this.logined){
+										$.openWindow({
+											id: "contact-list.html",
+											url: "contact-list.html",
+											extras: {
+												loginID : _this.loginID
 											}
 										})
-									}
-								},
-								error: function(xhr, type, errorThrown) {
-									mui.toast('服务器响应失败');
-								}
-							});
-						}, false);
-
-						//底部导航按钮点击事件==================================
-						mui(".mui-bar-tab").on('tap', '.mui-tab-item', function() {
-							var thisId = this.getAttribute("id");
-							switch(thisId) {
-								case "meBtn":
-									_this.showHeadImage = false;
-									break;
-								case "loctionBtn":
-									_this.showHeadImage = true;
-									break;
-								case "chatBtn":
-									_this.showHeadImage = true;
-									break;
-							}
-						})
-						//手机文件加载完毕
-						$.plusReady(function() {
-							//预加载设置界面-login.html
-							var settingPage = $.preload({
-								"id": 'login',
-								"url": 'login.html'
-							});
-							var settingPage = $.preload({
-								"id": 'setting',
-								"url": 'setting.html'
-							});
-
-							//打开新页面===========================================strat
-							//登陆
-							var loginPage = doc.getElementById("login");
-							loginPage.addEventListener("tap", function() {
-								$.openWindow({
-									url: 'login.html',
-									id: 'login.html'
-								});
-							});
-							//新的朋友
-							var newFriend = doc.getElementById("newFriend");
-							newFriend.addEventListener('tap', function() {
-								if(_this.logined) {
-									$.openWindow({
-										id: "newFriend.html",
-										url: "newFriend.html",
-										extras: {
-											loginId: _this.loginID
-										}
-									})
-								} else {
-									mui.confirm('您还未登陆，是否前往登陆？', "提示", new Array('是', '否'), function(e) {
-										if(e.index == 0) {
-											//												mui.toast('是');
-											mui.openWindow({
-												url: 'login.html',
-												id: 'login.html'
-											})
-										}
-									});
-								}
-							});
-							//群聊
-							var groupBtn = doc.getElementById("group");
-							groupBtn.addEventListener('tap', function() {
-								if(_this.logined) {
-									$.openWindow({
-										id: "group-list.html",
-										url: "group-list.html",
-										extras: {
-											loginID: _this.loginID
-										}
-									})
-								} else {
-									mui.confirm('您还未登陆，是否前往登陆？', "提示", new Array('是', '否'), function(e) {
-										if(e.index == 0) {
-											//												mui.toast('是');
-											mui.openWindow({
-												url: 'login.html',
-												id: 'login.html'
-											})
-										}
-									});
-								}
-							});
-							//通讯录
-							var contactBtn = doc.getElementById("contact");
-							contactBtn.addEventListener('tap', function() {
-								if(_this.logined) {
-									$.openWindow({
-										id: "contact-list.html",
-										url: "contact-list.html",
-										extras: {
-											loginID: _this.loginID
-										}
-									})
-								} else {
-									mui.confirm('您还未登陆，是否前往登陆？', "提示", new Array('是', '否'), function(e) {
-										if(e.index == 0) {
-											//												mui.toast('是');
-											mui.openWindow({
-												url: 'login.html',
-												id: 'login.html'
-											})
-										}
-									});
-								}
-							});
-							//个人信息
-							var userInfo = doc.getElementById("userInfo");
-							var userInfo2 = doc.getElementById("userInfo2");
-							userInfo.addEventListener('tap', function() {
-								$.openWindow({
-									id: "userInfo.html",
-									url: "userInfo.html",
-									extras: {
-										exInfo: {
-											exAccount: account.innerText,
-											exHeadImg: headImg.src
-										}
-									}
-								})
-							});
-							//头像账号处点击进去个人信息界面
-							userInfo2.addEventListener('tap', function() {
-								$.openWindow({
-									id: "userInfo.html",
-									url: "userInfo.html",
-									extras: {
-										exInfo: {
-											exAccount: account.innerText,
-											exHeadImg: headImg.src
-										}
-									}
-								})
-							});
-							//打开新页面===========================================end
-							//设置
-							var settingButton = doc.getElementById('setting');
-							//settingButton.style.display = settings.autoLogin ? 'block' : 'none';
-							settingButton.addEventListener('tap', function(event) {
-								$.openWindow({
-									id: 'setting',
-									show: {
-										aniShow: 'pop-in'
-									},
-									styles: {
-										popGesture: 'hide'
-									},
-									waiting: {
-										autoShow: false
+									}else{
+										mui.confirm('您还未登陆，是否前往登陆？',"提示",new Array('是','否'),function(e){
+											if(e.index == 0){
+//												mui.toast('是');
+												mui.openWindow({
+													url: 'login.html',
+													id: 'login.html'
+												})
+											}
+										});
 									}
 								});
+								//个人信息
+								var userInfo = doc.getElementById("userInfo");
+								var userInfo2 = doc.getElementById("userInfo2");
+								userInfo.addEventListener('tap', function(){
+									$.openWindow({
+										id: "userInfo.html",
+										url: "userInfo.html",
+										extras: {
+											exInfo: {
+												exAccount: account.innerText,
+												exHeadImg: headImg.src
+											}
+										}
+									})
+								});
+								//头像账号处点击进去个人信息界面
+								userInfo2.addEventListener('tap', function(){
+									$.openWindow({
+										id: "userInfo.html",
+										url: "userInfo.html",
+										extras: {
+											exInfo: {
+												exAccount: account.innerText,
+												exHeadImg: headImg.src
+											}
+										}
+									})
+								});
+								//打开新页面===========================================end
+								//设置
+								var settingButton = doc.getElementById('setting');
+								//settingButton.style.display = settings.autoLogin ? 'block' : 'none';
+								settingButton.addEventListener('tap', function(event) {
+									$.openWindow({
+										id: 'setting',
+										show: {
+											aniShow: 'pop-in'
+										},
+										styles: {
+											popGesture: 'hide'
+										},
+										waiting: {
+											autoShow: false
+										}
+									});
+								});
+								//--
+								$.oldBack = mui.back;
+								var backButtonPress = 0;
+								$.back = function(event) {
+									backButtonPress++;
+									if (backButtonPress > 1) {
+										plus.runtime.quit();
+									} else {
+										plus.nativeUI.toast('再按一次退出应用');
+									}
+									setTimeout(function() {
+										backButtonPress = 0;
+									}, 1000);
+									return false;
+								};
 							});
-							//--
-							$.oldBack = mui.back;
-							var backButtonPress = 0;
-							$.back = function(event) {
-								backButtonPress++;
-								if(backButtonPress > 1) {
-									plus.runtime.quit();
-								} else {
-									plus.nativeUI.toast('再按一次退出应用');
-								}
-								setTimeout(function() {
-									backButtonPress = 0;
-								}, 1000);
-								return false;
-							};
-						});
-					}(mui, document));
+						}(mui, document));						
+					}
 				}
-			}
-		});
-		//			Vue===end============
-	</script>
+			});					
+//			Vue===end============
 
+		</script>
 </html>
