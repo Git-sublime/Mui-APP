@@ -44,7 +44,7 @@
 		console.log(document.documentElement.clientWidth + "," + document.documentElement.clientHeight);
 		// 百度地图API功能
 		var map = new BMap.Map('allmap');
-		var MyPoi = new BMap.Point(104, 30);
+		var MyPoi = new BMap.Point(103.958792, 30.781972);
 		map.centerAndZoom(MyPoi, 18);
 		map.enableScrollWheelZoom();
 
@@ -55,7 +55,6 @@
 		marker.disableMassClear();
 
 		//	marker.enableDragging(); //marker可拖拽
-
 		marker.addEventListener("dragend", function() {
 			MyPoi = marker.getPosition();
 		})
