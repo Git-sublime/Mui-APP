@@ -167,6 +167,7 @@ groupId：String
 http://118.24.34.244:8080/test1/QuitGroup?userId=lulu&groupId=g11
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 接口20：根据2个用户id，查询最后一条聊天记录
 请求参数：
 id1：String，
@@ -182,3 +183,5 @@ id2：String，
 实例:
 http://118.24.34.244:8080/test1/GetLastMsgByTwoId?id1=lcj&id2=lzs
 
+=======
+>>>>>>> parent of b67165e... 寰畾浣岮PP 0.3.3
