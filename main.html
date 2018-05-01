@@ -421,92 +421,93 @@
 							};
 							_this.nowDay = monthStr + '-' + dateStr;
 								
+							//登陆成功跳转首页==============================================
+							window.addEventListener('show', function() {
+								var state = app.getState();
+//								console.log(JSON.stringify(state));
+								account.innerText = state.account.nickname || state.account;
+								//第三方使用qq或微信头像，否则使用默认头像
+								if(state.account.figureurl_qq_2 || state.account.headimgurl){
+									headImg.src = state.account.figureurl_qq_2 || state.account.headimgurl;
+									headImg2.src = state.account.figureurl_qq_2 || state.account.headimgurl;
+								} else {
+									headImg.src = headImg.src;
+									headImg2.src = headImg2.src;
+								}
+								//用户已登陆，隐藏登陆按钮
+								if(state.account){
+									doc.getElementById("login").style.display = 'none';
+									_this.logined = true;
+									_this.loginID = state.account;
+								}else{
+									doc.getElementById("login").style.display = 'block';
+									_this.logined = false;
+								}
+								//获取当前时间
+								//请求最近聊天列表
+								mui.ajax({
+									url: 'http://118.24.34.244:8080/test1/SelectChatListById?id=' + _this.loginID,
+									type: 'GET',
+									timeout: 700,
+									beforeSend: function(){
+										plus.nativeUI.showWaiting();
+									},
+									complete: function(){
+										plus.nativeUI.closeWaiting();
+									},
+									success: function(res){
+										res = JSON.parse(res);
+										for(var i =0; i<res.length; i++){
+											res[i].headImgUrl = imgUrl + res[i].headImgUrl; 										
+										}
+										_this.chatList = res;
+										_this.chatList.reverse();
+										var k = 0;
+										for(var j = 0; j<_this.chatList.length; j++){
+											var tempID = _this.chatList[j].id;
+											mui.ajax({
+												url: 'http://118.24.34.244:8080/test1/GetLastMsgByTwoId?id1=' + _this.loginID + '&id2=' + tempID,
+												type: 'GET',
+												timeout: 700,
+												async: false,
+												beforeSend: function(){
+													plus.nativeUI.showWaiting();
+												},
+												success: function(data){
+													data = JSON.parse(data);
+													_this.$set(_this.chatList[k], 'record', data);
+													_this.$set(_this.chatList[k], 'lastRecord', data[0].content);
+													_this.$set(_this.chatList[k], 'lastRecordDay', (data[0].dateTime).slice(5,10));
+													_this.$set(_this.chatList[k], 'lastRecordTime', (data[0].dateTime).slice(11,16));
+//													console.log(JSON.stringify(data));
+													k++;
+												},
+												error: function(xhr, type, errorThrown){
+													mui.toast('服务器响应失败');
+												},
+												complete: function(){
+													plus.nativeUI.closeWaiting();
+												}
+											})	
+										}
+									},
+									error: function(xhr, type, errorThrown){
+										mui.toast('服务器响应失败');
+									}
+								});
+							}, false);
+
+							//底部导航按钮点击事件==================================
+							mui(".mui-bar-tab").on('tap','.mui-tab-item',function(){
+								var thisId = this.getAttribute("id");
+								switch(thisId){
+									case "meBtn": _this.showHeadImage = false;break;
+									case "loctionBtn" : _this.showHeadImage = true;break;
+									case "chatBtn" : _this.showHeadImage = true;break;
+								}
+							})
 							//手机文件加载完毕
 							$.plusReady(function() {
-								//登陆成功跳转首页==============================================
-								window.addEventListener('show', function() {
-									var state = app.getState();
-	//								console.log(JSON.stringify(state));
-									account.innerText = state.account.nickname || state.account;
-									//第三方使用qq或微信头像，否则使用默认头像
-									if(state.account.figureurl_qq_2 || state.account.headimgurl){
-										headImg.src = state.account.figureurl_qq_2 || state.account.headimgurl;
-										headImg2.src = state.account.figureurl_qq_2 || state.account.headimgurl;
-									} else {
-										headImg.src = headImg.src;
-										headImg2.src = headImg2.src;
-									}
-									//用户已登陆，隐藏登陆按钮
-									if(state.account){
-										doc.getElementById("login").style.display = 'none';
-										_this.logined = true;
-										_this.loginID = state.account;
-									}else{
-										doc.getElementById("login").style.display = 'block';
-										_this.logined = false;
-									}
-									//获取当前时间
-									//请求最近聊天列表
-									mui.ajax({
-										url: 'http://118.24.34.244:8080/test1/SelectChatListById?id=' + _this.loginID,
-										type: 'GET',
-										timeout: 700,
-										beforeSend: function(){
-											plus.nativeUI.showWaiting();
-										},
-										complete: function(){
-											plus.nativeUI.closeWaiting();
-										},
-										success: function(res){
-											res = JSON.parse(res);
-											for(var i =0; i<res.length; i++){
-												res[i].headImgUrl = imgUrl + res[i].headImgUrl; 										
-											}
-											_this.chatList = res;
-											_this.chatList.reverse();
-											var k = 0;
-											for(var j = 0; j<_this.chatList.length; j++){
-												var tempID = _this.chatList[j].id;
-												mui.ajax({
-													url: 'http://118.24.34.244:8080/test1/GetLastMsgByTwoId?id1=' + _this.loginID + '&id2=' + tempID,
-													type: 'GET',
-													timeout: 700,
-													async: false,
-													beforeSend: function(){
-														plus.nativeUI.showWaiting();
-													},
-													success: function(data){
-														data = JSON.parse(data);
-														_this.$set(_this.chatList[k], 'record', data);
-														_this.$set(_this.chatList[k], 'lastRecord', data[0].content);
-														_this.$set(_this.chatList[k], 'lastRecordDay', (data[0].dateTime).slice(5,10));
-														_this.$set(_this.chatList[k], 'lastRecordTime', (data[0].dateTime).slice(11,16));
-	//													console.log(JSON.stringify(data));
-														k++;
-													},
-													error: function(xhr, type, errorThrown){
-														mui.toast('服务器响应失败');
-													},
-													complete: function(){
-														plus.nativeUI.closeWaiting();
-													}
-												})	
-											}
-										},
-										error: function(xhr, type, errorThrown){
-											mui.toast('服务器响应失败');
-										}
-									});
-								}, false);
-								//底部导航按钮点击事件==================================
-								mui(".mui-bar-tab").on('tap','.mui-tab-item',function(){
-									var thisId = this.getAttribute("id");
-									switch(thisId){
-										case "meBtn": _this.showHeadImage = false;break;
-										case "loctionBtn" : _this.showHeadImage = true;break;
-										case "chatBtn" : _this.showHeadImage = true;break;
-									}
-								})								
 								//预加载设置界面-login.html
 								var settingPage = $.preload({
 									"id": 'login',

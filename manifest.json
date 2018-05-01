@@ -352,13 +352,6 @@
 					"group-info.html"
 				],
 				"priority": 0
-			},
-			"group-info.html": {
-				"resources": [],
-				"refer": [
-					"user-info.html"
-				],
-				"priority": 0
 			}
 		},
 		"idle": {
