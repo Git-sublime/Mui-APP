@@ -398,29 +398,12 @@
 
 						var searchCtrl = new SearchControl(0, 30, 10);
 						map.addControl(searchCtrl);
-
-<<<<<<< HEAD
+						
 								var polyline = new BMap.Polyline(pointList, {strokeColor:"blue", strokeWeight:2, strokeOpacity:0.8}); 
 								map.centerAndZoom(startPoint, 8);
-								map.addOverlay(polyline);
+								map.addOverlay(polyline);							
 								
-								//定位当前位置
-								var geolocation = new BMap.Geolocation();
-								// 开启SDK辅助定位
-								geolocation.enableSDKLocation();
-								geolocation.getCurrentPosition(function(r){
-									if(this.getStatus() == BMAP_STATUS_SUCCESS){
-										var mk = new BMap.Marker(r.point);
-										map.addOverlay(mk);
-										map.panTo(r.point);
-			//							alert('您的位置：'+r.point.lng+','+r.point.lat);
-									}
-									else {
-										alert('failed'+this.getStatus());
-									}        
-								});
-								
-							};
+							
 							//调用百度地图==============================================end
 							var settings = app.getSettings();
 							var account = doc.getElementById('account');
@@ -587,7 +570,6 @@
 												})
 											}
 										});
-=======
 						function abc() {
 							alert("abc")
 						};
@@ -668,7 +650,6 @@
 									res = JSON.parse(res);
 									for(var i = 0; i < res.length; i++) {
 										res[i].headImgUrl = imgUrl + res[i].headImgUrl;
->>>>>>> 23d0353e47a905f1d3054ece1905f2a00ecce512
 									}
 									_this.chatList = res;
 									_this.chatList.reverse();
