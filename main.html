@@ -336,7 +336,7 @@
 								marker.disableMassClear();
 								
 								function moveToMyPoi() {
-									map.setZoom(17);
+									map.setZoom(18);
 									map.panTo(MyPoi);
 								};
 								var geolocation = new BMap.Geolocation();
@@ -651,6 +651,7 @@
 
 								var cur_route = null;
 								var cur_step_index = 0;
+								var isNavi = 0;
 
 								//开始步行导航
 								function startNavi() {
@@ -661,11 +662,13 @@
 									cur_step_index = 0;
 									map.addControl(myStepControl);
 									$("#step").text(cur_route.getStep(0).getDescription(false));
+									isNavi = 1;
 									checkStep();
 								};
 
 								//结束步行导航
 								function endNavi() {
+									isNavi = 0;
 									map.removeControl(myEndNaviControl);
 									map.removeControl(myStepControl);
 									map.clearOverlays();
@@ -673,6 +676,9 @@
 
 								//跟踪关键点
 								function checkStep() {
+									if(isNavi == 0) {
+										return;
+									}
 									if(map.getDistance(MyPoi, cur_route.getStep(cur_step_index).getPosition()) < 10) {
 										cur_step_index++;
 										if(cur_step_index == cur_route.getNumSteps()) {
@@ -685,7 +691,116 @@
 									setTimeout(function() {
 										checkStep();
 									}, 5000);
-								}								
+								}
+								
+								//定义控件：开始记录轨迹
+								function StartPathControl(posIndex, left, top) {
+									var position = [BMAP_ANCHOR_TOP_LEFT, BMAP_ANCHOR_TOP_RIGHT, BMAP_ANCHOR_BOTTOM_LEFT, BMAP_ANCHOR_BOTTOM_RIGHT];
+									this.defaultAnchor = position[posIndex];
+									this.defaultOffset = new BMap.Size(left, top);
+								}
+								StartPathControl.prototype = new BMap.Control();
+								StartPathControl.prototype.initialize = function(map) {
+									var div = document.createElement("div");
+									$(div).html('<div class="mui-btn mui-btn-primary">开始记录轨迹</div>');
+									$(div).click(function() {
+										startPath();
+									});
+									map.getContainer().appendChild(div);
+									return div;
+								}
+						
+								var startPathControl = new StartPathControl(1, 10, 50);
+								map.addControl(startPathControl);
+						
+								var pathPointIndex = 0;
+								var pathId = null;
+								var isDrawPath = 0;
+						
+								function startPath() {
+									console.log(_this.loginID);
+									pathId = '';
+									pathPointIndex = 0;
+									mui.ajax({
+										url: 'http://118.24.34.244:8080/test1/AddPath?userId=' + _this.loginID,
+										type: 'GET',
+										beforeSend: function() {
+											plus.nativeUI.showWaiting();
+										},
+										complete: function() {
+											plus.nativeUI.closeWaiting();
+										},
+										success: function(res) {
+											map.removeControl(startPathControl);
+											map.addControl(endPathControl);
+						
+											pathId = res;
+											console.log(pathId);
+											isDrawPath = 1;
+											addPointToPath();
+										},
+										error: function(xhr, type, errorThrown) {
+											mui.toast("Error: 创建路径失败");
+										}
+									});
+								};
+						
+								function addPointToPath() {
+									if(isDrawPath == 0) {
+										return;
+									}
+									mui.ajax({
+										url: 'http://118.24.34.244:8080/test1/AddPointToPath?pathId=' + pathId + '&lng=' + MyPoi.lng + '&lat=' + MyPoi.lat + '&index=' + pathPointIndex,
+										type: 'GET',
+										beforeSend: function() {
+											plus.nativeUI.showWaiting();
+										},
+										complete: function() {
+											plus.nativeUI.closeWaiting();
+										},
+										success: function(res) {
+											console.log(res);
+											pathPointIndex++;
+						
+											setTimeout(function() {
+												addPointToPath();
+											}, 5000);
+										},
+										error: function(xhr, type, errorThrown) {
+											mui.toast("Error: 上传位置失败");
+										}
+									});
+								};
+						
+								//定义控件：结束记录轨迹
+								function EndPathControl(posIndex, left, top) {
+									var position = [BMAP_ANCHOR_TOP_LEFT, BMAP_ANCHOR_TOP_RIGHT, BMAP_ANCHOR_BOTTOM_LEFT, BMAP_ANCHOR_BOTTOM_RIGHT];
+									this.defaultAnchor = position[posIndex];
+									this.defaultOffset = new BMap.Size(left, top);
+								}
+								EndPathControl.prototype = new BMap.Control();
+								EndPathControl.prototype.initialize = function(map) {
+									var div = document.createElement("div");
+									$(div).css({
+										//	color: "#0861E7",
+										//	padding: "0 4px 0 4px",
+										//	border: "1px solid black",
+										//	opacity: "0.5"
+									});
+									$(div).html('<div class="mui-btn mui-btn-primary">结束记录轨迹</div>');
+									$(div).click(function() {
+										endPath();
+									});
+									map.getContainer().appendChild(div);
+									return div;
+								}
+								var endPathControl = new EndPathControl(1, 10, 50);
+								
+								function endPath(){
+									isDrawPath = 0;
+									map.removeControl(endPathControl);
+									map.addControl(startPathControl);
+								};
 								
 								//调用百度地图==============================================end
 								
