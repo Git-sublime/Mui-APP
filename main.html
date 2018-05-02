@@ -329,8 +329,10 @@
 								//添加一个marker对象
 								var marker = new BMap.Marker(MyPoi);
 								map.addOverlay(marker);                     // 将标注添加到地图中 
-								marker.getIcon().setImageUrl("images/me.png");
-								marker.getIcon().setSize(new BMap.Size(24, 24));
+								marker.getIcon().setImageUrl("img/point.png");
+								marker.getIcon().setSize(new BMap.Size(33, 33));
+								marker.getShadow().setSize(new BMap.Size(0, 0));
+								marker.disableMassClear();
 								
 								function moveToMyPoi() {
 									map.setZoom(17);
@@ -370,7 +372,7 @@
 								};
 								getMyPosition();	
 								
-								function onPlusReady() {
+								
 									plus.orientation.watchOrientation(function(o) {
 										marker.setRotation(o.alpha);
 									}, function(e) {
@@ -378,9 +380,7 @@
 									}, {
 										frequency: 1
 									});
-								}
-								document.addEventListener("plusready", onPlusReady, false);	
-								
+
 								function SearchControl(posIndex, left, top) {
 									var position = [BMAP_ANCHOR_TOP_LEFT, BMAP_ANCHOR_TOP_RIGHT, BMAP_ANCHOR_BOTTOM_LEFT, BMAP_ANCHOR_BOTTOM_RIGHT];
 									this.defaultAnchor = position[posIndex];
@@ -531,14 +531,15 @@
 								var myRouteControl = new MyRouteControl(3, 50, 50);
 								var myStepControl = new MyStepControl(3, 0, 100);
 								map.addControl(searchCtrl);
-								map.addControl(myLoControl);	
+								map.addControl(myLoControl);
+								
 								//地图点击和移动搜索框失去焦点
-//								map.addEventListener("click", function() {
-//									$("#suggestId").blur();
-//								});
-//								map.addEventListener("moving", function() {
-//									$("#suggestId").blur();
-//								});	
+								map.addEventListener("click", function() {
+									$("#suggestId").blur();
+								});
+								map.addEventListener("moving", function() {
+									$("#suggestId").blur();
+								});
 								
 								var ac = new BMap.Autocomplete( //建立一个自动完成的对象
 									{
@@ -571,6 +572,7 @@
 									$("#searchResultPanel").html("onconfirm<br />index = " + e.item.index + "<br />myValue = " + myValue);
 									setPlace();
 								});
+								
 //								设置位置中心,跳转到搜索的位置
 								function setPlace() {
 									$("#suggestId").blur();
@@ -611,6 +613,9 @@
 										map: map,
 										panel: "r-result",
 										autoViewport: true
+									},
+									onPolylinesSet: function(routes) {
+										routes[0].getPolyline().setStrokeStyle("solid");
 									}
 								});
 
