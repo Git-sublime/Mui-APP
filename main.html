@@ -7,6 +7,7 @@
 		<title></title>
 		<link href="css/mui.min.css" rel="stylesheet" />
 		<link rel="stylesheet" href="css/icons-extra.css" />
+		<link rel="stylesheet" type="text/css" href="http://at.alicdn.com/t/font_650380_7lwp594onnbwewmi.css"/>
 		<link rel="stylesheet" href="http://api.map.baidu.com/library/SearchInfoWindow/1.5/src/SearchInfoWindow_min.css" />
 		<style>
 			.mui-btn {
@@ -329,7 +330,7 @@
 								//添加一个marker对象
 								var marker = new BMap.Marker(MyPoi);
 								map.addOverlay(marker);                     // 将标注添加到地图中 
-								marker.getIcon().setImageUrl("img/point.png");
+								marker.getIcon().setImageUrl("images/direction.png");
 								marker.getIcon().setSize(new BMap.Size(33, 33));
 								marker.getShadow().setSize(new BMap.Size(0, 0));
 								marker.disableMassClear();
@@ -408,12 +409,9 @@
 								MyLoControl.prototype.initialize = function(map) {
 									var div = document.createElement("div");
 									$(div).css({
-										color: "#0861E7",
-										padding: "0 4px 0 4px",
-										border: "1px solid black",
-										opacity: "0.5"
+										color: "#aaa"
 									});
-									$(div).html("<i class='fa fa-location-arrow fa-2x'></i>");
+									$(div).html("<div style='display: inline-block;background: #fff;padding: 4px;padding-top: 8px;border-radius: 2px;box-shadow: 0 0 2px #ccc;'><i class='iconfont icon-msnui-foresight' style='font-size: 26px;'></i></div>");
 
 									$(div).click(function() {
 										moveToMyPoi();
@@ -581,7 +579,7 @@
 										dest = local.getResults().getPoi(0).point; //获取第一个智能搜索的结果
 										map.centerAndZoom(dest, 17);
 										m1 = new BMap.Marker(dest);
-										m1.getIcon().setImageUrl("http://api0.map.bdimg.com/images/marker_red_sprite.png");
+										m1.getIcon().setImageUrl("images/sprite.png");
 										map.addOverlay(m1); //添加标注
 										map.addControl(myRouteControl);
 										/*m1.addEventListener("click", function() {
