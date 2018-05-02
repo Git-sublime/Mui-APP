@@ -201,7 +201,8 @@
 					"fonts/mui-icons-extra.ttf",
 					"js/mui.min.js",
 					"js/app.js",
-					"sub1.html"
+					"sub1.html",
+					"images/direction.png"
 				],
 				"refer": [
 					"setting.html",

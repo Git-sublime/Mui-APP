@@ -13,14 +13,45 @@
 		}
 	</style>
 	<body>
+	  <div id="app">
 		<header class="mui-bar mui-bar-nav">
 			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
 			<h1 class="mui-title">个人信息</h1>
+			<a class="mui-btn mui-btn-link mui-pull-right mui-btn-blue" @click="edit = true" v-show="!edit" style="color: #007aff;">编辑</a>
+			<a class="mui-btn mui-btn-link mui-pull-right mui-btn-blue" v-show="edit" style="color: #007aff;">提交</a>
 		</header>
 		<div class="mui-page">
 			<div class="mui-page-content">
 				<div class="mui-scroll-wrapper">
 					<div class="mui-scroll" style="margin-top: 60px;">
+					  <!--不可编辑——个人信息-->
+					  <div class="nonEditable" v-show="!edit">
+						<ul class="mui-table-view">
+							<li class="mui-table-view-cell mui-indexed-list-item mui-media">
+								<img class="mui-media-object mui-pull-right" src="images/cbd.jpg" style="height: 60px;max-width: 60px;line-height: 60px;">
+								<div class="mui-media-body">
+									<span style="font-size: 16px; padding-top: 17px;display: block;">头像</span>
+								</div>
+							</li>				
+						</ul>
+						<ul class="mui-table-view topHave">
+							<li class="mui-table-view-cell">
+								<a>账号<span class="mui-pull-right">dfa</span></a>
+							</li>
+							<li class="mui-table-view-cell">
+								<a>姓名<span class="mui-pull-right">dfa</span></a>
+							</li>
+							<li class="mui-table-view-cell">
+								<a>性别<span class="mui-pull-right">dfa</span></a>
+							</li>
+							<li class="mui-table-view-cell">
+								<a>年龄<span class="mui-pull-right">dfa</span></a>
+							</li>
+						</ul>
+					  </div>
+					  
+					  <!--编辑个人信息-->
+					  <div class="editable" v-show="edit">
 						<ul class="mui-table-view">
 							<li class="mui-table-view-cell">
 								<a id="head" class="mui-navigate-right" style="line-height: 60px;">头像
@@ -53,17 +84,25 @@
 								<a>出生年份<span class="mui-pull-right">1996</span></a>
 							</li>
 						</ul>
+					  </div>
 					</div>
 				</div>
 			</div>
 		</div>
-		
+	 </div><!--#app-->
 	</body>
 		<script src="js/mui.min.js"></script>
 		<script src="js/mui.view.js"></script>
 		<script src="js/feedback.js"></script>
+		<script src="js/vue.min.js"></script>
 		<script type="text/javascript">
 		mui.init();
+		new Vue({
+			el: '#app',
+			data: {
+				edit: false
+			}
+		})
 		//更换头像
 		mui(".mui-table-view-cell").on("tap", "#head", function(e) {
 			if(mui.os.plus){
@@ -181,20 +220,6 @@
 		document.getElementById("head-img1").addEventListener('tap', function(e) {
 			e.stopPropagation();
 		});
-//		document.getElementById("welcome").addEventListener('tap', function(e) {
-//			//显示启动导航
-//			mui.openWindow({
-//				id: 'guide',
-//				url: 'guide.html',
-//				show: {
-//					aniShow: 'fade-in',
-//					duration: 300
-//				},
-//				waiting: {
-//					autoShow: false
-//				}
-//			});
-//		});
 
 		function initImgPreview() {
 			var imgs = document.querySelectorAll("img.mui-action-preview");

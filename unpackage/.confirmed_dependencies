@@ -2,12 +2,25 @@
 	"main.html": {
 		"refer": [
 			"login.html",
-			"setting.html"
+			"setting.html",
+			"contact-list.html",
+			"newFriend.html",
+			"group-list.html",
+			"userInfo.html"
+		],
+		"resources": [
+			"images/direction.png"
 		]
 	},
 	"login.html": {
 		"refer": [
-			"main.html"
+			"main.html",
+			"reg.html"
+		]
+	},
+	"contact-list.html": {
+		"refer": [
+			"chat.html"
 		]
 	}
 }
