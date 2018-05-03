@@ -12,6 +12,10 @@
 - 页面渲染： **Vue**
 - UI 框 架： **Mui**
 - 后    台： **Java**
+- 数 据 库： **MySQL**
 
 ## 文档查阅
-- Mui + HBuilder + H5 Plus <a herf="http://www.dcloud.io/">www.dcloud.io</a> [www.dcloud.io](http://www.dcloud.io/)
+- Mui + HBuilder + H5 Plus混合开发 [www.dcloud.io](http://www.dcloud.io/)
+- 页面组件 Mui组件 [dev.dcloud.net.cn/mui/ui/]（http://dev.dcloud.net.cn/mui/ui/）
+- 界面逻辑处理 + 数据渲染 [Vue](https://cn.vuejs.org/v2/guide/index.html)
+- 图标提供 （阿里巴巴矢量图标） [http://www.iconfont.cn](http://www.iconfont.cn/)
