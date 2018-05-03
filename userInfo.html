@@ -28,7 +28,7 @@
 					  <div class="nonEditable" v-show="!edit">
 						<ul class="mui-table-view">
 							<li class="mui-table-view-cell mui-indexed-list-item mui-media">
-								<img class="mui-media-object mui-pull-right" src="images/cbd.jpg" style="height: 60px;max-width: 60px;line-height: 60px;">
+								<img class="mui-media-object mui-pull-right" :src="user.headImgUrl" style="height: 60px;max-width: 60px;line-height: 60px;">
 								<div class="mui-media-body">
 									<span style="font-size: 16px; padding-top: 17px;display: block;">头像</span>
 								</div>
@@ -36,16 +36,19 @@
 						</ul>
 						<ul class="mui-table-view topHave">
 							<li class="mui-table-view-cell">
-								<a>账号<span class="mui-pull-right">dfa</span></a>
+								<a>账号<span class="mui-pull-right" v-text="user.id"></span></a>
 							</li>
 							<li class="mui-table-view-cell">
-								<a>姓名<span class="mui-pull-right">dfa</span></a>
+								<a>姓名<span class="mui-pull-right" v-text="user.name"></span></a>
 							</li>
 							<li class="mui-table-view-cell">
-								<a>性别<span class="mui-pull-right">dfa</span></a>
+								<a>LBS服务<span class="mui-pull-right" v-text="user.isShareLocation"></span></a>
 							</li>
 							<li class="mui-table-view-cell">
-								<a>年龄<span class="mui-pull-right">dfa</span></a>
+								<a>性别<span class="mui-pull-right" v-text="user.sex"></span></a>
+							</li>
+							<li class="mui-table-view-cell">
+								<a>年龄<span class="mui-pull-right" v-text="user.age"></span></a>
 							</li>
 						</ul>
 					  </div>
@@ -100,7 +103,24 @@
 		new Vue({
 			el: '#app',
 			data: {
+				loginID: '',
+				user: {},
 				edit: false
+			},
+			mounted: function(){
+				this.$nextTick(function(){
+					var _this = this;
+					mui.plusReady(function(){
+						_this.InitPage();
+					})
+				})
+			},
+			methods: {
+				InitPage: function(){
+					var sData = plus.webview.currentWebview();
+					this.loginID = sData.user.id;
+					this.user = sData.user;
+				}
 			}
 		})
 		//更换头像
@@ -264,12 +284,5 @@
 		if(mui.os.stream){
 			document.getElementById("check_update").display = "none";
 		}
-		
-		mui.plusReady(function(){
-			var sData = plus.webview.currentWebview();
-//			console.log(JSON.stringify(sData.exInfo));
-			document.getElementById("head-img1").src = sData.exInfo.exHeadImg;
-			document.getElementById("accountInfo").innerHTML = sData.exInfo.exAccount;
-		})
 		</script>
 </html>

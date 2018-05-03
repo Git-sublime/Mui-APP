@@ -100,7 +100,7 @@
 		<!--            底部导航                       -->
 		<nav class="mui-bar mui-bar-tab">
 			<a class="mui-tab-item mui-active" href="#tabbar" id="loctionBtn">
-				<i class="iconfont icon-location" style="display: block;font-size: 22px;margin-top: 3px;"></i>
+				<i class="iconfont icon-008dingwei" style="display: block;font-size: 23px;margin-top: 3px;"></i>
 				<span class="mui-tab-label" style="font-size: 14px;">定位</span>
 			</a>
 			<a class="mui-tab-item" href="#tabbar-with-contact" id="chatBtn">
@@ -220,6 +220,7 @@
 				el:"#app",
 				data:{
 					loginID: '',
+					user:{},
 					logined: false,
 					showHeadImage: true,
 					showAddFriend: false,
@@ -323,8 +324,8 @@
 								
 								var map = new BMap.Map("map"); // 创建Map实例
 								//等待状态
-								plus.nativeUI.showWaiting("正在获取当前定位");
-								var MyPoi = new BMap.Point();
+								plus.nativeUI.showWaiting();
+								var MyPoi = new BMap.Point(103.958792,30.781972);
 								map.centerAndZoom(MyPoi, 17); // 初始化地图,设置中心点坐标和地图级别
 								map.enableScrollWheelZoom();
 								//添加一个marker对象
@@ -357,7 +358,7 @@
 										if(this.getStatus() == BMAP_STATUS_SUCCESS) {
 											MyPoi = r.point;
 											marker.setPosition(MyPoi);
-											if(r.point.lng){plus.nativeUI.closeWaiting("正在获取当前定位");};
+											if(r.point.lng){plus.nativeUI.closeWaiting();};
 											//	map.panTo(MyPoi);
 											//	alert('您的位置：' + r.point.lng + ',' + r.point.lat);
 											//定时再获取位置
@@ -720,6 +721,7 @@
 								function startPath() {
 									pathId = '';
 									pathPointIndex = 0;
+									if(!_this.loginID){mui.toast("您还未登陆");return;}
 									mui.ajax({
 										url: 'http://118.24.34.244:8080/test1/AddPath?userId=' + _this.loginID,
 										type: 'GET',
@@ -780,12 +782,6 @@
 								EndPathControl.prototype = new BMap.Control();
 								EndPathControl.prototype.initialize = function(map) {
 									var div = document.createElement("div");
-									$(div).css({
-										//	color: "#0861E7",
-										//	padding: "0 4px 0 4px",
-										//	border: "1px solid black",
-										//	opacity: "0.5"
-									});
 									$(div).html("<div style='display: inline-block;background: #fff;padding: 4px;padding-top: 8px;border-radius: 2px;box-shadow: 0 0 2px #999;'><i class='iconfont icon-zuji' style='font-size: 26px;color: #007aff;'></i></div>");
 									$(div).click(function() {
 										endPath();
@@ -807,20 +803,41 @@
 								window.addEventListener('show', function() {
 									var state = app.getState();
 	//								console.log(JSON.stringify(state));
-									account.innerText = state.account.nickname || state.account;
+//									account.innerText = state.account.nickname || state.account.account;
 									//第三方使用qq或微信头像，否则使用默认头像
 									if(state.account.figureurl_qq_2 || state.account.headimgurl){
-										headImg.src = state.account.figureurl_qq_2 || state.account.headimgurl;
-										headImg2.src = state.account.figureurl_qq_2 || state.account.headimgurl;
+										account.innerText = state.account.nickname;
+										headImg2.src = headImg.src = state.account.figureurl_qq_2 || state.account.headimgurl;
 									} else {
 										headImg.src = headImg.src;
 										headImg2.src = headImg2.src;
 									}
 									//用户已登陆，隐藏登陆按钮
-									if(state.account){
+									if(state.account.account){
+										console.log(JSON.stringify(state.account));
+										account.innerText = state.account.account;
 										document.getElementById("login").style.display = 'none';
 										_this.logined = true;
-										_this.loginID = state.account;
+										_this.loginID = state.account.account;
+										mui.ajax({
+											url: 'http://118.24.34.244:8080/test1/GetUserByIdServlet?id=' + _this.loginID,
+											type: 'GET',
+											timeout: 500,
+											beforeSend: function(){
+												plus.nativeUI.showWaiting();
+											},
+											complete: function(){
+												plus.nativeUI.closeWaiting();
+											},
+											success: function(res){
+												res = JSON.parse(res);
+												res.headImgUrl = imgUrl + res.headImgUrl;
+												_this.user = res;
+											},
+											error: function(xhr, type, errorThrown){
+												console.log("获取用户信息失败");
+											}
+										})
 									}else{
 										document.getElementById("login").style.display = 'block';
 										_this.logined = false;
@@ -973,7 +990,6 @@
 									}else{
 										mui.confirm('您还未登陆，是否前往登陆？',"提示",new Array('是','否'),function(e){
 											if(e.index == 0){
-//												mui.toast('是');
 												mui.openWindow({
 													url: 'login.html',
 													id: 'login.html'
@@ -986,29 +1002,47 @@
 								var userInfo = document.getElementById("userInfo");
 								var userInfo2 = document.getElementById("userInfo2");
 								userInfo.addEventListener('tap', function(){
-									mui.openWindow({
-										id: "userInfo.html",
-										url: "userInfo.html",
-										extras: {
-											exInfo: {
-												exAccount: account.innerText,
-												exHeadImg: headImg.src
+									if(_this.logined){
+										mui.openWindow({
+											id: "userInfo.html",
+											url: "userInfo.html",
+											extras: {
+												user: _this.user,
+												loginID : _this.loginID
 											}
-										}
-									})
+										})
+									}else{
+										mui.confirm('您还未登陆，是否前往登陆？',"提示",new Array('是','否'),function(e){
+											if(e.index == 0){
+												mui.openWindow({
+													url: 'login.html',
+													id: 'login.html'
+												})
+											}
+										});
+									}
 								});
 								//头像账号处点击进去个人信息界面
 								userInfo2.addEventListener('tap', function(){
-									mui.openWindow({
-										id: "userInfo.html",
-										url: "userInfo.html",
-										extras: {
-											exInfo: {
-												exAccount: account.innerText,
-												exHeadImg: headImg.src
+									if(_this.logined){
+										mui.openWindow({
+											id: "userInfo.html",
+											url: "userInfo.html",
+											extras: {
+												user: _this.user,
+												loginID : _this.loginID
 											}
-										}
-									})
+										})
+									}else{
+										mui.confirm('您还未登陆，是否前往登陆？',"提示",new Array('是','否'),function(e){
+											if(e.index == 0){
+												mui.openWindow({
+													url: 'login.html',
+													id: 'login.html'
+												})
+											}
+										});
+									}
 								});
 								//打开新页面===========================================end
 								//设置

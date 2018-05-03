@@ -22,5 +22,15 @@
 		"refer": [
 			"chat.html"
 		]
+	},
+	"chat.html": {
+		"refer": [
+			"user-info.html"
+		]
+	},
+	"add-friend.html": {
+		"refer": [
+			"user-info.html"
+		]
 	}
 }
