@@ -7,7 +7,7 @@
 		<title></title>
 		<link href="css/mui.min.css" rel="stylesheet" />
 		<link rel="stylesheet" href="css/icons-extra.css" />
-		<link rel="stylesheet" type="text/css" href="http://at.alicdn.com/t/font_650380_7lwp594onnbwewmi.css"/>
+		<link rel="stylesheet" type="text/css" href="http://at.alicdn.com/t/font_650380_cxjpqi5jppj02j4i.css"/>
 		<link rel="stylesheet" href="http://api.map.baidu.com/library/SearchInfoWindow/1.5/src/SearchInfoWindow_min.css" />
 		<style>
 			.mui-btn {
@@ -100,16 +100,16 @@
 		<!--            底部导航                       -->
 		<nav class="mui-bar mui-bar-tab">
 			<a class="mui-tab-item mui-active" href="#tabbar" id="loctionBtn">
-				<span class="mui-icon mui-icon-location"></span>
-				<span class="mui-tab-label">定位</span>
+				<i class="iconfont icon-location" style="display: block;font-size: 22px;margin-top: 3px;"></i>
+				<span class="mui-tab-label" style="font-size: 14px;">定位</span>
 			</a>
 			<a class="mui-tab-item" href="#tabbar-with-contact" id="chatBtn">
-				<span class="mui-icon mui-icon-chatbubble"></span>
-				<span class="mui-tab-label">聊天</span>
+				<i class="iconfont icon-ioschatbubble" style="display: block;font-size: 24px;margin-top: 3px;"></i>
+				<span class="mui-tab-label" style="font-size: 14px;">聊天</span>
 			</a>
 			<a class="mui-tab-item" href="#tabbar-with-map" id="meBtn">
-				<span class="mui-icon mui-icon-person"></span>
-				<span class="mui-tab-label">我的</span>
+				<i class="iconfont icon-iconfontzhizuobiaozhun023104" style="display: block;font-size: 19px;margin-top: 3px;"></i>
+				<span class="mui-tab-label" style="font-size: 14px;">我</span>
 			</a>
 		</nav>
 		
@@ -335,8 +335,8 @@
 								marker.getShadow().setSize(new BMap.Size(0, 0));
 								marker.disableMassClear();
 								
-								function moveToMyPoi() {
-									map.setZoom(18);
+								function moveToMyPoi(scale) {
+									map.setZoom(scale);
 									map.panTo(MyPoi);
 								};
 								var geolocation = new BMap.Geolocation();
@@ -344,7 +344,7 @@
 									if(this.getStatus() == BMAP_STATUS_SUCCESS) {
 										MyPoi = r.point;
 										marker.setPosition(MyPoi);
-										moveToMyPoi();
+										moveToMyPoi(17);
 									} else {
 										alert('failed' + this.getStatus());
 									}
@@ -409,12 +409,12 @@
 								MyLoControl.prototype.initialize = function(map) {
 									var div = document.createElement("div");
 									$(div).css({
-										color: "#aaa"
+										color: "#999"
 									});
 									$(div).html("<div style='display: inline-block;background: #fff;padding: 4px;padding-top: 8px;border-radius: 2px;box-shadow: 0 0 2px #ccc;'><i class='iconfont icon-msnui-foresight' style='font-size: 26px;'></i></div>");
 
 									$(div).click(function() {
-										moveToMyPoi();
+										moveToMyPoi(17);
 									});
 									map.getContainer().appendChild(div);
 									return div;
@@ -438,7 +438,7 @@
 									$(div).click(function(){
 										map.removeControl(myNaviControl);
 										map.addControl(myEndNaviControl);
-										moveToMyPoi();
+										moveToMyPoi(24);
 										cur_route = walking.getResults().getPlan(0).getRoute(0);
 										cur_step_index = 0;
 										map.addControl(myStepControl);
@@ -487,7 +487,7 @@
 								MyStepControl.prototype.initialize = function(map) {
 									var div = document.createElement("div");
 									$(div).css({
-										width: "100%"
+										width: "90%"
 										//	color: "#0861E7",
 										//	padding: "0 4px 0 4px",
 										//	border: "1px solid black",
@@ -522,12 +522,12 @@
 									return div;
 								}
 								//创建控件并添加到地图中
-								var searchCtrl = new SearchControl(0, 30, 10);
-								var myLoControl = new MyLoControl(2, 10, 50);
-								var myNaviControl = new MyNaviControl(3, 10, 50);
-								var myEndNaviControl = new MyEndNaviControl(3, 10, 50);
-								var myRouteControl = new MyRouteControl(3, 10, 50);
-								var myStepControl = new MyStepControl(3, 0, 100);
+								var searchCtrl = new SearchControl(0, 30, 10);//搜索框
+								var myLoControl = new MyLoControl(2, 10, 40);//定位当前位置
+								var myNaviControl = new MyNaviControl(3, 10, 40);//开始导航
+								var myEndNaviControl = new MyEndNaviControl(3, 10, 40);//结束导航
+								var myRouteControl = new MyRouteControl(3, 10, 40);//去这里
+								var myStepControl = new MyStepControl(3, -5, 90);//路线提醒
 								map.addControl(searchCtrl);
 								map.addControl(myLoControl);
 								
@@ -657,7 +657,7 @@
 								function startNavi() {
 									map.removeControl(myNaviControl);
 									map.addControl(myEndNaviControl);
-									moveToMyPoi();
+									moveToMyPoi(17);
 									cur_route = walking.getResults().getPlan(0).getRoute(0);
 									cur_step_index = 0;
 									map.addControl(myStepControl);
@@ -702,7 +702,7 @@
 								StartPathControl.prototype = new BMap.Control();
 								StartPathControl.prototype.initialize = function(map) {
 									var div = document.createElement("div");
-									$(div).html('<div class="mui-btn mui-btn-primary">开始记录轨迹</div>');
+									$(div).html("<div style='display: inline-block;background: #fff;padding: 4px;padding-top: 8px;border-radius: 2px;box-shadow: 0 0 2px #999;'><i class='iconfont icon-zuji' style='font-size: 26px;color: #999;'></i></div>");
 									$(div).click(function() {
 										startPath();
 									});
@@ -710,7 +710,7 @@
 									return div;
 								}
 						
-								var startPathControl = new StartPathControl(1, 10, 50);
+								var startPathControl = new StartPathControl(2, 10, 82);
 								map.addControl(startPathControl);
 						
 								var pathPointIndex = 0;
@@ -787,14 +787,14 @@
 										//	border: "1px solid black",
 										//	opacity: "0.5"
 									});
-									$(div).html('<div class="mui-btn mui-btn-primary">结束记录轨迹</div>');
+									$(div).html("<div style='display: inline-block;background: #fff;padding: 4px;padding-top: 8px;border-radius: 2px;box-shadow: 0 0 2px #999;'><i class='iconfont icon-zuji' style='font-size: 26px;color: #007aff;'></i></div>");
 									$(div).click(function() {
 										endPath();
 									});
 									map.getContainer().appendChild(div);
 									return div;
 								}
-								var endPathControl = new EndPathControl(1, 10, 50);
+								var endPathControl = new EndPathControl(2, 10, 82);
 								
 								function endPath(){
 									isDrawPath = 0;
