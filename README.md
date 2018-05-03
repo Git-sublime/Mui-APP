@@ -14,4 +14,4 @@
 - 后    台： **Java**
 
 ## 文档查阅
-- Mui + HBuilder + H5 Plus <a herf="http://www.dcloud.io/">www.dcloud.io</a>
+- Mui + HBuilder + H5 Plus <a herf="http://www.dcloud.io/">www.dcloud.io</a> [www.dcloud.io](http://www.dcloud.io/)
