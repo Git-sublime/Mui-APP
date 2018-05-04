@@ -1,36 +1,37 @@
 {
-  "main.html": {
-    "refer": [
-      "login.html",
-      "setting.html",
-      "contact-list.html",
-      "newFriend.html",
-      "group-list.html",
-      "userInfo.html"
-    ],
-    "resources": [
-      "images/direction.png"
-    ]
-  },
-  "login.html": {
-    "refer": [
-      "main.html",
-      "reg.html"
-    ]
-  },
-  "contact-list.html": {
-    "refer": [
-      "chat.html"
-    ]
-  },
-  "chat.html": {
-    "refer": [
-      "user-info.html"
-    ]
-  },
-  "add-friend.html": {
-    "refer": [
-      "user-info.html"
-    ]
-  }
+	"main.html": {
+		"refer": [
+			"login.html",
+			"setting.html",
+			"contact-list.html",
+			"newFriend.html",
+			"group-list.html",
+			"userInfo.html",
+			"navigationMap.html"
+		],
+		"resources": [
+			"images/direction.png"
+		]
+	},
+	"login.html": {
+		"refer": [
+			"main.html",
+			"reg.html"
+		]
+	},
+	"contact-list.html": {
+		"refer": [
+			"chat.html"
+		]
+	},
+	"chat.html": {
+		"refer": [
+			"user-info.html"
+		]
+	},
+	"add-friend.html": {
+		"refer": [
+			"user-info.html"
+		]
+	}
 }

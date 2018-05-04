@@ -83,7 +83,7 @@
 			<div v-show="showHeadImage" class="mui-pull-left m-headImg" style="width: 34px; height: 34px;margin-top: 5px;border-radius: 50%;overflow: hidden;">
 				<img id="headImage" src="images/cc-head.png" style="width: 34px; height: 34px;">
 			</div>
-			<h1 class="mui-title" id="title2">微定位</h1>
+			<h1 class="mui-title" id="baiduMap">微定位</h1>
 			<span @click.stop="addFriend()" id="addBtn" class="mui-icon mui-icon-plusempty mui-pull-right" style="font-size: 34px;padding-top: 6px;"></span>
 			<ul id="addShow" v-show="showAddFriend" class="mui-table-view mui-pull-right m-add-Dialog" style="opacity: 0;">
     			<li @click="openAddFriendPage()" class="mui-table-view-cell">
@@ -915,13 +915,13 @@
 								});
 								
 								//打开新页面===========================================strat
-								document.getElementById('title2').addEventListener('tap', function(){
+								
+								document.getElementById('baiduMap').addEventListener('tap', function(){
 									mui.openWindow({
-										url: 'navigationMap.html',
-										id: 'navigationMap.html'
+										url: 'https://map.baidu.com/',
+										id: 'baidu.map'
 									})
 								})
-								
 								//登陆
 								var loginPage = document.getElementById("login");
 								loginPage.addEventListener("tap",function(){
