@@ -179,5 +179,17 @@ id2：String，
 实例:
 http://118.24.34.244:8080/test1/GetLastMsgByTwoId?id1=lcj&id2=lzs
 
-=======
->>>>>>> parent of b67165e... 寰畾浣岮PP 0.3.3
+接口21：根据用户id，查询轨迹列表
+请求参数：
+userId：String，
+返回参数：PathList；类型：数组（数组元素类型：Path）
+实例:
+[图片]http://118.24.34.244:8080/test1/GetPathListByUserId?userId=lcj
+
+
+接口22：根据轨迹id，获取轨迹的起点和终点
+请求参数：
+id：String，
+返回参数：PointList；类型：数组（数组元素类型：point）
+实例:
+[图片]http://118.24.34.244:8080/test1/GetStartAndEndById?id=120a6a4888474bd7822160a9e416135e
