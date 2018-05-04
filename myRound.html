@@ -1,0 +1,94 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="http://at.alicdn.com/t/font_650380_9dxpvvaexb8lrf6r.css"/>
+	</head>
+	<style type="text/css">
+		.icon-guijitu{
+			font-size: 18px;
+			color: #007aff;
+		}
+	</style>
+	<body>
+	  <div id="app">
+		<header class="mui-bar mui-bar-nav">
+		    <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+		    <h1 class="mui-title">我的轨迹</h1>
+		</header>
+		<div class="mui-content">
+			<ul class="mui-table-view">
+			    <li class="mui-table-view-cell" v-for="(item, index) in roundList" :key="index" @click="openIndexMap(item)">
+			        <span class="iconfont icon-guijitu mui-pull-right"></span>
+			        <span v-text="item.dateTime"></span>
+			    </li>
+			</ul>		    
+		</div>
+	  </div>
+	</body>
+		<script src="js/mui.min.js"></script>
+		<script src="js/vue.min.js"></script>
+		<script type="text/javascript">
+			new Vue({
+				el: '#app',
+				data: {
+					loginID: '',
+					user: '',
+					roundList: []
+				},
+				mounted: function(){
+					this.$nextTick(function(){
+						mui.init();
+						var _this = this;
+						mui.plusReady(function(){
+							_this.InitPage();
+						})
+					})
+				},
+				methods: {
+					InitPage: function(){
+						var _this = this;
+						var sData = plus.webview.currentWebview();
+						_this.loginID = sData.loginID;
+						_this.user = sData.user;
+						mui.ajax({
+							url: 'http://118.24.34.244:8080/test1/GetPathListByUserId?userId=' + _this.loginID,
+							type: 'GET',
+							timeout: 500,
+							beforeSend: function(){
+								plus.nativeUI.showWaiting();
+							},
+							complete: function(){
+								plus.nativeUI.closeWaiting();
+							},
+							success: function(res){
+								res = JSON.parse(res);
+								for(var i = 0; i<res.length; i++){
+									res[i].dateTime = res[i].dateTime.slice(0, 19);
+								}
+								res.reverse();
+								_this.roundList = res;
+							},
+							error: function(xhr, type, errorThrown){
+								mui.toast("服务器响应失败");
+							}
+						})
+					},
+					openIndexMap: function(item){
+						mui.openWindow({
+							url: 'indexMap.html',
+							id: 'indexMap.html',
+							extras: {
+								locationID: item.id
+							}
+						})
+					}
+					
+				}
+			})
+		</script>
+</html>

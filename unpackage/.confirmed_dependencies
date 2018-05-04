@@ -9,7 +9,8 @@
 			"userInfo.html",
 			"chat.html",
 			"add-friend.html",
-			"navigationMap.html"
+			"navigationMap.html",
+			"myRound.html"
 		],
 		"resources": [
 			"images/direction.png"
@@ -60,6 +61,11 @@
 	"newFriend.html": {
 		"refer": [
 			"user-info.html"
+		]
+	},
+	"myRound.html": {
+		"refer": [
+			"indexMap.html"
 		]
 	}
 }

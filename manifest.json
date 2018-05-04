@@ -186,7 +186,8 @@
 					"add-friend.html",
 					"creat-group.html",
 					"newFriend.html",
-					"navigationMap.html"
+					"navigationMap.html",
+					"myRound.html"
 				],
 				"priority": 1
 			},
@@ -329,6 +330,13 @@
 				"resources": [],
 				"refer": [
 					"user-info.html"
+				],
+				"priority": 0
+			},
+			"myRound.html": {
+				"resources": [],
+				"refer": [
+					"indexMap.html"
 				],
 				"priority": 0
 			}

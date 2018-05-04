@@ -7,7 +7,7 @@
 		<title></title>
 		<link href="css/mui.min.css" rel="stylesheet" />
 		<link rel="stylesheet" href="css/icons-extra.css" />
-		<link rel="stylesheet" type="text/css" href="http://at.alicdn.com/t/font_650380_cxjpqi5jppj02j4i.css"/>
+		<link rel="stylesheet" type="text/css" href="http://at.alicdn.com/t/font_650380_9dxpvvaexb8lrf6r.css"/>
 		<link rel="stylesheet" href="http://api.map.baidu.com/library/SearchInfoWindow/1.5/src/SearchInfoWindow_min.css" />
 		<style>
 			.mui-btn {
@@ -178,7 +178,7 @@
 						个人信息
 					</a>
 				</li>
-				<li class="mui-table-view-cell">
+				<li class="mui-table-view-cell" id="myRound">
 					<a class="mui-navigate-right">
 						我的轨迹
 					</a>
@@ -1006,6 +1006,29 @@
 										mui.openWindow({
 											id: "userInfo.html",
 											url: "userInfo.html",
+											extras: {
+												user: _this.user,
+												loginID : _this.loginID
+											}
+										})
+									}else{
+										mui.confirm('您还未登陆，是否前往登陆？',"提示",new Array('是','否'),function(e){
+											if(e.index == 0){
+												mui.openWindow({
+													url: 'login.html',
+													id: 'login.html'
+												})
+											}
+										});
+									}
+								});
+								//我的路径
+								var userInfo = document.getElementById("myRound");
+								userInfo.addEventListener('tap', function(){
+									if(_this.logined){
+										mui.openWindow({
+											id: "myRound.html",
+											url: "myRound.html",
 											extras: {
 												user: _this.user,
 												loginID : _this.loginID
