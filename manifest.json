@@ -185,8 +185,7 @@
 					"userInfo.html",
 					"add-friend.html",
 					"creat-group.html",
-					"newFriend.html",
-					"navigationMap.html"
+					"newFriend.html"
 				],
 				"priority": 1
 			},
