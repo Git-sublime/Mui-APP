@@ -56,9 +56,8 @@
 			}
 			.m-add-Dialog{
 				width: 130px;
-				/*height: 150px;*/
 				background: #f7f7f7;
-				margin-top: 44px;
+				margin-top: 46px;
 				position: absolute;
 				right: 10px;
 				font-size: 16px;
@@ -72,6 +71,16 @@
 				top: 10px;
 				left: 15px;
 				color: #929292;
+			}
+			.fixedTop{
+				position: fixed;
+				top: 45px;
+				left: 0;
+				width: 100%;
+				z-index: 2;
+				background: #efeff4;
+				padding: 15px 0;
+				border: 0;
 			}
 		</style>
 	</head>
@@ -124,12 +133,14 @@
 			
 			<!--           聊天界面                     -->
 			<div id="tabbar-with-contact" class="mui-control-content">
-				<ul class="mui-table-view topHave">
-					<li class="mui-table-view-cell" id="newFriend">新的朋友</li>
-					<li class="mui-table-view-cell" id="group">群聊</li>
-					<li class="mui-table-view-cell" id="contact">通讯录</li>
-				</ul>
-				<ul v-if="logined" class="mui-table-view topHave" >
+				<div class="fixedTop">
+					<ul class="mui-table-view">
+						<li class="mui-table-view-cell" id="newFriend">新的朋友</li>
+						<li class="mui-table-view-cell" id="group">群聊</li>
+						<li class="mui-table-view-cell" id="contact">通讯录</li>
+					</ul>
+				</div>
+				<ul v-if="logined" class="mui-table-view topHave" style="margin-top: 160px;">
 					<li class="mui-table-view-cell mui-media" v-for="(item, index) in chatList" :key="index" @click="gotoChat(item)">
 						<a href="javascript:;">
 							<img class="mui-media-object mui-pull-left" :src="item.headImgUrl">
@@ -141,8 +152,8 @@
 							</div>
 						</a>
 					</li>
-				</ul>
-				<ul v-if="!logined" class="mui-table-view topHave" >
+				</ul>				
+				<ul v-if="!logined" class="mui-table-view topHave" style="margin-top: 160px;" id="freshChat">
 					<li class="mui-table-view-cell mui-media" @click="gotoChat(robot)">
 						<a href="javascript:;">
 							<img class="mui-media-object mui-pull-left" :src="robot.headImg">
@@ -154,7 +165,7 @@
 							</div>
 						</a>
 					</li>
-				</ul>			
+				</ul>						
 			</div>
 			
 			<!--           我的页面                            -->
@@ -213,8 +224,7 @@
 		<script src="js/jquery-3.3.1.min.js"></script>
 		<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=1GFjszMOqSYX1Ny1Y5NPWE4G2wGB0Ghx"></script>
 		<script type="text/javascript" src="http://api.map.baidu.com/library/SearchInfoWindow/1.5/src/SearchInfoWindow_min.js"></script>
-		<script type="text/javascript" charset="utf-8">
-			mui.init();
+		<script type="text/javascript" charset="utf-8">		
 //			Vue===
 			var vue = new Vue({
 				el:"#app",
@@ -293,6 +303,60 @@
 							}
 						});
 						this.showAddFriend = false;
+					},
+					getChatLiat: function(){
+						var _this = this;
+						//请求最近聊天列表
+						mui.ajax({
+							url: 'http://118.24.34.244:8080/test1/SelectChatListById?id=' + _this.loginID,
+							type: 'GET',
+							timeout: 7000,
+							beforeSend: function(){
+								plus.nativeUI.showWaiting();
+							},
+							complete: function(){
+								plus.nativeUI.closeWaiting();
+							},
+							success: function(res){
+								res = JSON.parse(res);
+								for(var i =0; i<res.length; i++){
+									res[i].headImgUrl = imgUrl + res[i].headImgUrl; 										
+								}
+								_this.chatList = res;
+								_this.chatList.reverse();
+								var k = 0;
+								for(var j = 0; j<_this.chatList.length; j++){
+									var tempID = _this.chatList[j].id;
+									mui.ajax({
+										url: 'http://118.24.34.244:8080/test1/GetLastMsgByTwoId?id1=' + _this.loginID + '&id2=' + tempID,
+										type: 'GET',
+										timeout: 7000,
+										async: false,
+										beforeSend: function(){
+											plus.nativeUI.showWaiting();
+										},
+										success: function(data){
+											data = JSON.parse(data);
+											_this.$set(_this.chatList[k], 'record', data);
+											_this.$set(_this.chatList[k], 'lastRecord', data[0].content);
+											_this.$set(_this.chatList[k], 'lastRecordDay', (data[0].dateTime).slice(5,10));
+											_this.$set(_this.chatList[k], 'lastRecordTime', (data[0].dateTime).slice(11,16));
+//											console.log(JSON.stringify(data));
+											k++;
+										},
+										error: function(xhr, type, errorThrown){
+											mui.toast('服务器响应失败');
+										},
+										complete: function(){
+											plus.nativeUI.closeWaiting();
+										}
+									})	
+								}
+							},
+							error: function(xhr, type, errorThrown){
+								mui.toast('服务器响应失败');
+							}
+						});						
 					},
 					//初始化
 					InitMain: function(){
@@ -373,8 +437,6 @@
 									})
 								};
 								getMyPosition();	
-								
-								
 									plus.orientation.watchOrientation(function(o) {
 										marker.setRotation(o.alpha);
 									}, function(e) {
@@ -429,12 +491,6 @@
 								MyNaviControl.prototype = new BMap.Control();
 								MyNaviControl.prototype.initialize = function(map) {
 									var div = document.createElement("div");
-									$(div).css({
-										//	color: "#0861E7",
-										//	padding: "0 4px 0 4px",
-										//	border: "1px solid black",
-										//	opacity: "0.5"
-									});
 									$(div).html('<div id="startNaviBtn" class="mui-btn mui-btn-primary">开始导航</div>');
 									$(div).click(function(){
 										map.removeControl(myNaviControl);
@@ -464,12 +520,6 @@
 								MyEndNaviControl.prototype = new BMap.Control();
 								MyEndNaviControl.prototype.initialize = function(map) {
 									var div = document.createElement("div");
-									$(div).css({
-										//	color: "#0861E7",
-										//	padding: "0 4px 0 4px",
-										//	border: "1px solid black",
-										//	opacity: "0.5"
-									});
 									$(div).html('<div class="mui-btn mui-btn-primary">结束导航</div>');
 
 									$(div).click(function() {
@@ -489,13 +539,8 @@
 									var div = document.createElement("div");
 									$(div).css({
 										width: "90%"
-										//	color: "#0861E7",
-										//	padding: "0 4px 0 4px",
-										//	border: "1px solid black",
-										//	opacity: "0.5"
 									});
 									$(div).html('<div class="mui-card"><ul class="mui-table-view"><li id="step" class="mui-table-view-cell"></li></ul></div>');
-
 									map.getContainer().appendChild(div);
 									return div;
 								}
@@ -509,12 +554,6 @@
 								MyRouteControl.prototype = new BMap.Control();
 								MyRouteControl.prototype.initialize = function(map) {
 									var div = document.createElement("div");
-									$(div).css({
-										//	color: "#0861E7",
-										//	padding: "0 4px 0 4px",
-										//	border: "1px solid black",
-										//	opacity: "0.5"
-									});
 									$(div).html('<div class="mui-btn mui-btn-primary">去这里</div>');
 									$(div).click(function() {
 										walk();
@@ -814,7 +853,6 @@
 									}
 									//用户已登陆，隐藏登陆按钮
 									if(state.account.account){
-										console.log(JSON.stringify(state.account));
 										account.innerText = state.account.account;
 										document.getElementById("login").style.display = 'none';
 										_this.logined = true;
@@ -822,7 +860,7 @@
 										mui.ajax({
 											url: 'http://118.24.34.244:8080/test1/GetUserByIdServlet?id=' + _this.loginID,
 											type: 'GET',
-											timeout: 500,
+											timeout: 5000,
 											beforeSend: function(){
 												plus.nativeUI.showWaiting();
 											},
@@ -842,58 +880,12 @@
 										document.getElementById("login").style.display = 'block';
 										_this.logined = false;
 									}
-									//获取当前时间
-									//请求最近聊天列表
-									mui.ajax({
-										url: 'http://118.24.34.244:8080/test1/SelectChatListById?id=' + _this.loginID,
-										type: 'GET',
-										timeout: 700,
-										beforeSend: function(){
-											plus.nativeUI.showWaiting();
-										},
-										complete: function(){
-											plus.nativeUI.closeWaiting();
-										},
-										success: function(res){
-											res = JSON.parse(res);
-											for(var i =0; i<res.length; i++){
-												res[i].headImgUrl = imgUrl + res[i].headImgUrl; 										
-											}
-											_this.chatList = res;
-											_this.chatList.reverse();
-											var k = 0;
-											for(var j = 0; j<_this.chatList.length; j++){
-												var tempID = _this.chatList[j].id;
-												mui.ajax({
-													url: 'http://118.24.34.244:8080/test1/GetLastMsgByTwoId?id1=' + _this.loginID + '&id2=' + tempID,
-													type: 'GET',
-													timeout: 700,
-													async: false,
-													beforeSend: function(){
-														plus.nativeUI.showWaiting();
-													},
-													success: function(data){
-														data = JSON.parse(data);
-														_this.$set(_this.chatList[k], 'record', data);
-														_this.$set(_this.chatList[k], 'lastRecord', data[0].content);
-														_this.$set(_this.chatList[k], 'lastRecordDay', (data[0].dateTime).slice(5,10));
-														_this.$set(_this.chatList[k], 'lastRecordTime', (data[0].dateTime).slice(11,16));
-//														console.log(JSON.stringify(data));
-														k++;
-													},
-													error: function(xhr, type, errorThrown){
-														mui.toast('服务器响应失败');
-													},
-													complete: function(){
-														plus.nativeUI.closeWaiting();
-													}
-												})	
-											}
-										},
-										error: function(xhr, type, errorThrown){
-											mui.toast('服务器响应失败');
-										}
-									});
+									//获取聊天列表数据
+									_this.getChatLiat();
+									//定义下拉刷新
+
+
+
 								}, false);
 								//底部导航按钮点击事件==================================
 								mui(".mui-bar-tab").on('tap','.mui-tab-item',function(){

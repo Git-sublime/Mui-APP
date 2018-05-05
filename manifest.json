@@ -4,7 +4,7 @@
 		"iPhone",
 		"iPad"
 	],
-	"id": "",/*应用的标识，创建应用时自动生成，勿手动修改*/
+	"id": "H51CB4E94",/*应用的标识，创建应用时自动生成，勿手动修改*/
 	"name": "muiLogin",/*应用名称，程序桌面图标名称*/
 	"version": {
 		"name": "1.0.0",/*应用版本名称*/
@@ -32,14 +32,14 @@
 			"description": "应用扩展事件"
 		},
 		"UI": {},
-		"Share": {},
+		
 		"OAuth": {},
-		"Push": {},
+		
 		"Maps": {},
 		"Speech": {},
-		"Payment": {},
+		
 		"Contacts": {},
-		"Statistic": {},
+		
 		"Messaging": {},"Webview":{},"NativeUI":{},"Navigator":{},
         "Orientation": {
 			"description": "方向传感器"
@@ -102,11 +102,11 @@
 					}
 				},
 				"android": {
-					"mdpi": "unpackage/res/icons/48x48.png", /*普通屏程序图标，分辨率：48x48*/
-					"ldpi": "unpackage/res/icons/48x48.png", /*大屏程序图标，分辨率：48x48*/
-					"hdpi": "unpackage/res/icons/72x72.png", /*高分屏程序图标，分辨率：72x72*/
-					"xhdpi": "unpackage/res/icons/96x96.png",/*720P高分屏程序图标，分辨率：96x96*/
-					"xxhdpi": "unpackage/res/icons/144x144.png"
+					"mdpi": "images/start1.png", /*普通屏程序图标，分辨率：48x48*/
+					"ldpi": "images/start1.png", /*大屏程序图标，分辨率：48x48*/
+					"hdpi": "images/start2.png", /*高分屏程序图标，分辨率：72x72*/
+					"xhdpi": "images/start3.png",/*720P高分屏程序图标，分辨率：96x96*/
+					"xxhdpi": "images/logo.png"
 				}
 			},
 			"splashscreen": {
@@ -135,7 +135,7 @@
 					"xxhdpi": ""
 				}
 			}
-		}
+		},"ads":{"rp":false,"splash":true,"push":false},"adid":""
 	},
 	"dependencies": {
 		"pages": {
@@ -351,6 +351,8 @@
 		}
 	},
 	"unpackage": [
-		"README.md"
+	  "README.md",
+	  "images/user-photo.png",
+	  "libs/easymob-webim-sdk/quickstart.md"
 	]
 }
