@@ -255,7 +255,6 @@
 				methods:{
 					//聊天界面跳转函数
 					gotoChat: function(item){
-//						 console.log(JSON.stringify(item));
 						var _this = this;
 						 mui.openWindow({
 						 	url: "chat.html",
@@ -311,19 +310,12 @@
 							url: 'http://118.24.34.244:8080/test1/SelectChatListById?id=' + _this.loginID,
 							type: 'GET',
 							timeout: 7000,
-							beforeSend: function(){
-								plus.nativeUI.showWaiting();
-							},
-							complete: function(){
-								plus.nativeUI.closeWaiting();
-							},
 							success: function(res){
 								res = JSON.parse(res);
 								for(var i =0; i<res.length; i++){
 									res[i].headImgUrl = imgUrl + res[i].headImgUrl; 										
 								}
 								_this.chatList = res;
-								_this.chatList.reverse();
 								var k = 0;
 								for(var j = 0; j<_this.chatList.length; j++){
 									var tempID = _this.chatList[j].id;
@@ -332,13 +324,11 @@
 										type: 'GET',
 										timeout: 7000,
 										async: false,
-										beforeSend: function(){
-											plus.nativeUI.showWaiting();
-										},
 										success: function(data){
 											data = JSON.parse(data);
 											_this.$set(_this.chatList[k], 'record', data);
 											_this.$set(_this.chatList[k], 'lastRecord', data[0].content);
+											_this.$set(_this.chatList[k], 'lastRecordDate', (data[0].dateTime).slice(0,19));
 											_this.$set(_this.chatList[k], 'lastRecordDay', (data[0].dateTime).slice(5,10));
 											_this.$set(_this.chatList[k], 'lastRecordTime', (data[0].dateTime).slice(11,16));
 //											console.log(JSON.stringify(data));
@@ -346,17 +336,30 @@
 										},
 										error: function(xhr, type, errorThrown){
 											mui.toast('服务器响应失败');
-										},
-										complete: function(){
-											plus.nativeUI.closeWaiting();
 										}
 									})	
 								}
+//								时间排序
+								_this.chatList.sort(function(a, b){
+									return Date.parse(a.lastRecordDate) - Date.parse(b.lastRecordDate);
+								})
+								_this.chatList.reverse();
 							},
 							error: function(xhr, type, errorThrown){
 								mui.toast('服务器响应失败');
 							}
-						});						
+						});	
+						mui.ajax({
+							url: 'http://118.24.34.244:8080/test1/SelectGroupChatListById?id=' + _this.loginID,
+							type: 'GET',
+							timeout: 5000,
+							success: function(res){
+								
+							},
+							error: function(xhr, type, errorThrown){
+								mui.toast("服务器响应失败")
+							}
+						})
 					},
 					//初始化
 					InitMain: function(){
@@ -389,7 +392,7 @@
 								var map = new BMap.Map("map"); // 创建Map实例
 								//等待状态
 								plus.nativeUI.showWaiting();
-								var MyPoi = new BMap.Point(103.958792,30.781972);
+								var MyPoi = new BMap.Point(103.9587,30.7819);
 								map.centerAndZoom(MyPoi, 17); // 初始化地图,设置中心点坐标和地图级别
 								map.enableScrollWheelZoom();
 								//添加一个marker对象
@@ -883,9 +886,9 @@
 									//获取聊天列表数据
 									_this.getChatLiat();
 									//定义下拉刷新
-
-
-
+									setInterval(function() {
+										_this.getChatLiat()
+									}, 3000);
 								}, false);
 								//底部导航按钮点击事件==================================
 								mui(".mui-bar-tab").on('tap','.mui-tab-item',function(){
