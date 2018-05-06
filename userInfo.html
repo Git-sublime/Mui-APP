@@ -200,20 +200,20 @@
 //  	上传头像
 		function uploadHead(img){
 			img.onload = function(){
-				var myBlob = dataURLtoBlob(getBase64Image(img))			
-				var form = new FormData()
-				form.append('token','6fa7d0ccfd786f4a34e2b8d1ba92a2e')
-				form.append('upload',myBlob,'head.jpg')//图片
+				var myBlob = dataURLtoBlob(getBase64Image(img));			
+				var form = new FormData();
+				form.append('token','6fa7d0ccfd786f4a34e2b8d1ba92a2e');
+				form.append('upload',myBlob,'head.jpg');//图片
 				$.ajax({
-					url:'http://cfxiaobao.top:8080/PhoneSafe/api/fileupload',
-					type:'POST',
+					url:'http://192.168.43.253:8080/test1/UploadHeadImg',
+					type:'GET', 
 					contentType:false,
 					processData:false,
 					data:form,
 					success:function(data){
-							console.log(data.msg)
+							console.log(data)
 					}				
-				})		
+				});		
 			}
 		}
 		

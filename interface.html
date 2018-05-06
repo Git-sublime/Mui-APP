@@ -171,19 +171,12 @@ groupId：String
 返回参数：isOk：bool
 实例:
 http://118.24.34.244:8080/test1/QuitGroup?userId=lulu&groupId=g11
- 
-接口20：根据2个用户id，查询最后一条聊天记录
-请求参数：
-id1：String，
-id2：String，
-返回参数：chartRecord 类型：chartRecord
 
 接口20：根据2个用户id，查询最后20条聊天记录
 请求参数：
 id1：String，
 id2：String，
 返回参数：chartRecordList；类型：数组（数组元素类型：chartRecord）
->>>>>>> 55851ae66af8df2af7cb3961fb4d9c9656d7b874
 实例:
 http://118.24.34.244:8080/test1/GetLastMsgByTwoId?id1=lcj&id2=lzs
 
@@ -192,15 +185,21 @@ http://118.24.34.244:8080/test1/GetLastMsgByTwoId?id1=lcj&id2=lzs
 userId：String，
 返回参数：PathList；类型：数组（数组元素类型：Path）
 实例:
-[图片]http://118.24.34.244:8080/test1/GetPathListByUserId?userId=lcj
-
+http://118.24.34.244:8080/test1/GetPathListByUserId?userId=lcj
 
 接口22：根据轨迹id，获取轨迹的起点和终点
 请求参数：
 id：String，
 返回参数：PointList；类型：数组（数组元素类型：point）
 实例:
-[图片]http://118.24.34.244:8080/test1/GetStartAndEndById?id=120a6a4888474bd7822160a9e416135e	
+http://118.24.34.244:8080/test1/GetStartAndEndById?id=120a6a4888474bd7822160a9e416135e
+
+接口23：根据群id，查询最后20条聊天记录
+请求参数：
+groupId：String，
+返回参数：groupChartRecordList；类型：数组（数组元素类型：GroupChartRecord）
+实例:
+http://118.24.34.244:8080/test1/GetLastGroupMsgById?groupId=group001
 </pre>
 </body>
 </html>
