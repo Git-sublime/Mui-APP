@@ -98,6 +98,7 @@
 		<script src="js/mui.view.js"></script>
 		<script src="js/feedback.js"></script>
 		<script src="js/vue.min.js"></script>
+		<script src="js/jquery-3.3.1.min.js"></script>
 		<script type="text/javascript">
 		mui.init();
 		new Vue({
@@ -161,6 +162,7 @@
 					console.log(s);
 //					document.getElementById("head-img").src = s;
 					document.getElementById("head-img1").src = s;
+					uploadHead(document.getElementById("head-img1"))
 					//变更大图预览的src
 					//目前仅有一张图片，暂时如此处理，后续需要通过标准组件实现
 					document.querySelector("#__mui-imageview__group .mui-slider-item img").src = s + "?version=" + new Date().getTime();
@@ -173,7 +175,49 @@
 				filename: "_doc/head.jpg"
 			})
 		}
+		    //压缩图片转成base64
+    function getBase64Image(img){
+        var canvas=document.createElement("canvas");
+        var width=img.width;
+        var height=img.height;
+        canvas.width=width;
+        canvas.height=height;
+        var ctx=canvas.getContext('2d');
+        ctx.drawImage(img,0,0,width,height);
 
+        var dataUrl=canvas.toDataURL('image/png',0.8);
+        return dataUrl;
+    } 
+    function dataURLtoBlob(dataurl) {
+    var arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1],
+        bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
+    while(n--){
+        u8arr[n] = bstr.charCodeAt(n);
+    }
+    return new Blob([u8arr], {type:mime});
+	}
+    
+    
+//  	上传头像
+		function uploadHead(img){
+			img.onload = function(){
+				var myBlob = dataURLtoBlob(getBase64Image(img))			
+				var form = new FormData()
+				form.append('token','6fa7d0ccfd786f4a34e2b8d1ba92a2e')
+				form.append('upload',myBlob,'head.jpg')//图片
+				$.ajax({
+					url:'http://cfxiaobao.top:8080/PhoneSafe/api/fileupload',
+					type:'POST',
+					contentType:false,
+					processData:false,
+					data:form,
+					success:function(data){
+							console.log(data.msg)
+					}				
+				})		
+			}
+		}
+		
 		function galleryImg() {
 			plus.gallery.pick(function(a) {
 				plus.io.resolveLocalFileSystemURL(a, function(entry) {
@@ -186,6 +230,7 @@
 										var e = e.fullPath + "?version=" + new Date().getTime();
 //										document.getElementById("head-img").src = e;
 										document.getElementById("head-img1").src = e;
+										uploadHead(document.getElementById("head-img1"))
 										//变更大图预览的src
 										//目前仅有一张图片，暂时如此处理，后续需要通过标准组件实现
 										document.querySelector("#__mui-imageview__group .mui-slider-item img").src = e + "?version=" + new Date().getTime();;
