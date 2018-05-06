@@ -243,6 +243,8 @@
 						dataDay: '05-01'
 					},
 					chatList: [],
+					chatList1: [],
+					groupChatList: [],
 					recordList: [],
 					lastChatList: [],
 					nowDay: ''
@@ -315,10 +317,10 @@
 								for(var i =0; i<res.length; i++){
 									res[i].headImgUrl = imgUrl + res[i].headImgUrl; 										
 								}
-								_this.chatList = res;
+								_this.chatList1 = res;
 								var k = 0;
-								for(var j = 0; j<_this.chatList.length; j++){
-									var tempID = _this.chatList[j].id;
+								for(var j = 0; j<_this.chatList1.length; j++){
+									var tempID = _this.chatList1[j].id;
 									mui.ajax({
 										url: 'http://118.24.34.244:8080/test1/GetLastMsgByTwoId?id1=' + _this.loginID + '&id2=' + tempID,
 										type: 'GET',
@@ -326,12 +328,13 @@
 										async: false,
 										success: function(data){
 											data = JSON.parse(data);
-											_this.$set(_this.chatList[k], 'record', data);
-											_this.$set(_this.chatList[k], 'lastRecord', data[0].content);
-											_this.$set(_this.chatList[k], 'lastRecordDate', (data[0].dateTime).slice(0,19));
-											_this.$set(_this.chatList[k], 'lastRecordDay', (data[0].dateTime).slice(5,10));
-											_this.$set(_this.chatList[k], 'lastRecordTime', (data[0].dateTime).slice(11,16));
-//											console.log(JSON.stringify(_this.chatList[0]));
+											_this.$set(_this.chatList1[k], 'record', data);
+											_this.$set(_this.chatList1[k], 'lastRecord', data[0].content);
+											_this.$set(_this.chatList1[k], 'lastRecordDate', (data[0].dateTime).slice(0,19));
+											_this.$set(_this.chatList1[k], 'lastRecordDay', (data[0].dateTime).slice(5,10));
+											_this.$set(_this.chatList1[k], 'lastRecordTime', (data[0].dateTime).slice(11,16));
+											_this.$set(_this.chatList1[k], 'type', 1);
+//											console.log(JSON.stringify(data));
 											k++;
 										},
 										error: function(xhr, type, errorThrown){
@@ -339,11 +342,6 @@
 										}
 									})	
 								}
-//								时间排序
-								_this.chatList.sort(function(a, b){
-									return Date.parse(a.lastRecordDate) - Date.parse(b.lastRecordDate);
-								})
-								_this.chatList.reverse();
 							},
 							error: function(xhr, type, errorThrown){
 								mui.toast('服务器响应失败');
@@ -354,12 +352,50 @@
 							type: 'GET',
 							timeout: 5000,
 							success: function(res){
-								
+								res = JSON.parse(res);
+								for(var i =0; i<res.length; i++){
+									res[i].headImgUrl = imgUrl + res[i].headImgUrl; 										
+								}
+								_this.groupChatList = res;
+								var k = 0;
+//								for(var j = 0; j<_this.groupChatList.length; j++){
+//									var tempID = _this.groupChatList[j].id;
+//									mui.ajax({
+//										url: 'http://118.24.34.244:8080/test1/GetLastMsgByTwoId?id1=' + _this.loginID + '&id2=' + tempID,
+//										type: 'GET',
+//										timeout: 7000,
+//										async: false,
+//										success: function(data){
+//											data = JSON.parse(data);
+//											_this.$set(_this.groupChatList[k], 'record', data);
+//											_this.$set(_this.groupChatList[k], 'lastRecord', data[0].content);
+//											_this.$set(_this.groupChatList[k], 'lastRecordDate', (data[0].dateTime).slice(0,19));
+//											_this.$set(_this.groupChatList[k], 'lastRecordDay', (data[0].dateTime).slice(5,10));
+//											_this.$set(_this.groupChatList[k], 'lastRecordTime', (data[0].dateTime).slice(11,16));
+//											_this.$set(_this.groupChatList[k], 'type', 2);
+////											console.log(JSON.stringify(data));
+//											k++;
+//										},
+//										error: function(xhr, type, errorThrown){
+//											mui.toast('服务器响应失败');
+//										}
+//									})	
+//								}
 							},
 							error: function(xhr, type, errorThrown){
 								mui.toast("服务器响应失败")
 							}
+						});
+						
+//						数组合并
+						_this.chatList = _this.chatList1;
+						_this.chatList = _this.chatList.concat(_this.groupChatList);
+//						时间排序
+						_this.chatList.sort(function(a, b){
+							return Date.parse(a.lastRecordDate) - Date.parse(b.lastRecordDate);
 						})
+						_this.chatList.reverse();
+						
 					},
 					//初始化
 					InitMain: function(){
@@ -908,14 +944,6 @@
 									"id": 'setting',
 									"url": 'setting.html'
 								});
-								
-								//打开新页面===========================================strat
-								document.getElementById('title2').addEventListener('tap', function(){
-									mui.openWindow({
-										url: 'navigationMap.html',
-										id: 'navigationMap.html'
-									})
-								})
 								
 								//登陆
 								var loginPage = document.getElementById("login");
