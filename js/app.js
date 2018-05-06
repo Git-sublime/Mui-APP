@@ -37,6 +37,7 @@
 			},
 			success: function(res) {
 				console.log(res);
+				
 				//若启动页不是登录页，则需通过如下方式打开登录页		
 				if (res == 'true') {
 					plus.nativeUI.toast('登陆成功');
