@@ -305,7 +305,7 @@
 			<% for(var i in record){ var item=record[i]; %>
 				<div class="msg-item <%= (item.sender=='self'?' msg-item-self':'') %>" msg-type='<%=(item.type)%>' msg-content='<%=(item.content)%>'>
 					<% if(item.sender=='self' ) { %>
-						<img id="loginerHead" class="msg-user-img" src="images/logo.png" alt="" />
+						<i class="msg-user mui-icon mui-icon-person"></i>
 					<% } else { %>
 						<img class="msg-user-img" src="images/logo.png" alt="" />
 					<% } %>
@@ -373,8 +373,9 @@
 					document.getElementById("chatName").innerHTML = sData.chatObj.name;
 					var realSenderId = sData.loginId;
 					var realReceiverId = sData.chatObj.id;
+					console.log(JSON.stringify(sData.chatObj))
 					
-					document.getElementById('loginerHead').src = sData.chatObj.headImgUrl;
+//					document.getElementById('loginerHead').src = sData.chatObj.headImgUrl;
 //					document.getElementById("head-img").src = sData.chatObj.headImg;
 
 					//查看好友个人信息
@@ -472,6 +473,7 @@
 						record.push(msg);
 						bindMsgList();
 					//	toRobot(msg.content);
+					console.log(JSON.stringify(msg))
 						
 						//发送消息到后台
 						sendMessage(realSenderId, realReceiverId, msg.content);

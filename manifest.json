@@ -187,7 +187,8 @@
 					"creat-group.html",
 					"newFriend.html",
 					"navigationMap.html",
-					"myRound.html"
+					"myRound.html",
+					"group-chat.html"
 				],
 				"priority": 1
 			},
