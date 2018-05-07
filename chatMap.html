@@ -19,7 +19,7 @@
 		<link rel="stylesheet" href="css/mui.min.css">
 		<link rel="stylesheet" href="http://api.map.baidu.com/library/SearchInfoWindow/1.5/src/SearchInfoWindow_min.css" />
 
-		<title>导航</title>
+		<title>位置共享</title>
 	</head>
 
 	<body>
@@ -31,90 +31,62 @@
 		<div id="r-result"></div>
 	</body>
 	<script>
-		
-		$("#allmap").css("height", document.documentElement.clientHeight);
-
-	
-		console.log(document.documentElement.clientWidth + "," + document.documentElement.clientHeight);
-		// 百度地图API功能
-		var map = new BMap.Map('allmap');
-		var MyPoi = new BMap.Point(103.958792, 30.781972);
-		map.centerAndZoom(MyPoi, 18);
+		var map = new BMap.Map("allmap"); // 创建Map实例
+		//等待状态
+	//	plus.nativeUI.showWaiting();
+		var MyPoi = new BMap.Point(103.9587, 30.7819); 
+		map.centerAndZoom(MyPoi, 17); // 初始化地图,设置中心点坐标和地图级别
 		map.enableScrollWheelZoom();
-
+		//添加一个marker对象
 		var marker = new BMap.Marker(MyPoi);
-		marker.getIcon().setImageUrl("img/point.png");
+		map.addOverlay(marker); // 将标注添加到地图中 
+		marker.getIcon().setImageUrl("images/direction.png");
 		marker.getIcon().setSize(new BMap.Size(33, 33));
 		marker.getShadow().setSize(new BMap.Size(0, 0));
 		marker.disableMassClear();
 
-		//	marker.enableDragging(); //marker可拖拽
-		marker.addEventListener("dragend", function() {
-			MyPoi = marker.getPosition();
-		})
-
-		map.addOverlay(marker); //在地图中添加marker
-
-		var geolocation = new BMap.Geolocation();
-
-		function moveToMyPoi() {
-			map.setZoom(18);
+		function moveToMyPoi(scale) {
+			map.setZoom(scale);
 			map.panTo(MyPoi);
 		};
-
+		var geolocation = new BMap.Geolocation();
 		geolocation.getCurrentPosition(function(r) {
 			if(this.getStatus() == BMAP_STATUS_SUCCESS) {
 				MyPoi = r.point;
 				marker.setPosition(MyPoi);
-				moveToMyPoi();
+				moveToMyPoi(17);
 			} else {
 				alert('failed' + this.getStatus());
 			}
 		}, {
-			enableHighAccuracy: true
+			enableHighAccuracy: false
 		})
-
 		//获取定位
 		function getMyPosition() {
 			geolocation.getCurrentPosition(function(r) {
 				if(this.getStatus() == BMAP_STATUS_SUCCESS) {
 					MyPoi = r.point;
 					marker.setPosition(MyPoi);
-					//	map.panTo(MyPoi);
-					//	alert('您的位置：' + r.point.lng + ',' + r.point.lat);
-
+					
 					//定时再获取位置
 					setTimeout(function() {
 						getMyPosition();
-					}, 5000);
+					}, 3000);
 				} else {
 					alert('failed' + this.getStatus());
 				}
 			}, {
-				enableHighAccuracy: true
+				enableHighAccuracy: false
 			})
 		};
-
 		getMyPosition();
-
-		function onPlusReady() {
-			plus.orientation.watchOrientation(function(o) {
-//					console.log(o.alpha);
-				marker.setRotation(o.alpha);
-			}, function(e) {
-				alert("Orientation error: " + e.message);
-			}, {
-				frequency: 1
-			});
-		}
-		document.addEventListener("plusready", onPlusReady, false);
-
-		/*var local = new BMap.LocalSearch(map, {
-			renderOptions: {
-				map: map
-			}
-		});
-		local.search("景点");*/
+		/*plus.orientation.watchOrientation(function(o) {
+			marker.setRotation(o.alpha);
+		}, function(e) {
+			alert("Orientation error: " + e.message);
+		}, {
+			frequency: 1
+		});*/
 
 		function SearchControl(posIndex, left, top) {
 			var position = [BMAP_ANCHOR_TOP_LEFT, BMAP_ANCHOR_TOP_RIGHT, BMAP_ANCHOR_BOTTOM_LEFT, BMAP_ANCHOR_BOTTOM_RIGHT];
@@ -125,7 +97,8 @@
 		SearchControl.prototype.initialize = function(map) {
 			var div = document.createElement("div");
 			$(div).css({
-				width: "80%"
+				width: "85%",
+				//										opacity: '0.7'
 			});
 			$(div).addClass("mui-input-row mui-search");
 			$(div).html("<input id='suggestId' type='search' class='mui-input-clear' placeholder='请输入关键字'>");
@@ -142,20 +115,16 @@
 		MyLoControl.prototype.initialize = function(map) {
 			var div = document.createElement("div");
 			$(div).css({
-				color: "#0861E7",
-				padding: "0 4px 0 4px",
-				border: "1px solid black",
-				opacity: "0.5"
+				color: "#999"
 			});
-			$(div).html("<i class='fa fa-location-arrow fa-2x'></i>");
+			$(div).html("<div style='display: inline-block;background: #fff;padding: 4px;padding-top: 8px;border-radius: 2px;box-shadow: 0 0 2px #ccc;'><i class='iconfont icon-msnui-foresight' style='font-size: 26px;'></i></div>");
 
 			$(div).click(function() {
-				moveToMyPoi();
+				moveToMyPoi(17);
 			});
 			map.getContainer().appendChild(div);
 			return div;
 		}
-
 		//定义控件：开始导航
 		function MyNaviControl(posIndex, left, top) {
 			var position = [BMAP_ANCHOR_TOP_LEFT, BMAP_ANCHOR_TOP_RIGHT, BMAP_ANCHOR_BOTTOM_LEFT, BMAP_ANCHOR_BOTTOM_RIGHT];
@@ -165,18 +134,20 @@
 		MyNaviControl.prototype = new BMap.Control();
 		MyNaviControl.prototype.initialize = function(map) {
 			var div = document.createElement("div");
-			$(div).css({
-				//	color: "#0861E7",
-				//	padding: "0 4px 0 4px",
-				//	border: "1px solid black",
-				//	opacity: "0.5"
+			$(div).html('<div id="startNaviBtn" class="mui-btn mui-btn-primary">开始导航</div>');
+			$(div).click(function() {
+				map.removeControl(myNaviControl);
+				map.addControl(myEndNaviControl);
+				moveToMyPoi(24);
+				cur_route = walking.getResults().getPlan(0).getRoute(0);
+				cur_step_index = 0;
+				map.addControl(myStepControl);
+				$("#step").text(cur_route.getStep(0).getDescription(false));
+				checkStep();
 			});
-			$(div).html('<div id="startNaviBtn" onclick="startNavi()" class="mui-btn mui-btn-primary">开始导航</div> <div id="endNaviBtn" onclick="reGetRoute()" class="mui-btn mui-btn-primary">重选目的地</div>');
-
 			map.getContainer().appendChild(div);
 			return div;
 		}
-
 		//定义函数：重选目的地
 		function reGetRoute() {
 			map.removeControl(myNaviControl);
@@ -192,12 +163,6 @@
 		MyEndNaviControl.prototype = new BMap.Control();
 		MyEndNaviControl.prototype.initialize = function(map) {
 			var div = document.createElement("div");
-			$(div).css({
-				//	color: "#0861E7",
-				//	padding: "0 4px 0 4px",
-				//	border: "1px solid black",
-				//	opacity: "0.5"
-			});
 			$(div).html('<div class="mui-btn mui-btn-primary">结束导航</div>');
 
 			$(div).click(function() {
@@ -216,19 +181,14 @@
 		MyStepControl.prototype.initialize = function(map) {
 			var div = document.createElement("div");
 			$(div).css({
-				width: "100%"
-				//	color: "#0861E7",
-				//	padding: "0 4px 0 4px",
-				//	border: "1px solid black",
-				//	opacity: "0.5"
+				width: "90%"
 			});
 			$(div).html('<div class="mui-card"><ul class="mui-table-view"><li id="step" class="mui-table-view-cell"></li></ul></div>');
-
 			map.getContainer().appendChild(div);
 			return div;
 		}
 
-		//定义控件：路径规划
+		//定义控件：路径规划《去这里》
 		function MyRouteControl(posIndex, left, top) {
 			var position = [BMAP_ANCHOR_TOP_LEFT, BMAP_ANCHOR_TOP_RIGHT, BMAP_ANCHOR_BOTTOM_LEFT, BMAP_ANCHOR_BOTTOM_RIGHT];
 			this.defaultAnchor = position[posIndex];
@@ -237,12 +197,6 @@
 		MyRouteControl.prototype = new BMap.Control();
 		MyRouteControl.prototype.initialize = function(map) {
 			var div = document.createElement("div");
-			$(div).css({
-				//	color: "#0861E7",
-				//	padding: "0 4px 0 4px",
-				//	border: "1px solid black",
-				//	opacity: "0.5"
-			});
 			$(div).html('<div class="mui-btn mui-btn-primary">去这里</div>');
 			$(div).click(function() {
 				walk();
@@ -250,16 +204,17 @@
 			map.getContainer().appendChild(div);
 			return div;
 		}
-
-		var searchCtrl = new SearchControl(0, 30, 10);
-		var myLoControl = new MyLoControl(2, 10, 50);
-		var myNaviControl = new MyNaviControl(3, 50, 50);
-		var myEndNaviControl = new MyEndNaviControl(3, 50, 50);
-		var myRouteControl = new MyRouteControl(3, 50, 50);
-		var myStepControl = new MyStepControl(3, 0, 100);
+		//创建控件并添加到地图中
+		var searchCtrl = new SearchControl(0, 30, 10); //搜索框
+		var myLoControl = new MyLoControl(2, 10, 40); //定位当前位置
+		var myNaviControl = new MyNaviControl(3, 10, 40); //开始导航
+		var myEndNaviControl = new MyEndNaviControl(3, 10, 40); //结束导航
+		var myRouteControl = new MyRouteControl(3, 10, 40); //去这里
+		var myStepControl = new MyStepControl(3, -5, 90); //路线提醒
 		map.addControl(searchCtrl);
 		map.addControl(myLoControl);
 
+		//地图点击和移动搜索框失去焦点
 		map.addEventListener("click", function() {
 			$("#suggestId").blur();
 		});
@@ -296,34 +251,34 @@
 			var _value = e.item.value;
 			myValue = _value.province + _value.city + _value.district + _value.street + _value.business;
 			$("#searchResultPanel").html("onconfirm<br />index = " + e.item.index + "<br />myValue = " + myValue);
-
 			setPlace();
 		});
 
-		var dest = null; //目的地
-		var m1 = null;
-
+		//								设置位置中心,跳转到搜索的位置
 		function setPlace() {
 			$("#suggestId").blur();
+			isNavi = 0;
+			map.removeControl(myNaviControl);
+			map.removeControl(myEndNaviControl);
+			map.removeControl(myStepControl);
 			map.clearOverlays(); //清除地图上所有覆盖物
 			function myFun() {
 				dest = local.getResults().getPoi(0).point; //获取第一个智能搜索的结果
-				map.centerAndZoom(dest, 18);
+				map.centerAndZoom(dest, 17);
 				m1 = new BMap.Marker(dest);
-				m1.getIcon().setImageUrl("http://api0.map.bdimg.com/images/marker_red_sprite.png");
+				m1.getIcon().setImageUrl("images/sprite.png");
 				map.addOverlay(m1); //添加标注
 				map.addControl(myRouteControl);
 				/*m1.addEventListener("click", function() {
 					searchInfoWindow.open(m1);
 				});
 				searchInfoWindow.open(m1);*/
-
 			}
 			var local = new BMap.LocalSearch(map, { //智能搜索
 				onSearchComplete: myFun
 			});
 			local.search(myValue);
-		}
+		};
 
 		var content = '<button id="bt1" type="button" class="mui-btn mui-btn-primary mui-btn-block" onclick="walk()">到这里去</button>';
 		//创建检索信息窗口对象
@@ -343,6 +298,9 @@
 				map: map,
 				panel: "r-result",
 				autoViewport: true
+			},
+			onPolylinesSet: function(routes) {
+				routes[0].getPolyline().setStrokeStyle("solid");
 			}
 		});
 
@@ -380,21 +338,24 @@
 
 		var cur_route = null;
 		var cur_step_index = 0;
+		var isNavi = 0;
 
 		//开始步行导航
 		function startNavi() {
 			map.removeControl(myNaviControl);
 			map.addControl(myEndNaviControl);
-			moveToMyPoi();
+			moveToMyPoi(17);
 			cur_route = walking.getResults().getPlan(0).getRoute(0);
 			cur_step_index = 0;
 			map.addControl(myStepControl);
 			$("#step").text(cur_route.getStep(0).getDescription(false));
+			isNavi = 1;
 			checkStep();
 		};
 
 		//结束步行导航
 		function endNavi() {
+			isNavi = 0;
 			map.removeControl(myEndNaviControl);
 			map.removeControl(myStepControl);
 			map.clearOverlays();
@@ -402,6 +363,9 @@
 
 		//跟踪关键点
 		function checkStep() {
+			if(isNavi == 0) {
+				return;
+			}
 			if(map.getDistance(MyPoi, cur_route.getStep(cur_step_index).getPosition()) < 10) {
 				cur_step_index++;
 				if(cur_step_index == cur_route.getNumSteps()) {
@@ -415,6 +379,112 @@
 				checkStep();
 			}, 5000);
 		}
+
+		//定义控件：开始记录轨迹
+		function StartPathControl(posIndex, left, top) {
+			var position = [BMAP_ANCHOR_TOP_LEFT, BMAP_ANCHOR_TOP_RIGHT, BMAP_ANCHOR_BOTTOM_LEFT, BMAP_ANCHOR_BOTTOM_RIGHT];
+			this.defaultAnchor = position[posIndex];
+			this.defaultOffset = new BMap.Size(left, top);
+		}
+		StartPathControl.prototype = new BMap.Control();
+		StartPathControl.prototype.initialize = function(map) {
+			var div = document.createElement("div");
+			$(div).html("<div style='display: inline-block;background: #fff;padding: 4px;padding-top: 8px;border-radius: 2px;box-shadow: 0 0 2px #999;'><i class='iconfont icon-zuji' style='font-size: 26px;color: #999;'></i></div>");
+			$(div).click(function() {
+				startPath();
+			});
+			map.getContainer().appendChild(div);
+			return div;
+		}
+
+		var startPathControl = new StartPathControl(2, 10, 82);
+		map.addControl(startPathControl);
+
+		var pathPointIndex = 0;
+		var pathId = null;
+		var isDrawPath = 0;
+		//开始记录轨迹
+		function startPath() {
+			pathId = '';
+			pathPointIndex = 0;
+			if(!_this.loginID) {
+				mui.toast("您还未登陆");
+				return;
+			}
+			mui.ajax({
+				url: 'http://118.24.34.244:8080/test1/AddPath?userId=' + _this.loginID,
+				type: 'GET',
+				beforeSend: function() {
+					plus.nativeUI.showWaiting();
+				},
+				complete: function() {
+					plus.nativeUI.closeWaiting();
+				},
+				success: function(res) {
+					map.removeControl(startPathControl);
+					map.addControl(endPathControl);
+
+					pathId = res;
+					console.log(pathId);
+					isDrawPath = 1;
+					addPointToPath();
+				},
+				error: function(xhr, type, errorThrown) {
+					mui.toast("Error: 创建路径失败");
+				}
+			});
+		};
+
+		function addPointToPath() {
+			if(isDrawPath == 0) {
+				return;
+			}
+			mui.ajax({
+				url: 'http://118.24.34.244:8080/test1/AddPointToPath?pathId=' + pathId + '&lng=' + MyPoi.lng + '&lat=' + MyPoi.lat + '&index=' + pathPointIndex,
+				type: 'GET',
+				beforeSend: function() {
+					plus.nativeUI.showWaiting();
+				},
+				complete: function() {
+					plus.nativeUI.closeWaiting();
+				},
+				success: function(res) {
+					console.log(res);
+					pathPointIndex++;
+
+					setTimeout(function() {
+						addPointToPath();
+					}, 5000);
+				},
+				error: function(xhr, type, errorThrown) {
+					mui.toast("Error: 上传位置失败");
+				}
+			});
+		};
+
+		//定义控件：结束记录轨迹
+		function EndPathControl(posIndex, left, top) {
+			var position = [BMAP_ANCHOR_TOP_LEFT, BMAP_ANCHOR_TOP_RIGHT, BMAP_ANCHOR_BOTTOM_LEFT, BMAP_ANCHOR_BOTTOM_RIGHT];
+			this.defaultAnchor = position[posIndex];
+			this.defaultOffset = new BMap.Size(left, top);
+		}
+		EndPathControl.prototype = new BMap.Control();
+		EndPathControl.prototype.initialize = function(map) {
+			var div = document.createElement("div");
+			$(div).html("<div style='display: inline-block;background: #fff;padding: 4px;padding-top: 8px;border-radius: 2px;box-shadow: 0 0 2px #999;'><i class='iconfont icon-zuji' style='font-size: 26px;color: #007aff;'></i></div>");
+			$(div).click(function() {
+				endPath();
+			});
+			map.getContainer().appendChild(div);
+			return div;
+		}
+		var endPathControl = new EndPathControl(2, 10, 82);
+
+		function endPath() {
+			isDrawPath = 0;
+			map.removeControl(endPathControl);
+			map.addControl(startPathControl);
+		};
 	</script>
 
 </html>
