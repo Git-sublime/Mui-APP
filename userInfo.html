@@ -11,6 +11,11 @@
 		.mui-pull-right{
 			color: #999;
 		}
+		input[type=text]{
+			/*width: auto;*/
+			margin-bottom: 0;
+			/*border: none;*/
+		}
 	</style>
 	<body>
 	  <div id="app">
@@ -18,7 +23,7 @@
 			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
 			<h1 class="mui-title">个人信息</h1>
 			<a class="mui-btn mui-btn-link mui-pull-right mui-btn-blue" @click="edit = true" v-show="!edit" style="color: #007aff;">编辑</a>
-			<a class="mui-btn mui-btn-link mui-pull-right mui-btn-blue" v-show="edit" style="color: #007aff;">提交</a>
+			<a class="mui-btn mui-btn-link mui-pull-right mui-btn-blue" @click="submitChange()" v-show="edit" style="color: #007aff;">提交</a>
 		</header>
 		<div class="mui-page">
 			<div class="mui-page-content">
@@ -59,32 +64,23 @@
 							<li class="mui-table-view-cell">
 								<a id="head" class="mui-navigate-right" style="line-height: 60px;">头像
 								<span class="mui-pull-right head" style="height: 60px;">
-									<img class="head-img mui-action-preview" id="head-img1" src="images/logo.png" style="width: 60px; height: 60px;margin-right: 20px;"/>
+									<img class="head-img mui-action-preview" id="head-img1" :src="user.headImgUrl" style="width: 60px; height: 60px;margin-right: 20px;"/>
 								</span>
 								</a>
 							</li>
-							<li class="mui-table-view-cell">
-								<a>账号<span class="mui-pull-right" id="accountInfo">Hbuilder</span></a>
-							</li>
-							<li class="mui-table-view-cell">
-								开启LBS服务
-								<div class="mui-switch mui-active mui-switch-mini">
-									<div class="mui-switch-handle"></div>
-								</div>
-							</li>
+							<!--<li class="mui-table-view-cell">
+								<a>账号<input type="text" class="mui-pull-right" id="accountInfo"/></a>
+							</li>-->
 						</ul>
 						<ul class="mui-table-view topHave">
 							<li class="mui-table-view-cell">
-								<a>个性签名<span class="mui-pull-right">人生需要奋斗，奋斗本身就是...</span></a>
+								<a>姓名：<input type="text" class="mui-pull-right" :value='userName' id="userName"/></a>
 							</li>
 							<li class="mui-table-view-cell">
-								<a>性别<span class="mui-pull-right">男</span></a>
+								<a>性别：<input type="text" class="mui-pull-right" :value='userSex' id="userSex"/></a>
 							</li>
 							<li class="mui-table-view-cell">
-								<a>地址<span class="mui-pull-right">四川-成都</span></a>
-							</li>
-							<li class="mui-table-view-cell">
-								<a>出生年份<span class="mui-pull-right">1996</span></a>
+								<a>年龄：<input type="text" class="mui-pull-right" :value='userAge' id="userAge"/></a>
 							</li>
 						</ul>
 					  </div>
@@ -107,7 +103,10 @@
 			data: {
 				loginID: '',
 				user: {},
-				edit: false
+				edit: false,
+				userName: '',
+				userSex: '',
+				userAge: 20
 			},
 			mounted: function(){
 				this.$nextTick(function(){
@@ -122,8 +121,28 @@
 					var sData = plus.webview.currentWebview();
 					this.loginID = sData.user.id;
 					userId = sData.user.id;
+					this.userName = sData.user.name;
+					this.userSex = sData.user.sex;
+					this.userAge = sData.user.age;
 					console.log(userId);
 					this.user = sData.user;
+				},
+				submitChange: function(){
+					var _this = this;
+					_this.userName = document.getElementById('userName').value;
+					_this.userSex = document.getElementById('userSex').value;
+					_this.userAge = document.getElementById('userAge').value;
+					mui.ajax({
+						url: 'http://118.24.34.244:8080/test1/UpdateUser?id=' + _this.loginID + '&name= ' + _this.userName + '&sex=' + _this.userSex + '&age=' + _this.userAge,
+						type: 'GET',
+						timeout: 5000,
+						success: function(res){
+							console.log(res);
+							if(res == 'true'){
+								mui.toast("提交成功")
+							}
+						}
+					})
 				}
 			}
 		})

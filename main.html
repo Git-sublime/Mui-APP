@@ -178,7 +178,8 @@
 							<img v-show="!loginID" class="mui-media-object mui-pull-left header-img" src="images/cc-head.png" style="height: 60px;max-width: 60px;line-height: 60px;">
 							<img v-show="loginID" class="mui-media-object mui-pull-left header-img" :src="user.headImgUrl" style="height: 60px;max-width: 60px;line-height: 60px;">
 							<div class="mui-media-body" style="padding-top: 8px;">
-								<span id="account">天涯游客</span>
+								<span id="account" v-show="!loginID">天涯游客</span>
+								<span v-show="loginID" v-text="user.name">天涯游客</span>
 								<p class='mui-ellipsis' style="margin-top: 2px;">人活着就是应该奋斗，奋斗本身就是一种幸福。</p>
 							</div>
 						</a>
@@ -333,7 +334,7 @@
 									_this.user = res;
 								},
 								error: function(xhr, type, errorThrown){
-									console.log("获取用户信息失败");
+									console.log("获取用户信息失败");return;
 								}
 							})						
 						
@@ -367,15 +368,9 @@
 											_this.$set(_this.chatList1[k], 'type', 1);
 //											console.log(JSON.stringify(data));
 											k++;
-										},
-										error: function(xhr, type, errorThrown){
-											mui.toast('服务器响应失败');
 										}
 									})	
 								}
-							},
-							error: function(xhr, type, errorThrown){
-								mui.toast('服务器响应失败');
 							}
 						});	
 						mui.ajax({
@@ -927,7 +922,7 @@
 									}
 									//用户已登陆，隐藏登陆按钮
 									if(state.account.account){
-										account.innerText = state.account.account;
+//										account.innerText = state.account.account;
 										document.getElementById("login").style.display = 'none';
 										_this.logined = true;
 										_this.loginID = state.account.account;

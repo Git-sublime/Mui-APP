@@ -375,9 +375,29 @@
 					document.getElementById("chatName").innerHTML = sData.chatObj.name;
 					var realSenderId = sData.loginId;
 					var realReceiverId = sData.chatObj.id;
+					var record = [];//聊天记录
 					var hisRecord;//历史聊天记录
 					if(sData.flag == 1){
 						hisRecord = sData.chatObj.record;
+						hisRecord = hisRecord.reverse();
+						//渲染聊天记录
+						for(var i = 0; i<hisRecord.length; i++){
+							if(hisRecord[i].senderId == sData.loginId){
+			            		record.push({
+									sender: 'self',
+									type: 'text',
+									content: hisRecord[i].content,
+									headImgUrl: sData.loginer.headImgUrl
+								});							
+							}else if(hisRecord[i].senderId == sData.chatObj.id){
+								record.push({
+									sender: 'zs',
+									type: 'text',
+									content: hisRecord[i].content,
+									headImgUrl: sData.chatObj.headImgUrl
+								});	
+							}
+						}							
 					}else if(sData.flag == 2){
 						mui.ajax({
 							url: 'http://118.24.34.244:8080/test1/GetLastMsgByTwoId?id1=' + realSenderId + '&id2=' + realReceiverId,
@@ -385,51 +405,37 @@
 							timeout: 7000,
 							async: false,
 							success: function(data){
-								if(data == ""){mui.toast('没有任何数据');return}
-								data = JSON.parse(data);
-								hisRecord = data;
+								if(data != "[]"){
+									data = JSON.parse(data);
+									hisRecord = data;
+	//								console.log(JSON.stringify(hisRecord))
+									hisRecord = hisRecord.reverse();
+									//渲染聊天记录
+									for(var i = 0; i<hisRecord.length; i++){
+										if(hisRecord[i].senderId == sData.loginId){
+						            		record.push({
+												sender: 'self',
+												type: 'text',
+												content: hisRecord[i].content,
+												headImgUrl: sData.loginer.headImgUrl
+											});							
+										}else if(hisRecord[i].senderId == sData.chatObj.id){
+											record.push({
+												sender: 'zs',
+												type: 'text',
+												content: hisRecord[i].content,
+												headImgUrl: sData.chatObj.headImgUrl
+											});	
+										}
+									}
+								}
 							},
 							error: function(xhr, type, errorThrown){
 								mui.toast('服务器响应失败');
 							}
 						})						
 					}
-					var record = [];
-					hisRecord = hisRecord.reverse();
-					//渲染聊天记录
-					for(var i = 0; i<hisRecord.length; i++){
-						if(hisRecord[i].senderId == sData.loginId){
-		            		record.push({
-								sender: 'self',
-								type: 'text',
-								content: hisRecord[i].content,
-								headImgUrl: sData.loginer.headImgUrl
-							});							
-						}else if(hisRecord[i].senderId == sData.chatObj.id){
-							record.push({
-								sender: 'zs',
-								type: 'text',
-								content: hisRecord[i].content,
-								headImgUrl: sData.chatObj.headImgUrl
-							});	
-						}
-					}
-					//渲染最后一条聊天记录
-					if(hisRecord[hisRecord.length-1].senderId == sData.loginId){
-	            		record.push({
-							sender: 'self',
-							type: 'text',
-							content: hisRecord[hisRecord.length-1].content,
-							headImgUrl: sData.loginer.headImgUrl
-						});							
-					}else if(hisRecord[hisRecord.length-1].senderId == sData.chatObj.id){
-						record.push({
-							sender: 'zs',
-							type: 'text',
-							content: hisRecord[hisRecord.length-1].content,
-							headImgUrl: sData.chatObj.headImgUrl
-						});	
-					}					
+				
 //					document.getElementById('loginerHead').src = sData.chatObj.headImgUrl;
 //					document.getElementById("head-img").src = sData.chatObj.headImg;
 
@@ -467,8 +473,7 @@
 						}
 					};
 //					var record = [];
-					
-					
+									
 					var ui = {
 						body: doc.querySelector('body'),
 						footer: doc.querySelector('footer'),
