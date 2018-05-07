@@ -93,17 +93,18 @@
 				clear: both;
 			}
 			.msg-item .msg-user {
-				width: 38px;
-				height: 38px;
-				border: solid 1px #d3d3d3;
+				width: 40px;
+				height: 40px;
+				/*border: solid 1px #d3d3d3;*/
 				display: inline-block;
-				background: #fff;
+				/*background: #fff;*/
+				background: none;
 				border-radius: 3px;
 				vertical-align: top;
 				text-align: center;
 				float: left;
-				padding: 3px;
-				color: #ddd;
+				/*padding: 3px;*/
+				/*color: #ddd;*/
 			}
 			.msg-item .msg-user-img{
 				width: 38px;
@@ -305,9 +306,10 @@
 			<% for(var i in record){ var item=record[i]; %>
 				<div class="msg-item <%= (item.sender=='self'?' msg-item-self':'') %>" msg-type='<%=(item.type)%>' msg-content='<%=(item.content)%>'>
 					<% if(item.sender=='self' ) { %>
-						<img id="loginerHead" class="msg-user-img" src="images/logo.png" alt="" />
+						<!--<i class="msg-user mui-icon mui-icon-person"></i>-->
+						<img class="msg-user" src="<%=(item.headImgUrl)%>">
 					<% } else { %>
-						<img class="msg-user-img" src="images/logo.png" alt="" />
+						<img class="msg-user-img" src="<%=(item.headImgUrl)%>" alt="" />
 					<% } %>
 					<div class="msg-content">
 						<div class="msg-content-inner">
@@ -373,8 +375,62 @@
 					document.getElementById("chatName").innerHTML = sData.chatObj.name;
 					var realSenderId = sData.loginId;
 					var realReceiverId = sData.chatObj.id;
-					
-					document.getElementById('loginerHead').src = sData.chatObj.headImgUrl;
+					var hisRecord;//历史聊天记录
+					if(sData.flag == 1){
+						hisRecord = sData.chatObj.record;
+					}else if(sData.flag == 2){
+						mui.ajax({
+							url: 'http://118.24.34.244:8080/test1/GetLastMsgByTwoId?id1=' + realSenderId + '&id2=' + realReceiverId,
+							type: 'GET',
+							timeout: 7000,
+							async: false,
+							success: function(data){
+								if(data == ""){mui.toast('没有任何数据');return}
+								data = JSON.parse(data);
+								hisRecord = data;
+							},
+							error: function(xhr, type, errorThrown){
+								mui.toast('服务器响应失败');
+							}
+						})						
+					}
+					var record = [];
+					hisRecord = hisRecord.reverse();
+					//渲染聊天记录
+					for(var i = 0; i<hisRecord.length; i++){
+						if(hisRecord[i].senderId == sData.loginId){
+		            		record.push({
+								sender: 'self',
+								type: 'text',
+								content: hisRecord[i].content,
+								headImgUrl: sData.loginer.headImgUrl
+							});							
+						}else if(hisRecord[i].senderId == sData.chatObj.id){
+							record.push({
+								sender: 'zs',
+								type: 'text',
+								content: hisRecord[i].content,
+								headImgUrl: sData.chatObj.headImgUrl
+							});	
+						}
+					}
+					//渲染最后一条聊天记录
+					if(hisRecord[hisRecord.length-1].senderId == sData.loginId){
+	            		record.push({
+							sender: 'self',
+							type: 'text',
+							content: hisRecord[hisRecord.length-1].content,
+							headImgUrl: sData.loginer.headImgUrl
+						});							
+					}else if(hisRecord[hisRecord.length-1].senderId == sData.chatObj.id){
+						record.push({
+							sender: 'zs',
+							type: 'text',
+							content: hisRecord[hisRecord.length-1].content,
+							headImgUrl: sData.chatObj.headImgUrl
+						});	
+					}					
+//					document.getElementById('loginerHead').src = sData.chatObj.headImgUrl;
 //					document.getElementById("head-img").src = sData.chatObj.headImg;
 
 					//查看好友个人信息
@@ -410,7 +466,9 @@
 							//alert("ll");
 						}
 					};
-					var record = [];
+//					var record = [];
+					
+					
 					var ui = {
 						body: doc.querySelector('body'),
 						footer: doc.querySelector('footer'),
@@ -472,6 +530,7 @@
 						record.push(msg);
 						bindMsgList();
 					//	toRobot(msg.content);
+					console.log(JSON.stringify(msg))
 						
 						//发送消息到后台
 						sendMessage(realSenderId, realReceiverId, msg.content);
@@ -548,7 +607,8 @@
 				            		record.push({
 										sender: 'zs',
 										type: 'text',
-										content: list[i].content
+										content: list[i].content,
+										headImgUrl: sData.chatObj.headImgUrl
 									});
 									bindMsgList();
 				            	}
@@ -564,7 +624,6 @@
 				        });
 					};
 					
-
 					function msgTextFocus() {
 							ui.boxMsgText.focus();
 							setTimeout(function() {
@@ -608,7 +667,8 @@
 							send({
 								sender: 'self',
 								type: 'text',
-								content: ui.boxMsgText.value.replace(new RegExp('\n', 'gm'), '<br/>')
+								content: ui.boxMsgText.value.replace(new RegExp('\n', 'gm'), '<br/>'),
+								headImgUrl: sData.loginer.headImgUrl
 							});
 							ui.boxMsgText.value = '';
 							$.trigger(ui.boxMsgText, 'input', null);

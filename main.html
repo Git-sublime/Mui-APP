@@ -133,14 +133,14 @@
 			
 			<!--           聊天界面                     -->
 			<div id="tabbar-with-contact" class="mui-control-content">
-				<div class="fixedTop">
-					<ul class="mui-table-view">
+				<!--<div class="fixedTop">-->
+					<ul class="mui-table-view topHave">
 						<li class="mui-table-view-cell" id="newFriend">新的朋友</li>
 						<li class="mui-table-view-cell" id="group">群聊</li>
 						<li class="mui-table-view-cell" id="contact">通讯录</li>
 					</ul>
-				</div>
-				<ul v-if="logined" class="mui-table-view topHave" style="margin-top: 160px;">
+				<!--</div>-->
+				<ul v-if="logined" class="mui-table-view topHave">
 					<li class="mui-table-view-cell mui-media" v-for="(item, index) in chatList" :key="index" @click="gotoChat(item)">
 						<a href="javascript:;">
 							<img class="mui-media-object mui-pull-left" :src="item.headImgUrl">
@@ -153,7 +153,7 @@
 						</a>
 					</li>
 				</ul>				
-				<ul v-if="!logined" class="mui-table-view topHave" style="margin-top: 160px;" id="freshChat">
+				<ul v-if="!logined" class="mui-table-view topHave" id="freshChat">
 					<li class="mui-table-view-cell mui-media" @click="gotoChat(robot)">
 						<a href="javascript:;">
 							<img class="mui-media-object mui-pull-left" :src="robot.headImg">
@@ -258,14 +258,28 @@
 					//聊天界面跳转函数
 					gotoChat: function(item){
 						var _this = this;
-						 mui.openWindow({
-						 	url: "chat.html",
-						 	id: "chat.html",
-						 	extras: {
-						 		chatObj: item,
-						 		loginId: _this.loginID
-						 	}
-						 })
+						if(item.type == 1){
+							mui.openWindow({
+							 	url: "chat.html",
+							 	id: "chat.html",
+							 	extras: {
+							 		chatObj: item,
+							 		loginId: _this.loginID,
+							 		loginer: _this.user,
+							 		flag: 1
+							 	}
+							})							
+						}else if(item.type == 2){
+							mui.openWindow({
+							 	url: "group-chat.html",
+							 	id: "group-chat.html",
+							 	extras: {
+							 		chatObj: item,
+							 		loginId: _this.loginID
+							 	}
+							})								
+						}
+
 					},
 					//右上角 加 按钮
 					addFriend: function(){
@@ -327,6 +341,7 @@
 										timeout: 7000,
 										async: false,
 										success: function(data){
+											if(data == ""){mui.toast('没有任何数据');return}
 											data = JSON.parse(data);
 											_this.$set(_this.chatList1[k], 'record', data);
 											_this.$set(_this.chatList1[k], 'lastRecord', data[0].content);
@@ -358,29 +373,29 @@
 								}
 								_this.groupChatList = res;
 								var k = 0;
-//								for(var j = 0; j<_this.groupChatList.length; j++){
-//									var tempID = _this.groupChatList[j].id;
-//									mui.ajax({
-//										url: 'http://118.24.34.244:8080/test1/GetLastMsgByTwoId?id1=' + _this.loginID + '&id2=' + tempID,
-//										type: 'GET',
-//										timeout: 7000,
-//										async: false,
-//										success: function(data){
-//											data = JSON.parse(data);
-//											_this.$set(_this.groupChatList[k], 'record', data);
-//											_this.$set(_this.groupChatList[k], 'lastRecord', data[0].content);
-//											_this.$set(_this.groupChatList[k], 'lastRecordDate', (data[0].dateTime).slice(0,19));
-//											_this.$set(_this.groupChatList[k], 'lastRecordDay', (data[0].dateTime).slice(5,10));
-//											_this.$set(_this.groupChatList[k], 'lastRecordTime', (data[0].dateTime).slice(11,16));
-//											_this.$set(_this.groupChatList[k], 'type', 2);
-////											console.log(JSON.stringify(data));
-//											k++;
-//										},
-//										error: function(xhr, type, errorThrown){
-//											mui.toast('服务器响应失败');
-//										}
-//									})	
-//								}
+								for(var j = 0; j<_this.groupChatList.length; j++){
+									var tempID = _this.groupChatList[j].id;
+									mui.ajax({
+										url: 'http://118.24.34.244:8080/test1/GetLastGroupMsgById?groupId=' + tempID,
+										type: 'GET',
+										timeout: 7000,
+										async: false,
+										success: function(data){
+											data = JSON.parse(data);
+											_this.$set(_this.groupChatList[k], 'record', data);
+											_this.$set(_this.groupChatList[k], 'lastRecord', data[0].content);
+											_this.$set(_this.groupChatList[k], 'lastRecordDate', (data[0].dateTime).slice(0,19));
+											_this.$set(_this.groupChatList[k], 'lastRecordDay', (data[0].dateTime).slice(5,10));
+											_this.$set(_this.groupChatList[k], 'lastRecordTime', (data[0].dateTime).slice(11,16));
+											_this.$set(_this.groupChatList[k], 'type', 2);
+//											console.log(JSON.stringify(data));
+											k++;
+										},
+										error: function(xhr, type, errorThrown){
+											mui.toast('服务器响应失败');
+										}
+									})	
+								}
 							},
 							error: function(xhr, type, errorThrown){
 								mui.toast("服务器响应失败")
@@ -909,6 +924,7 @@
 											success: function(res){
 												res = JSON.parse(res);
 												res.headImgUrl = imgUrl + res.headImgUrl;
+												console.log(JSON.stringify(res));
 												_this.user = res;
 											},
 											error: function(xhr, type, errorThrown){
@@ -1007,7 +1023,8 @@
 											id: "contact-list.html",
 											url: "contact-list.html",
 											extras: {
-												loginID : _this.loginID
+												loginID : _this.loginID,
+												user: _this.user
 											}
 										})
 									}else{

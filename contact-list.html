@@ -54,25 +54,9 @@
 				el: "#app",
 				data: {
 					loginID: '',
-					contacts: [
-						{
-							name: "金大爷",
-							headImg: "images/cbd.jpg",
-							dataTags: "JinDaYe"
-						},
-						{
-							name: "露露",
-							headImg: "images/shuijiao.jpg",
-							dataTags: "LuLu"
-						},
-						{
-							name: "会飞的鱼",
-							headImg: "images/cbd.jpg",
-							dataTags: "HuiFeiDeYu"						
-						}
-					],
 					contacts2: {},
-					imgUrl: ''
+					imgUrl: '',
+					user: {}
 				},
 				mounted: function(){
 					this.$nextTick(function(){
@@ -88,10 +72,11 @@
 						 	id: "chat.html",
 						 	extras: {
 						 		chatObj: item,
-						 		loginId: _this.loginID
+						 		loginId: _this.loginID,
+						 		loginer: _this.user,
+						 		flag: 2
 						 	}
 						 })
-						 console.log("sss" + _this.loginID);
 					},
 					dataInit: function(){
 						var _this = this;
@@ -111,6 +96,8 @@
 				        mui.plusReady(function(){
 				        	var sData = plus.webview.currentWebview();
 				        	_this.loginID = sData.loginID;
+				        	_this.user = sData.user;
+				        	console.log(JSON.stringify(_this.user));
 				        	mui.ajax({
 				            	url      : 'http://118.24.34.244:8080/test1/selectFriendsByIdServlet?id=' + _this.loginID,
 				            	type     : 'GET',
