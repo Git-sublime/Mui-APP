@@ -257,7 +257,6 @@
 				methods:{
 					//聊天界面跳转函数
 					gotoChat: function(item){
-						console.log(item.type);
 						var _this = this;
 						if(item.type == 1){
 							mui.openWindow({
@@ -266,7 +265,8 @@
 							 	extras: {
 							 		chatObj: item,
 							 		loginId: _this.loginID,
-							 		loginer: _this.user
+							 		loginer: _this.user,
+							 		flag: 1
 							 	}
 							})							
 						}else if(item.type == 2){
@@ -923,8 +923,8 @@
 											},
 											success: function(res){
 												res = JSON.parse(res);
-												console.log(JSON.stringify(res));
 												res.headImgUrl = imgUrl + res.headImgUrl;
+												console.log(JSON.stringify(res));
 												_this.user = res;
 											},
 											error: function(xhr, type, errorThrown){
@@ -1023,7 +1023,8 @@
 											id: "contact-list.html",
 											url: "contact-list.html",
 											extras: {
-												loginID : _this.loginID
+												loginID : _this.loginID,
+												user: _this.user
 											}
 										})
 									}else{
