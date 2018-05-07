@@ -93,17 +93,18 @@
 				clear: both;
 			}
 			.msg-item .msg-user {
-				width: 38px;
-				height: 38px;
-				border: solid 1px #d3d3d3;
+				width: 40px;
+				height: 40px;
+				/*border: solid 1px #d3d3d3;*/
 				display: inline-block;
-				background: #fff;
+				/*background: #fff;*/
+				background: none;
 				border-radius: 3px;
 				vertical-align: top;
 				text-align: center;
 				float: left;
-				padding: 3px;
-				color: #ddd;
+				/*padding: 3px;*/
+				/*color: #ddd;*/
 			}
 			.msg-item .msg-user-img{
 				width: 38px;
@@ -305,9 +306,10 @@
 			<% for(var i in record){ var item=record[i]; %>
 				<div class="msg-item <%= (item.sender=='self'?' msg-item-self':'') %>" msg-type='<%=(item.type)%>' msg-content='<%=(item.content)%>'>
 					<% if(item.sender=='self' ) { %>
-						<i class="msg-user mui-icon mui-icon-person"></i>
+						<!--<i class="msg-user mui-icon mui-icon-person"></i>-->
+						<img class="msg-user" src="<%=(item.headImgUrl)%>">
 					<% } else { %>
-						<img class="msg-user-img" src="images/logo.png" alt="" />
+						<img class="msg-user-img" src="<%=(item.headImgUrl)%>" alt="" />
 					<% } %>
 					<div class="msg-content">
 						<div class="msg-content-inner">
@@ -373,8 +375,43 @@
 					document.getElementById("chatName").innerHTML = sData.chatObj.name;
 					var realSenderId = sData.loginId;
 					var realReceiverId = sData.chatObj.id;
-					console.log(JSON.stringify(sData.chatObj))
-					
+					var hisRecord = sData.chatObj.record;
+					hisRecord = hisRecord.reverse();
+					console.log(JSON.stringify(hisRecord[hisRecord.length-1]))
+					var record = [];
+					//渲染聊天记录
+					for(var i = 0; i<hisRecord.length; i++){
+						if(hisRecord[i].senderId == sData.loginId){
+		            		record.push({
+								sender: 'self',
+								type: 'text',
+								content: hisRecord[i].content,
+								headImgUrl: sData.loginer.headImgUrl
+							});							
+						}else if(hisRecord[i].senderId == sData.chatObj.id){
+							record.push({
+								sender: 'zs',
+								type: 'text',
+								content: hisRecord[i].content,
+								headImgUrl: sData.chatObj.headImgUrl
+							});	
+						}
+					}
+						if(hisRecord[hisRecord.length-1].senderId == sData.loginId){
+		            		record.push({
+								sender: 'self',
+								type: 'text',
+								content: hisRecord[hisRecord.length-1].content,
+								headImgUrl: sData.loginer.headImgUrl
+							});							
+						}else if(hisRecord[hisRecord.length-1].senderId == sData.chatObj.id){
+							record.push({
+								sender: 'zs',
+								type: 'text',
+								content: hisRecord[hisRecord.length-1].content,
+								headImgUrl: sData.chatObj.headImgUrl
+							});	
+						}					
 //					document.getElementById('loginerHead').src = sData.chatObj.headImgUrl;
 //					document.getElementById("head-img").src = sData.chatObj.headImg;
 
@@ -411,7 +448,9 @@
 							//alert("ll");
 						}
 					};
-					var record = [];
+//					var record = [];
+					
+					
 					var ui = {
 						body: doc.querySelector('body'),
 						footer: doc.querySelector('footer'),
@@ -550,7 +589,8 @@
 				            		record.push({
 										sender: 'zs',
 										type: 'text',
-										content: list[i].content
+										content: list[i].content,
+										headImgUrl: sData.chatObj.headImgUrl
 									});
 									bindMsgList();
 				            	}
@@ -566,7 +606,6 @@
 				        });
 					};
 					
-
 					function msgTextFocus() {
 							ui.boxMsgText.focus();
 							setTimeout(function() {
@@ -610,7 +649,8 @@
 							send({
 								sender: 'self',
 								type: 'text',
-								content: ui.boxMsgText.value.replace(new RegExp('\n', 'gm'), '<br/>')
+								content: ui.boxMsgText.value.replace(new RegExp('\n', 'gm'), '<br/>'),
+								headImgUrl: sData.loginer.headImgUrl
 							});
 							ui.boxMsgText.value = '';
 							$.trigger(ui.boxMsgText, 'input', null);

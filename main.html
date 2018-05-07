@@ -133,14 +133,14 @@
 			
 			<!--           聊天界面                     -->
 			<div id="tabbar-with-contact" class="mui-control-content">
-				<div class="fixedTop">
-					<ul class="mui-table-view">
+				<!--<div class="fixedTop">-->
+					<ul class="mui-table-view topHave">
 						<li class="mui-table-view-cell" id="newFriend">新的朋友</li>
 						<li class="mui-table-view-cell" id="group">群聊</li>
 						<li class="mui-table-view-cell" id="contact">通讯录</li>
 					</ul>
-				</div>
-				<ul v-if="logined" class="mui-table-view topHave" style="margin-top: 160px;">
+				<!--</div>-->
+				<ul v-if="logined" class="mui-table-view topHave">
 					<li class="mui-table-view-cell mui-media" v-for="(item, index) in chatList" :key="index" @click="gotoChat(item)">
 						<a href="javascript:;">
 							<img class="mui-media-object mui-pull-left" :src="item.headImgUrl">
@@ -153,7 +153,7 @@
 						</a>
 					</li>
 				</ul>				
-				<ul v-if="!logined" class="mui-table-view topHave" style="margin-top: 160px;" id="freshChat">
+				<ul v-if="!logined" class="mui-table-view topHave" id="freshChat">
 					<li class="mui-table-view-cell mui-media" @click="gotoChat(robot)">
 						<a href="javascript:;">
 							<img class="mui-media-object mui-pull-left" :src="robot.headImg">
@@ -265,7 +265,8 @@
 							 	id: "chat.html",
 							 	extras: {
 							 		chatObj: item,
-							 		loginId: _this.loginID
+							 		loginId: _this.loginID,
+							 		loginer: _this.user
 							 	}
 							})							
 						}else if(item.type == 2){
