@@ -90,7 +90,8 @@
 		<header class="mui-bar mui-bar-nav">
 			<!--<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>-->
 			<div v-show="showHeadImage" class="mui-pull-left m-headImg" style="width: 34px; height: 34px;margin-top: 5px;border-radius: 50%;overflow: hidden;">
-				<img id="headImage" src="images/cc-head.png" style="width: 34px; height: 34px;">
+				<img v-show="!loginID" src="images/cc-head.png" style="width: 34px; height: 34px;">
+				<img v-show="loginID" :src="user.headImgUrl" style="width: 34px; height: 34px;">
 			</div>
 			<h1 class="mui-title" id="title2">微定位</h1>
 			<span @click.stop="addFriend()" id="addBtn" class="mui-icon mui-icon-plusempty mui-pull-right" style="font-size: 34px;padding-top: 6px;"></span>
@@ -174,7 +175,8 @@
 				<ul class="mui-table-view topHave">
 					<li class="mui-table-view-cell mui-media" id="userInfo2">
 						<a href="#account">
-							<img id="head-img" class="mui-media-object mui-pull-left header-img" src="images/cc-head.png" style="height: 60px;max-width: 60px;line-height: 60px;">
+							<img v-show="!loginID" class="mui-media-object mui-pull-left header-img" src="images/cc-head.png" style="height: 60px;max-width: 60px;line-height: 60px;">
+							<img v-show="loginID" class="mui-media-object mui-pull-left header-img" :src="user.headImgUrl" style="height: 60px;max-width: 60px;line-height: 60px;">
 							<div class="mui-media-body" style="padding-top: 8px;">
 								<span id="account">天涯游客</span>
 								<p class='mui-ellipsis' style="margin-top: 2px;">人活着就是应该奋斗，奋斗本身就是一种幸福。</p>
@@ -321,6 +323,20 @@
 					},
 					getChatLiat: function(){
 						var _this = this;
+							mui.ajax({
+								url: 'http://118.24.34.244:8080/test1/GetUserByIdServlet?id=' + _this.loginID,
+								type: 'GET',
+								timeout: 5000,
+								success: function(res){
+									res = JSON.parse(res);
+									res.headImgUrl = imgUrl + res.headImgUrl;
+									_this.user = res;
+								},
+								error: function(xhr, type, errorThrown){
+									console.log("获取用户信息失败");
+								}
+							})						
+						
 						//请求最近聊天列表
 						mui.ajax({
 							url: 'http://118.24.34.244:8080/test1/SelectChatListById?id=' + _this.loginID,
@@ -418,8 +434,8 @@
 						(function() {
 							var settings = app.getSettings();
 							var account = document.getElementById('account');
-							var headImg = document.getElementById("head-img");
-							var headImg2 = document.getElementById("headImage");
+//							var headImg = document.getElementById("head-img");
+//							var headImg2 = document.getElementById("headImage");
 							//获取当前时间
 							var nowDate = new Date();
 							var monthStr = (nowDate.getMonth() + 1).toString();
@@ -904,10 +920,10 @@
 									//第三方使用qq或微信头像，否则使用默认头像
 									if(state.account.figureurl_qq_2 || state.account.headimgurl){
 										account.innerText = state.account.nickname;
-										headImg2.src = headImg.src = state.account.figureurl_qq_2 || state.account.headimgurl;
+//										headImg2.src = headImg.src = state.account.figureurl_qq_2 || state.account.headimgurl;
 									} else {
-										headImg.src = headImg.src;
-										headImg2.src = headImg2.src;
+//										headImg.src = headImg.src;
+//										headImg2.src = headImg2.src;
 									}
 									//用户已登陆，隐藏登陆按钮
 									if(state.account.account){
@@ -915,26 +931,6 @@
 										document.getElementById("login").style.display = 'none';
 										_this.logined = true;
 										_this.loginID = state.account.account;
-										mui.ajax({
-											url: 'http://118.24.34.244:8080/test1/GetUserByIdServlet?id=' + _this.loginID,
-											type: 'GET',
-											timeout: 5000,
-											beforeSend: function(){
-												plus.nativeUI.showWaiting();
-											},
-											complete: function(){
-												plus.nativeUI.closeWaiting();
-											},
-											success: function(res){
-												res = JSON.parse(res);
-												res.headImgUrl = imgUrl + res.headImgUrl;
-												console.log(JSON.stringify(res));
-												_this.user = res;
-											},
-											error: function(xhr, type, errorThrown){
-												console.log("获取用户信息失败");
-											}
-										})
 									}else{
 										document.getElementById("login").style.display = 'block';
 										_this.logined = false;
