@@ -100,6 +100,7 @@
 		<script src="js/vue.min.js"></script>
 		<script src="js/jquery-3.3.1.min.js"></script>
 		<script type="text/javascript">
+		var userId = '';
 		mui.init();
 		new Vue({
 			el: '#app',
@@ -120,6 +121,8 @@
 				InitPage: function(){
 					var sData = plus.webview.currentWebview();
 					this.loginID = sData.user.id;
+					userId = sData.user.id;
+					console.log(userId);
 					this.user = sData.user;
 				}
 			}
@@ -202,17 +205,17 @@
 			img.onload = function(){
 				var myBlob = dataURLtoBlob(getBase64Image(img));			
 				var form = new FormData();
-				form.append('token','6fa7d0ccfd786f4a34e2b8d1ba92a2e');
+				form.append('userId',userId);
 				form.append('upload',myBlob,'head.jpg');//图片
 				$.ajax({
-					url:'http://192.168.43.253:8080/test1/UploadHeadImg',
-					type:'GET', 
+					url:'http://118.24.34.244:8080/test1/UploadHeadImg',
+					type:'POST', 
 					contentType:false,
 					processData:false,
 					data:form,
 					success:function(data){
 							console.log(data)
-					}				
+					}			
 				});		
 			}
 		}
