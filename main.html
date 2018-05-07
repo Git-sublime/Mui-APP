@@ -668,6 +668,10 @@
 //								设置位置中心,跳转到搜索的位置
 								function setPlace() {
 									$("#suggestId").blur();
+									isNavi = 0;
+									map.removeControl(myNaviControl);
+									map.removeControl(myEndNaviControl);
+									map.removeControl(myStepControl);
 									map.clearOverlays(); //清除地图上所有覆盖物
 									function myFun() {
 										dest = local.getResults().getPoi(0).point; //获取第一个智能搜索的结果
