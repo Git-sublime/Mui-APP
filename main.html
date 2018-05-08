@@ -425,6 +425,9 @@
 						})
 						_this.chatList.reverse();
 						
+						setTimeout(function(){
+							_this.getChatLiat();
+						},4000)
 					},
 					//初始化
 					InitMain: function(){
@@ -936,9 +939,9 @@
 									//获取聊天列表数据
 									_this.getChatLiat();
 									//定义下拉刷新
-									setInterval(function() {
-										_this.getChatLiat()
-									}, 3000);
+//									setInterval(function() {
+//										_this.getChatLiat()
+//									}, 3000);
 								}, false);
 								//底部导航按钮点击事件==================================
 								mui(".mui-bar-tab").on('tap','.mui-tab-item',function(){
