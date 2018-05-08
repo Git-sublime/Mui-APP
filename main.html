@@ -149,7 +149,7 @@
 								<span v-text="item.name"></span>
 								<span v-if="item.lastRecordDay == nowDay" v-text="item.lastRecordTime" class="mui-pull-right" style="font-size: 14px;color: #8f8f94;"></span>
 								<span v-if="item.lastRecordDay != nowDay" v-text="item.lastRecordDay" class="mui-pull-right" style="font-size: 14px;color: #8f8f94;"></span>
-								<p class='mui-ellipsis'><span v-if="item.chatUser">last：</span>{{item.lastRecord}}</p>
+								<p class='mui-ellipsis'><span v-if="item.lastRecordUser" v-text="item.lastRecordUser"></span>{{item.lastRecord}}</p>
 							</div>
 						</a>
 					</li>
@@ -330,12 +330,13 @@
 								type: 'GET',
 								timeout: 5000,
 								success: function(res){
+//									console.log(JSON.stringify(res));
 									res = JSON.parse(res);
 									res.headImgUrl = imgUrl + res.headImgUrl;
 									_this.user = res;
 								},
 								error: function(xhr, type, errorThrown){
-									console.log("获取用户信息失败");return;
+									console.log("获取用户信息失败");
 								}
 							})						
 						
@@ -396,6 +397,7 @@
 											data = JSON.parse(data);
 											_this.$set(_this.groupChatList[k], 'record', data);
 											_this.$set(_this.groupChatList[k], 'lastRecord', data[0].content);
+											_this.$set(_this.groupChatList[k], 'lastRecordUser', data[0].senderName + '：');
 											_this.$set(_this.groupChatList[k], 'lastRecordDate', (data[0].dateTime).slice(0,19));
 											_this.$set(_this.groupChatList[k], 'lastRecordDay', (data[0].dateTime).slice(5,10));
 											_this.$set(_this.groupChatList[k], 'lastRecordTime', (data[0].dateTime).slice(11,16));
