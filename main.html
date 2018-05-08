@@ -278,7 +278,8 @@
 							 	id: "group-chat.html",
 							 	extras: {
 							 		chatObj: item,
-							 		loginId: _this.loginID
+							 		loginId: _this.loginID,
+							 		loginer: _this.user
 							 	}
 							})								
 						}
@@ -995,7 +996,8 @@
 											id: "group-list.html",
 											url: "group-list.html",
 											extras: {
-												loginID: _this.loginID
+												loginID: _this.loginID,
+												user: _this.user
 											}
 										})										
 									}else{

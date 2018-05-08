@@ -94,17 +94,18 @@
 				clear: both;
 			}
 			.msg-item .msg-user {
-				width: 38px;
-				height: 38px;
-				border: solid 1px #d3d3d3;
+				width: 40px;
+				height: 40px;
+				/*border: solid 1px #d3d3d3;*/
 				display: inline-block;
-				background: #fff;
+				/*background: #fff;*/
+				background: none;
 				border-radius: 3px;
 				vertical-align: top;
 				text-align: center;
 				float: left;
-				padding: 3px;
-				color: #ddd;
+				/*padding: 3px;*/
+				/*color: #ddd;*/
 			}
 			.msg-item .msg-user-img{
 				width: 38px;
@@ -306,7 +307,8 @@
 			<% for(var i in record){ var item=record[i]; %>
 				<div class="msg-item <%= (item.sender=='self'?' msg-item-self':'') %>" msg-type='<%=(item.type)%>' msg-content='<%=(item.content)%>'>
 					<% if(item.sender=='self' ) { %>
-						<i class="msg-user mui-icon mui-icon-person"></i>
+						<!--<i class="msg-user mui-icon mui-icon-person"></i>-->
+						<img class="msg-user" src="<%=(item.headImgUrl)%>">
 					<% } else { %>
 						<img class="msg-user-img" src="images/logo.png" alt="" />
 					<% } %>
@@ -375,6 +377,37 @@
 					var realGroupId = sData.chatObj.id;
 					console.log(realSenderId);
 					console.log(realGroupId);
+					
+					//过去聊天记录
+					var record = [];
+					mui.ajax({
+						url: 'http://118.24.34.244:8080/test1/GetLastGroupMsgById?groupId=' + realGroupId,
+						type: 'GET',
+						timeout: 5000,
+						async: false,
+						success: function(data){
+							if(data != '[]'){
+								data = JSON.parse(data);
+								data = data.reverse();
+								for(var i = 0; i<data.length; i++){
+									if(data[i].senderId == sData.loginer.id){
+										record.push({
+											sender: 'self',
+											type: 'text',
+											content: data[i].content,
+											headImgUrl: sData.loginer.headImgUrl
+										});										
+									}else{
+										record.push({
+											sender: 'zs',
+											type: 'text',
+											content: data[i].content
+										});	
+									}
+								}
+							}
+						}
+					})
 //					document.getElementById("head-img").src = sData.chatObj.headImg;
 					//打开群详细信息
 					doc.getElementById("openGroupMemberInfo").addEventListener('tap', function(){
@@ -409,7 +442,6 @@
 							//alert("ll");
 						}
 					};
-					var record = [];
 					var ui = {
 						body: doc.querySelector('body'),
 						footer: doc.querySelector('footer'),
@@ -613,7 +645,8 @@
 							send({
 								sender: 'self',
 								type: 'text',
-								content: ui.boxMsgText.value.replace(new RegExp('\n', 'gm'), '<br/>')
+								content: ui.boxMsgText.value.replace(new RegExp('\n', 'gm'), '<br/>'),
+								headImgUrl: sData.loginer.headImgUrl
 							});
 							ui.boxMsgText.value = '';
 							$.trigger(ui.boxMsgText, 'input', null);

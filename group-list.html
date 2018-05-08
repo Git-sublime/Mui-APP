@@ -58,7 +58,8 @@
 				data: {
 					loginID: '',
 					groups: [],
-					member: 1
+					member: 1,
+					user:{}
 				},
 				mounted: function(){
 					this.$nextTick(function(){
@@ -67,6 +68,7 @@
 						mui.plusReady(function(){
 							var sData = plus.webview.currentWebview();
 				        	_this.loginID = sData.loginID;
+				        	_this.user = sData.user;
 							_this.groupInit();
 						})
 					})
@@ -80,7 +82,8 @@
 						 	id: "group-chat.html",
 						 	extras: {
 						 		chatObj: item,
-						 		loginId: _this.loginID
+						 		loginId: _this.loginID,
+						 		loginer: _this.user
 						 	}
 						 })
 					},
