@@ -324,6 +324,16 @@
 						this.showAddFriend = false;
 					},
 					getChatLiat: function(){
+						//让请求同步的变量
+						
+						var GetUserOK = false;//GetUserByIdServlet是否完成
+						
+						var ChatListOKTotal = 0;//需要请求多少次"GetLastMsgByTwoId"
+						var ChatListOKCount = 0;//已请求多少次"GetLastMsgByTwoId"
+						
+						var GroupChatListOKTotal = 0;//需要请求多少次"GetLastGroupMsgById"
+						var GroupChatListOKCount = 0;//已请求多少次"GetLastGroupMsgById"
+						
 						var _this = this;
 							mui.ajax({
 								url: 'http://118.24.34.244:8080/test1/GetUserByIdServlet?id=' + _this.loginID,
@@ -334,9 +344,12 @@
 									res = JSON.parse(res);
 									res.headImgUrl = imgUrl + res.headImgUrl;
 									_this.user = res;
+									
+									GetUserOK = true;
 								},
 								error: function(xhr, type, errorThrown){
 									console.log("获取用户信息失败");
+									GetUserOK = true;
 								}
 							})						
 						
@@ -352,13 +365,16 @@
 								}
 								_this.chatList1 = res;
 								var k = 0;
+								
+								ChatListOKTotal = _this.chatList1.length;
+								
 								for(var j = 0; j<_this.chatList1.length; j++){
 									var tempID = _this.chatList1[j].id;
 									mui.ajax({
 										url: 'http://118.24.34.244:8080/test1/GetLastMsgByTwoId?id1=' + _this.loginID + '&id2=' + tempID,
 										type: 'GET',
 										timeout: 7000,
-										async: false,
+										async: true,
 										success: function(data){
 											if(data == ""){mui.toast('没有任何数据');return}
 											data = JSON.parse(data);
@@ -370,9 +386,16 @@
 											_this.$set(_this.chatList1[k], 'type', 1);
 //											console.log(JSON.stringify(data));
 											k++;
+											ChatListOKCount++;
+										},
+										error: function(xhr, type, errorThrown){
+											ChatListOKCount++;
 										}
 									})	
 								}
+							},
+							error: function(xhr, type, errorThrown){
+
 							}
 						});	
 						mui.ajax({
@@ -386,13 +409,16 @@
 								}
 								_this.groupChatList = res;
 								var k = 0;
+								
+								GroupChatListOKTotal = _this.groupChatList.length;
+								
 								for(var j = 0; j<_this.groupChatList.length; j++){
 									var tempID = _this.groupChatList[j].id;
 									mui.ajax({
 										url: 'http://118.24.34.244:8080/test1/GetLastGroupMsgById?groupId=' + tempID,
 										type: 'GET',
 										timeout: 7000,
-										async: false,
+										async: true,
 										success: function(data){
 											data = JSON.parse(data);
 											_this.$set(_this.groupChatList[k], 'record', data);
@@ -404,30 +430,40 @@
 											_this.$set(_this.groupChatList[k], 'type', 2);
 //											console.log(JSON.stringify(data));
 											k++;
+											GroupChatListOKCount++;
 										},
 										error: function(xhr, type, errorThrown){
-											mui.toast('服务器响应失败');
+											GroupChatListOKCount++;
 										}
 									})	
 								}
 							},
 							error: function(xhr, type, errorThrown){
-								mui.toast("服务器响应失败")
+							
 							}
 						});
 						
-//						数组合并
-						_this.chatList = _this.chatList1;
-						_this.chatList = _this.chatList.concat(_this.groupChatList);
-//						时间排序
-						_this.chatList.sort(function(a, b){
-							return Date.parse(a.lastRecordDate) - Date.parse(b.lastRecordDate);
-						})
-						_this.chatList.reverse();
-						
-						setTimeout(function(){
-							_this.getChatLiat();
-						},4000)
+						//判断完成所有请求后再进行：数组合并，时间排序，再次请求
+						var intervalCkeck = setInterval(function(){
+							if(GetUserOK && ChatListOKCount==ChatListOKTotal && GroupChatListOKCount==GroupChatListOKTotal){
+								console.log("已完成");
+								//结束定时器
+								clearInterval(intervalCkeck);
+								//数组合并
+								_this.chatList = _this.chatList1;
+								_this.chatList = _this.chatList.concat(_this.groupChatList);
+								//时间排序
+								_this.chatList.sort(function(a, b){
+									return Date.parse(a.lastRecordDate) - Date.parse(b.lastRecordDate);
+								})
+								_this.chatList.reverse();
+								//再次请求
+								_this.getChatLiat();
+							}else{
+								console.log("还未完成");
+							}
+						}, 2000);
+					
 					},
 					//初始化
 					InitMain: function(){
@@ -724,7 +760,7 @@
 								var walking = new BMap.WalkingRoute(map, {
 									renderOptions: {
 										map: map,
-										panel: "r-result",
+									//	panel: "r-result",
 										autoViewport: true
 									},
 									onPolylinesSet: function(routes) {
