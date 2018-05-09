@@ -565,7 +565,7 @@
 									}, function(e) {
 										alert("Orientation error: " + e.message);
 									}, {
-										frequency: 1
+										frequency: 10
 									});
 
 								function SearchControl(posIndex, left, top) {
@@ -616,14 +616,7 @@
 									var div = document.createElement("div");
 									$(div).html('<div id="startNaviBtn" class="mui-btn mui-btn-primary">开始导航</div>');
 									$(div).click(function(){
-										map.removeControl(myNaviControl);
-										map.addControl(myEndNaviControl);
-										moveToMyPoi(24);
-										cur_route = walking.getResults().getPlan(0).getRoute(0);
-										cur_step_index = 0;
-										map.addControl(myStepControl);
-										$("#step").text(cur_route.getStep(0).getDescription(false));
-										checkStep();
+										startNavi();
 									});
 									map.getContainer().appendChild(div);
 									return div;
@@ -824,13 +817,32 @@
 								function startNavi() {
 									map.removeControl(myNaviControl);
 									map.addControl(myEndNaviControl);
-									moveToMyPoi(17);
+									moveToMyPoi(19);
 									cur_route = walking.getResults().getPlan(0).getRoute(0);
 									cur_step_index = 0;
 									map.addControl(myStepControl);
-									$("#step").text(cur_route.getStep(0).getDescription(false));
 									isNavi = 1;
 									checkStep();
+								};
+								
+								//语音合成，并播放
+								function speak(text) {
+									var dtask = plus.downloader.createDownload("http://tsn.baidu.com/text2audio?tex=" + text + "&lan=zh&cuid=cuid0001&ctp=1&tok=24.767e62f3abdcd1581a6bc26164e31d46.2592000.1528437715.282335-11213698", {
+										filename: "_downloads/voice.map3"
+									}, function(d, status) {
+										// 下载完成
+										if(status == 200) {
+											var p = plus.audio.createPlayer(d.filename);
+											p.play(function() {
+												console("播放成功");
+											}, function(e) {
+												console("播放失败");
+											});
+										} else {
+											console("下载失败");
+										}
+									});
+									dtask.start();
 								};
 
 								//结束步行导航
@@ -852,8 +864,10 @@
 											$("#step").text("已到达终点附近");
 											return;
 										}
-										$("#step").text(cur_route.getStep(cur_step_index).getDescription(false));
 										console.log("到达关键点");
+										var curText = cur_route.getStep(cur_step_index).getDescription(false);
+										$("#step").text(curText);
+										speak(curText);
 									}
 									setTimeout(function() {
 										checkStep();
