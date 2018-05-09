@@ -200,6 +200,26 @@ groupId：String，
 返回参数：groupChartRecordList；类型：数组（数组元素类型：GroupChartRecord）
 实例:
 http://118.24.34.244:8080/test1/GetLastGroupMsgById?groupId=group001
+
+//上传群头像
+function uploadHead(img){
+	img.onload = function(){
+		var myBlob = dataURLtoBlob(getBase64Image(img));			
+		var form = new FormData();
+		form.append('groupId',groupId);
+		form.append('upload',myBlob,'head.jpg');//图片
+		$.ajax({
+			url:'http://118.24.34.244:8080/test1/UploadGroupHeadImg',
+			type:'POST', 
+			contentType:false,
+			processData:false,
+			data:form,
+			success:function(data){
+				console.log(data)
+			}			
+		});		
+	}
+}
 </pre>
 </body>
 </html>
