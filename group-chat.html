@@ -310,7 +310,7 @@
 						<!--<i class="msg-user mui-icon mui-icon-person"></i>-->
 						<img class="msg-user" src="<%=(item.headImgUrl)%>">
 					<% } else { %>
-						<img class="msg-user-img" src="images/logo.png" alt="" />
+						<img class="msg-user-img" src="<%=(item.headImgUrl)%>" alt="" />
 					<% } %>
 					<div class="msg-content">
 						<div class="msg-content-inner">
@@ -385,11 +385,19 @@
 						type: 'GET',
 						timeout: 5000,
 						async: false,
+						beforeSend: function(){
+							plus.nativeUI.showWaiting();
+						},
+						complete: function(){
+							plus.nativeUI.closeWaiting();
+						},
 						success: function(data){
 							if(data != '[]'){
 								data = JSON.parse(data);
+//								console.log(JSON.stringify(data));
 								data = data.reverse();
 								for(var i = 0; i<data.length; i++){
+									data[i].senderHeadImg = imgUrl + data[i].senderHeadImg;
 									if(data[i].senderId == sData.loginer.id){
 										record.push({
 											sender: 'self',
@@ -401,7 +409,8 @@
 										record.push({
 											sender: 'zs',
 											type: 'text',
-											content: data[i].content
+											content: data[i].content,
+											headImgUrl: data[i].senderHeadImg
 										});	
 									}
 								}
