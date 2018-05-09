@@ -378,15 +378,21 @@
 										success: function(data){
 											if(data == ""){mui.toast('没有任何数据');return}
 											data = JSON.parse(data);
-											_this.$set(_this.chatList1[k], 'record', data);
-											_this.$set(_this.chatList1[k], 'lastRecord', data[0].content);
-											_this.$set(_this.chatList1[k], 'lastRecordDate', (data[0].dateTime).slice(0,19));
-											_this.$set(_this.chatList1[k], 'lastRecordDay', (data[0].dateTime).slice(5,10));
-											_this.$set(_this.chatList1[k], 'lastRecordTime', (data[0].dateTime).slice(11,16));
-											_this.$set(_this.chatList1[k], 'type', 1);
-//											console.log(JSON.stringify(data));
-											k++;
-											ChatListOKCount++;
+											for(var j1 = 0; j1<_this.chatList1.length; j1++){
+												if(_this.chatList1[j1].id == data[0].senderId || _this.chatList1[j1].id == data[0].receiverId){
+													_this.$set(_this.chatList1[j1], 'record', data);
+													_this.$set(_this.chatList1[j1], 'lastRecord', data[0].content);
+													_this.$set(_this.chatList1[j1], 'lastRecordDate', (data[0].dateTime).slice(0,19));
+													_this.$set(_this.chatList1[j1], 'lastRecordDay', (data[0].dateTime).slice(5,10));
+													_this.$set(_this.chatList1[j1], 'lastRecordTime', (data[0].dateTime).slice(11,16));
+													_this.$set(_this.chatList1[j1], 'type', 1);
+		//											console.log(JSON.stringify(data));
+													k++;
+													ChatListOKCount++;
+													break;
+												}
+											}
+											
 										},
 										error: function(xhr, type, errorThrown){
 											ChatListOKCount++;
@@ -408,12 +414,12 @@
 									res[i].headImgUrl = imgUrl + res[i].headImgUrl; 										
 								}
 								_this.groupChatList = res;
-								var k = 0;
+								var kk = 0;
 								
 								GroupChatListOKTotal = _this.groupChatList.length;
 								
-								for(var j = 0; j<_this.groupChatList.length; j++){
-									var tempID = _this.groupChatList[j].id;
+								for(var jj = 0; jj<_this.groupChatList.length; jj++){
+									var tempID = _this.groupChatList[jj].id;
 									mui.ajax({
 										url: 'http://118.24.34.244:8080/test1/GetLastGroupMsgById?groupId=' + tempID,
 										type: 'GET',
@@ -421,16 +427,24 @@
 										async: true,
 										success: function(data){
 											data = JSON.parse(data);
-											_this.$set(_this.groupChatList[k], 'record', data);
-											_this.$set(_this.groupChatList[k], 'lastRecord', data[0].content);
-											_this.$set(_this.groupChatList[k], 'lastRecordUser', data[0].senderName + '：');
-											_this.$set(_this.groupChatList[k], 'lastRecordDate', (data[0].dateTime).slice(0,19));
-											_this.$set(_this.groupChatList[k], 'lastRecordDay', (data[0].dateTime).slice(5,10));
-											_this.$set(_this.groupChatList[k], 'lastRecordTime', (data[0].dateTime).slice(11,16));
-											_this.$set(_this.groupChatList[k], 'type', 2);
-//											console.log(JSON.stringify(data));
-											k++;
-											GroupChatListOKCount++;
+											
+											for(var j1 = 0; j1<_this.groupChatList.length; j1++){
+												if(_this.groupChatList[j1].id == data[0].groupId){
+													_this.$set(_this.groupChatList[j1], 'record', data);
+													_this.$set(_this.groupChatList[j1], 'lastRecord', data[0].content);
+													_this.$set(_this.groupChatList[j1], 'lastRecordUser', data[0].senderName + '：');
+													_this.$set(_this.groupChatList[j1], 'lastRecordDate', (data[0].dateTime).slice(0,19));
+													_this.$set(_this.groupChatList[j1], 'lastRecordDay', (data[0].dateTime).slice(5,10));
+													_this.$set(_this.groupChatList[j1], 'lastRecordTime', (data[0].dateTime).slice(11,16));
+													_this.$set(_this.groupChatList[j1], 'type', 2);
+		//											console.log(JSON.stringify(data));
+													kk++;
+													GroupChatListOKCount++;
+													break;
+												}
+											}
+											
+											
 										},
 										error: function(xhr, type, errorThrown){
 											GroupChatListOKCount++;
@@ -445,6 +459,7 @@
 						
 						//判断完成所有请求后再进行：数组合并，时间排序，再次请求
 						var intervalCkeck = setInterval(function(){
+							console.log("ChatListOKTotal:"+ChatListOKTotal+",ChatListOKCount:"+ChatListOKCount);
 							if(GetUserOK && ChatListOKCount==ChatListOKTotal && GroupChatListOKCount==GroupChatListOKTotal){
 								console.log("已完成");
 								//结束定时器
@@ -461,6 +476,7 @@
 								_this.getChatLiat();
 							}else{
 								console.log("还未完成");
+								
 							}
 						}, 2000);
 					
