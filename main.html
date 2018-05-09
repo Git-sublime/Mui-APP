@@ -334,6 +334,8 @@
 						var GroupChatListOKTotal = 0;//需要请求多少次"GetLastGroupMsgById"
 						var GroupChatListOKCount = 0;//已请求多少次"GetLastGroupMsgById"
 						
+						var anyChatGetFail = false;//有任何一条聊天记录获取失败
+						
 						var _this = this;
 							mui.ajax({
 								url: 'http://118.24.34.244:8080/test1/GetUserByIdServlet?id=' + _this.loginID,
@@ -395,13 +397,15 @@
 											
 										},
 										error: function(xhr, type, errorThrown){
+											console.log("获取最后一条聊天记录失败");
 											ChatListOKCount++;
+											anyChatGetFail = true;
 										}
 									})	
 								}
 							},
 							error: function(xhr, type, errorThrown){
-
+								console.log("获取聊天列表失败");
 							}
 						});	
 						mui.ajax({
@@ -447,13 +451,15 @@
 											
 										},
 										error: function(xhr, type, errorThrown){
+											console.log("获取最后一条群聊天记录失败");
 											GroupChatListOKCount++;
+											anyChatGetFail = true;
 										}
 									})	
 								}
 							},
 							error: function(xhr, type, errorThrown){
-							
+								console.log("获取群聊天列表失败");
 							}
 						});
 						
@@ -464,14 +470,18 @@
 								console.log("已完成");
 								//结束定时器
 								clearInterval(intervalCkeck);
-								//数组合并
-								_this.chatList = _this.chatList1;
-								_this.chatList = _this.chatList.concat(_this.groupChatList);
-								//时间排序
-								_this.chatList.sort(function(a, b){
-									return Date.parse(a.lastRecordDate) - Date.parse(b.lastRecordDate);
-								})
-								_this.chatList.reverse();
+								
+								//如果有任何一条聊天记录获取失败，放弃渲染
+								if(anyChatGetFail == false){
+									//数组合并
+									_this.chatList = _this.chatList1;
+									_this.chatList = _this.chatList.concat(_this.groupChatList);
+									//时间排序
+									_this.chatList.sort(function(a, b){
+										return Date.parse(a.lastRecordDate) - Date.parse(b.lastRecordDate);
+									})
+									_this.chatList.reverse();
+								}
 								//再次请求
 								_this.getChatLiat();
 							}else{
@@ -565,7 +575,7 @@
 									}, function(e) {
 										alert("Orientation error: " + e.message);
 									}, {
-										frequency: 10
+										frequency: 100
 									});
 
 								function SearchControl(posIndex, left, top) {
