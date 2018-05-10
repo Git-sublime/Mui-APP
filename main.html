@@ -7,46 +7,58 @@
 		<title></title>
 		<link href="css/mui.min.css" rel="stylesheet" />
 		<link rel="stylesheet" href="css/icons-extra.css" />
-		<link rel="stylesheet" type="text/css" href="http://at.alicdn.com/t/font_650380_9dxpvvaexb8lrf6r.css"/>
+		<link rel="stylesheet" type="text/css" href="http://at.alicdn.com/t/font_650380_9dxpvvaexb8lrf6r.css" />
 		<link rel="stylesheet" href="http://api.map.baidu.com/library/SearchInfoWindow/1.5/src/SearchInfoWindow_min.css" />
 		<style>
 			.mui-btn {
 				padding: 10px;
 			}
-			.title{
+			
+			.title {
 				margin: 20px 15px 10px;
 				color: #6d6d72;
 				font-size: 15px;
 			}
+			
 			.oa-contact-cell.mui-table .mui-table-cell {
 				padding: 11px 0;
 				vertical-align: middle;
 			}
+			
 			.oa-contact-cell {
 				position: relative;
 				margin: -11px 0;
 			}
+			
 			.oa-contact-avatar {
 				width: 75px;
 			}
+			
 			.oa-contact-avatar img {
 				border-radius: 50%;
 			}
+			
 			.oa-contact-content {
 				width: 100%;
 			}
+			
 			.oa-contact-name {
 				margin-right: 20px;
 			}
-			.oa-contact-name, oa-contact-position {
+			
+			.oa-contact-name,
+			oa-contact-position {
 				float: left;
 			}
-			.hide{
+			
+			.hide {
 				display: none;
 			}
-			.null{
+			
+			.null {
 				height: 45px;
 			}
+			
 			#map {
 				width: 100%;
 				/*height: 100%;*/
@@ -54,7 +66,8 @@
 				margin: 0;
 				font-family: "微软雅黑";
 			}
-			.m-add-Dialog{
+			
+			.m-add-Dialog {
 				width: 130px;
 				background: #f7f7f7;
 				margin-top: 46px;
@@ -65,14 +78,16 @@
 				border-bottom-left-radius: 5px;
 				color: #444;
 			}
-			.mui-icon-extra{
+			
+			.mui-icon-extra {
 				font-size: 22px;
 				position: absolute;
 				top: 10px;
 				left: 15px;
 				color: #929292;
 			}
-			.fixedTop{
+			
+			.fixedTop {
 				position: fixed;
 				top: 45px;
 				left: 0;
@@ -84,1154 +99,1190 @@
 			}
 		</style>
 	</head>
-	
+
 	<body>
-	<div id="app" @click="showAddFriend = false">
-		<header class="mui-bar mui-bar-nav">
-			<!--<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>-->
-			<div v-show="showHeadImage" class="mui-pull-left m-headImg" style="width: 34px; height: 34px;margin-top: 5px;border-radius: 50%;overflow: hidden;">
-				<img v-show="!loginID" src="images/cc-head.png" style="width: 34px; height: 34px;">
-				<img v-show="loginID" :src="user.headImgUrl" style="width: 34px; height: 34px;">
-			</div>
-			<h1 class="mui-title" id="title2">微定位</h1>
-			<span @click.stop="addFriend()" id="addBtn" class="mui-icon mui-icon-plusempty mui-pull-right" style="font-size: 34px;padding-top: 6px;"></span>
-			<ul id="addShow" v-show="showAddFriend" class="mui-table-view mui-pull-right m-add-Dialog" style="opacity: 0;">
-    			<li @click="openAddFriendPage()" class="mui-table-view-cell">
-    				<span class="mui-icon-extra mui-icon-extra-addpeople"></span>
-    				<span style="margin-left: 35px;">添加朋友</span>
-    			</li>
-    			<li @click="openCreatGroupPage()" class="mui-table-view-cell">
-    				<span class="mui-icon-extra mui-icon-extra-peoples"></span>
-    				<span style="margin-left: 35px;">创建群聊</span>
-    			</li>
-			</ul>
-		</header>
-		
-		<!--            底部导航                       -->
-		<nav class="mui-bar mui-bar-tab">
-			<a class="mui-tab-item mui-active" href="#tabbar" id="loctionBtn">
-				<i class="iconfont icon-008dingwei" style="display: block;font-size: 23px;margin-top: 3px;"></i>
-				<span class="mui-tab-label" style="font-size: 14px;">定位</span>
-			</a>
-			<a class="mui-tab-item" href="#tabbar-with-contact" id="chatBtn">
-				<i class="iconfont icon-ioschatbubble" style="display: block;font-size: 24px;margin-top: 3px;"></i>
-				<span class="mui-tab-label" style="font-size: 14px;">聊天</span>
-			</a>
-			<a class="mui-tab-item" href="#tabbar-with-map" id="meBtn">
-				<i class="iconfont icon-iconfontzhizuobiaozhun023104" style="display: block;font-size: 19px;margin-top: 3px;"></i>
-				<span class="mui-tab-label" style="font-size: 14px;">我</span>
-			</a>
-		</nav>
-		
-		<!-- 内容区  -->
-		<div class="mui-content">
-			<!--             首页                       -->
-			<div id="tabbar" class="mui-control-content mui-active">
-				<div id="searchResultPanel" style="border:1px solid #C0C0C0;width:150px;height:auto; display:none;"></div>
-				<div id="map"></div>
-				<div id="r-result"></div>
-			</div>
-			
-			<!--           聊天界面                     -->
-			<div id="tabbar-with-contact" class="mui-control-content">
-				<!--<div class="fixedTop">-->
+		<div id="app" @click="showAddFriend = false">
+			<header class="mui-bar mui-bar-nav">
+				<!--<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>-->
+				<div v-show="showHeadImage" class="mui-pull-left m-headImg" style="width: 34px; height: 34px;margin-top: 5px;border-radius: 50%;overflow: hidden;">
+					<img v-show="!loginID" src="images/cc-head.png" style="width: 34px; height: 34px;">
+					<img v-show="loginID" :src="user.headImgUrl" style="width: 34px; height: 34px;">
+				</div>
+				<h1 class="mui-title" id="title2">微定位</h1>
+				<span @click.stop="addFriend()" id="addBtn" class="mui-icon mui-icon-plusempty mui-pull-right" style="font-size: 34px;padding-top: 6px;"></span>
+				<ul id="addShow" v-show="showAddFriend" class="mui-table-view mui-pull-right m-add-Dialog" style="opacity: 0;">
+					<li @click="openAddFriendPage()" class="mui-table-view-cell">
+						<span class="mui-icon-extra mui-icon-extra-addpeople"></span>
+						<span style="margin-left: 35px;">添加朋友</span>
+					</li>
+					<li @click="openCreatGroupPage()" class="mui-table-view-cell">
+						<span class="mui-icon-extra mui-icon-extra-peoples"></span>
+						<span style="margin-left: 35px;">创建群聊</span>
+					</li>
+				</ul>
+			</header>
+
+			<!--            底部导航                       -->
+			<nav class="mui-bar mui-bar-tab">
+				<a class="mui-tab-item mui-active" href="#tabbar" id="loctionBtn">
+					<i class="iconfont icon-008dingwei" style="display: block;font-size: 23px;margin-top: 3px;"></i>
+					<span class="mui-tab-label" style="font-size: 14px;">定位</span>
+				</a>
+				<a class="mui-tab-item" href="#tabbar-with-contact" id="chatBtn">
+					<i class="iconfont icon-ioschatbubble" style="display: block;font-size: 24px;margin-top: 3px;"></i>
+					<span class="mui-tab-label" style="font-size: 14px;">聊天</span>
+				</a>
+				<a class="mui-tab-item" href="#tabbar-with-map" id="meBtn">
+					<i class="iconfont icon-iconfontzhizuobiaozhun023104" style="display: block;font-size: 19px;margin-top: 3px;"></i>
+					<span class="mui-tab-label" style="font-size: 14px;">我</span>
+				</a>
+			</nav>
+
+			<!-- 内容区  -->
+			<div class="mui-content">
+				<!--             首页                       -->
+				<div id="tabbar" class="mui-control-content mui-active">
+					<div id="searchResultPanel" style="border:1px solid #C0C0C0;width:150px;height:auto; display:none;"></div>
+					<div id="map"></div>
+					<div id="r-result"></div>
+				</div>
+
+				<!--           聊天界面                     -->
+				<div id="tabbar-with-contact" class="mui-control-content">
+					<!--<div class="fixedTop">-->
 					<ul class="mui-table-view topHave">
 						<li class="mui-table-view-cell" id="newFriend">新的朋友</li>
 						<li class="mui-table-view-cell" id="group">群聊</li>
 						<li class="mui-table-view-cell" id="contact">通讯录</li>
 					</ul>
-				<!--</div>-->
-				<ul v-if="logined" class="mui-table-view topHave">
-					<li class="mui-table-view-cell mui-media" v-for="(item, index) in chatList" :key="index" @click="gotoChat(item)">
-						<a href="javascript:;">
-							<img class="mui-media-object mui-pull-left" :src="item.headImgUrl">
-							<div class="mui-media-body">
-								<span v-text="item.name"></span>
-								<span v-if="item.lastRecordDay == nowDay" v-text="item.lastRecordTime" class="mui-pull-right" style="font-size: 14px;color: #8f8f94;"></span>
-								<span v-if="item.lastRecordDay != nowDay" v-text="item.lastRecordDay" class="mui-pull-right" style="font-size: 14px;color: #8f8f94;"></span>
-								<p class='mui-ellipsis'><span v-if="item.lastRecordUser" v-text="item.lastRecordUser"></span>{{item.lastRecord}}</p>
-							</div>
-						</a>
-					</li>
-				</ul>				
-				<ul v-if="!logined" class="mui-table-view topHave" id="freshChat">
-					<li class="mui-table-view-cell mui-media" @click="gotoChat(robot)">
-						<a href="javascript:;">
-							<img class="mui-media-object mui-pull-left" :src="robot.headImg">
-							<div class="mui-media-body">
-								<span v-text="robot.name"></span>
-								<span v-if="robot.dataDay == nowDay" v-text="robot.dataTime" class="mui-pull-right" style="font-size: 14px;color: #8f8f94;"></span>
-								<span v-if="robot.dataDay != nowDay" v-text="robot.dataDay" class="mui-pull-right" style="font-size: 14px;color: #8f8f94;"></span>
-								<p class='mui-ellipsis'><span v-if="robot.chatUser">{{robot.chatUser}}：</span>{{robot.lastAsk}}</p>
-							</div>
-						</a>
-					</li>
-				</ul>						
-			</div>
-			
-			<!--           我的页面                            -->
-			<div id="tabbar-with-map" class="mui-control-content">
-				<!--头像-->
-				<ul class="mui-table-view topHave">
-					<li class="mui-table-view-cell mui-media" id="userInfo2">
-						<a href="#account">
-							<img v-show="!loginID" class="mui-media-object mui-pull-left header-img" src="images/cc-head.png" style="height: 60px;max-width: 60px;line-height: 60px;">
-							<img v-show="loginID" class="mui-media-object mui-pull-left header-img" :src="user.headImgUrl" style="height: 60px;max-width: 60px;line-height: 60px;">
-							<div class="mui-media-body" style="padding-top: 8px;">
-								<span id="account" v-show="!loginID">天涯游客</span>
-								<span v-show="loginID" v-text="user.name">天涯游客</span>
-								<p class='mui-ellipsis' style="margin-top: 2px;">人活着就是应该奋斗，奋斗本身就是一种幸福。</p>
-							</div>
-						</a>
-					</li>
-				</ul>
-				<ul class="mui-table-view topHave">
-				<li class="mui-table-view-cell" id="userInfo">
-					<a class="mui-navigate-right">
-						个人信息
-					</a>
-				</li>
-				<li class="mui-table-view-cell" id="myRound">
-					<a class="mui-navigate-right">
-						我的足迹
-					</a>
-				</li>
-				<!--<li class="mui-table-view-cell">
+					<!--</div>-->
+					<ul v-if="logined" class="mui-table-view topHave">
+						<li class="mui-table-view-cell mui-media" v-for="(item, index) in chatList" :key="index" @click="gotoChat(item)">
+							<a href="javascript:;">
+								<img class="mui-media-object mui-pull-left" :src="item.headImgUrl">
+								<div class="mui-media-body">
+									<span v-text="item.name"></span>
+									<span v-if="item.lastRecordDay == nowDay" v-text="item.lastRecordTime" class="mui-pull-right" style="font-size: 14px;color: #8f8f94;"></span>
+									<span v-if="item.lastRecordDay != nowDay" v-text="item.lastRecordDay" class="mui-pull-right" style="font-size: 14px;color: #8f8f94;"></span>
+									<p class='mui-ellipsis'><span v-if="item.lastRecordUser" v-text="item.lastRecordUser"></span>{{item.lastRecord}}</p>
+								</div>
+							</a>
+						</li>
+					</ul>
+					<ul v-if="!logined" class="mui-table-view topHave" id="freshChat">
+						<li class="mui-table-view-cell mui-media" @click="gotoChat(robot)">
+							<a href="javascript:;">
+								<img class="mui-media-object mui-pull-left" :src="robot.headImg">
+								<div class="mui-media-body">
+									<span v-text="robot.name"></span>
+									<span v-if="robot.dataDay == nowDay" v-text="robot.dataTime" class="mui-pull-right" style="font-size: 14px;color: #8f8f94;"></span>
+									<span v-if="robot.dataDay != nowDay" v-text="robot.dataDay" class="mui-pull-right" style="font-size: 14px;color: #8f8f94;"></span>
+									<p class='mui-ellipsis'><span v-if="robot.chatUser">{{robot.chatUser}}：</span>{{robot.lastAsk}}</p>
+								</div>
+							</a>
+						</li>
+					</ul>
+				</div>
+
+				<!--           我的页面                            -->
+				<div id="tabbar-with-map" class="mui-control-content">
+					<!--头像-->
+					<ul class="mui-table-view topHave">
+						<li class="mui-table-view-cell mui-media" id="userInfo2">
+							<a href="#account">
+								<img v-show="!loginID" class="mui-media-object mui-pull-left header-img" src="images/cc-head.png" style="height: 60px;max-width: 60px;line-height: 60px;">
+								<img v-show="loginID" class="mui-media-object mui-pull-left header-img" :src="user.headImgUrl" style="height: 60px;max-width: 60px;line-height: 60px;">
+								<div class="mui-media-body" style="padding-top: 8px;">
+									<span id="account" v-show="!loginID">天涯游客</span>
+									<span v-show="loginID" v-text="user.name">天涯游客</span>
+									<p class='mui-ellipsis' style="margin-top: 2px;">人活着就是应该奋斗，奋斗本身就是一种幸福。</p>
+								</div>
+							</a>
+						</li>
+					</ul>
+					<ul class="mui-table-view topHave">
+						<li class="mui-table-view-cell" id="userInfo">
+							<a class="mui-navigate-right">
+								个人信息
+							</a>
+						</li>
+						<li class="mui-table-view-cell" id="myRound">
+							<a class="mui-navigate-right">
+								我的足迹
+							</a>
+						</li>
+						<!--<li class="mui-table-view-cell">
 					<a class="mui-navigate-right">
 						标记地址
 					</a>
 				</li>-->
-			</ul>
-			<ul class="mui-table-view">
-				<li class="mui-table-view-cell">
-					<a class="mui-navigate-right" id="setting">
-						设置
-					</a>
-				</li>
-			</ul>
-			<ul class="mui-table-view" style="margin-top: 25px;" id="login">
-				<li class="mui-table-view-cell">
-					<a style="text-align: center;color: #FF3B30;">
-						登录
-					</a>
-				</li>
-			</ul>
+					</ul>
+					<ul class="mui-table-view">
+						<li class="mui-table-view-cell">
+							<a class="mui-navigate-right" id="setting">
+								设置
+							</a>
+						</li>
+					</ul>
+					<ul class="mui-table-view" style="margin-top: 25px;" id="login">
+						<li class="mui-table-view-cell">
+							<a style="text-align: center;color: #FF3B30;">
+								登录
+							</a>
+						</li>
+					</ul>
+				</div>
 			</div>
 		</div>
-	</div><!--#app-->
-	</body>	
-		<script src="js/mui.min.js"></script>
-		<script src="js/app.js"></script>
-		<script src="js/vue.min.js"></script>
-		<script src="js/jquery-3.3.1.min.js"></script>
-		<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=1GFjszMOqSYX1Ny1Y5NPWE4G2wGB0Ghx"></script>
-		<script type="text/javascript" src="http://api.map.baidu.com/library/SearchInfoWindow/1.5/src/SearchInfoWindow_min.js"></script>
-		<script type="text/javascript" charset="utf-8">		
-//			Vue===
-			var vue = new Vue({
-				el:"#app",
-				data:{
-					loginID: '',
-					user:{},
-					logined: false,
-					showHeadImage: true,
-					showAddFriend: false,
-					robot:{
-						name: 'MUI',
-						chatUser: "",
-						headImg: "images/logo.png",
-						lastAsk: "Hi,我是MUI小管家",
-						dataTime: "12:31",
-						dataDay: '05-01'
-					},
-					chatList: [],
-					chatList1: [],
-					groupChatList: [],
-					recordList: [],
-					lastChatList: [],
-					nowDay: '',
-					
-					ChatListOKTotal : 0,//需要请求多少次"GetLastMsgByTwoId"
-					ChatListOKCount : 0,//已请求多少次"GetLastMsgByTwoId"
-						
-					GroupChatListOKTotal : 0,//需要请求多少次"GetLastGroupMsgById"
-					GroupChatListOKCount : 0//已请求多少次"GetLastGroupMsgById"						
+		<!--#app-->
+	</body>
+	<script src="js/mui.min.js"></script>
+	<script src="js/app.js"></script>
+	<script src="js/vue.min.js"></script>
+	<script src="js/jquery-3.3.1.min.js"></script>
+	<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=1GFjszMOqSYX1Ny1Y5NPWE4G2wGB0Ghx"></script>
+	<script type="text/javascript" src="http://api.map.baidu.com/library/SearchInfoWindow/1.5/src/SearchInfoWindow_min.js"></script>
+	<script type="text/javascript" charset="utf-8">
+		//			Vue===
+		var vue = new Vue({
+			el: "#app",
+			data: {
+				loginID: '',
+				user: {},
+				logined: false,
+				showHeadImage: true,
+				showAddFriend: false,
+				robot: {
+					name: 'MUI',
+					chatUser: "",
+					headImg: "images/logo.png",
+					lastAsk: "Hi,我是MUI小管家",
+					dataTime: "12:31",
+					dataDay: '05-01'
 				},
-				mounted: function(){
-					this.$nextTick(function(){
-						this.InitMain();
+				chatList: [],
+				chatList1: [],
+				groupChatList: [],
+				recordList: [],
+				lastChatList: [],
+				nowDay: '',
+
+				ChatListOKTotal: 0, //需要请求多少次"GetLastMsgByTwoId"
+				ChatListOKCount: 0, //已请求多少次"GetLastMsgByTwoId"
+
+				GroupChatListOKTotal: 0, //需要请求多少次"GetLastGroupMsgById"
+				GroupChatListOKCount: 0 //已请求多少次"GetLastGroupMsgById"						
+			},
+			mounted: function() {
+				this.$nextTick(function() {
+					this.InitMain();
+				})
+			},
+			methods: {
+				//聊天界面跳转函数
+				gotoChat: function(item) {
+					var _this = this;
+					if(item.type == 1) {
+						mui.openWindow({
+							url: "chat.html",
+							id: "chat.html",
+							extras: {
+								chatObj: item,
+								loginId: _this.loginID,
+								loginer: _this.user,
+								flag: 1
+							}
+						})
+					} else if(item.type == 2) {
+						mui.openWindow({
+							url: "group-chat.html",
+							id: "group-chat.html",
+							extras: {
+								chatObj: item,
+								loginId: _this.loginID,
+								loginer: _this.user
+							}
+						})
+					}
+
+				},
+				//右上角 加 按钮
+				addFriend: function() {
+					if(this.logined) {
+						this.showAddFriend = !this.showAddFriend;
+					} else {
+						mui.confirm('您还未登陆，是否前往登陆？', "提示", new Array('是', '否'), function(e) {
+							if(e.index == 0) {
+								mui.openWindow({
+									url: 'login.html',
+									id: 'login.html'
+								})
+							}
+						});
+					}
+				},
+				//打开添加朋友页面
+				openAddFriendPage: function() {
+					var _this = this;
+					mui.openWindow({
+						url: 'add-friend.html',
+						id: 'add-friend.html',
+						extras: {
+							loginID: _this.loginID
+						}
+					});
+					this.showAddFriend = false;
+				},
+				openCreatGroupPage: function() {
+					var _this = this;
+					mui.openWindow({
+						url: 'creat-group.html',
+						id: 'creat-group.html',
+						extras: {
+							loginID: _this.loginID
+						}
+					});
+					this.showAddFriend = false;
+				},
+				getChatLiat: function() {
+					//让请求同步的变量
+
+					var GetUserOK = false; //GetUserByIdServlet是否完成
+
+					this.ChatListOKTotal = 0;
+					this.ChatListOKCount = 0;
+					this.GroupChatListOKTotal = 0;
+					this.GroupChatListOKCount = 0;
+
+					var anyChatGetFail = false; //有任何一条聊天记录获取失败
+
+					var _this = this;
+					mui.ajax({
+						url: 'http://118.24.34.244:8080/test1/GetUserByIdServlet?id=' + _this.loginID,
+						type: 'GET',
+						timeout: 5000,
+						success: function(res) {
+							//									console.log(JSON.stringify(res));
+							res = JSON.parse(res);
+							res.headImgUrl = imgUrl + res.headImgUrl;
+							_this.user = res;
+							GetUserOK = true;
+						},
+						error: function(xhr, type, errorThrown) {
+							console.log("获取用户信息失败");
+							GetUserOK = true;
+						}
 					})
-				},
-				methods:{
-					//聊天界面跳转函数
-					gotoChat: function(item){
-						var _this = this;
-						if(item.type == 1){
-							mui.openWindow({
-							 	url: "chat.html",
-							 	id: "chat.html",
-							 	extras: {
-							 		chatObj: item,
-							 		loginId: _this.loginID,
-							 		loginer: _this.user,
-							 		flag: 1
-							 	}
-							})							
-						}else if(item.type == 2){
-							mui.openWindow({
-							 	url: "group-chat.html",
-							 	id: "group-chat.html",
-							 	extras: {
-							 		chatObj: item,
-							 		loginId: _this.loginID,
-							 		loginer: _this.user
-							 	}
-							})								
-						}
 
-					},
-					//右上角 加 按钮
-					addFriend: function(){
-						if (this.logined) {
-							this.showAddFriend = !this.showAddFriend;
-						}else{
-							mui.confirm('您还未登陆，是否前往登陆？',"提示",new Array('是','否'),function(e){
-								if(e.index == 0){
-									mui.openWindow({
-										url: 'login.html',
-										id: 'login.html'
-									})
-								}
-							});							
-						}
-					},
-					//打开添加朋友页面
-					openAddFriendPage: function(){
-						var _this = this;
-						mui.openWindow({
-							url: 'add-friend.html',
-							id: 'add-friend.html',
-							extras: {
-								loginID : _this.loginID
+					//请求最近聊天列表
+					mui.ajax({
+						url: 'http://118.24.34.244:8080/test1/SelectChatListById?id=' + _this.loginID,
+						type: 'GET',
+						timeout: 7000,
+						success: function(res) {
+							res = JSON.parse(res);
+							for(var i = 0; i < res.length; i++) {
+								res[i].headImgUrl = imgUrl + res[i].headImgUrl;
 							}
-						});
-						this.showAddFriend = false;
-					},
-					openCreatGroupPage: function(){
-						var _this = this;
-						mui.openWindow({
-							url: 'creat-group.html',
-							id: 'creat-group.html',
-							extras: {
-								loginID: _this.loginID
-							}
-						});
-						this.showAddFriend = false;
-					},
-					getChatLiat: function(){
-						//让请求同步的变量
-						
-						var GetUserOK = false;//GetUserByIdServlet是否完成
-						
-
-									this.ChatListOKTotal = 0;
-									this.ChatListOKCount = 0;
-									this.GroupChatListOKTotal = 0;
-									this.GroupChatListOKCount = 0;
-						
-						var anyChatGetFail = false;//有任何一条聊天记录获取失败
-						
-						var _this = this;
-							mui.ajax({
-								url: 'http://118.24.34.244:8080/test1/GetUserByIdServlet?id=' + _this.loginID,
-								type: 'GET',
-								timeout: 5000,
-								success: function(res){
-//									console.log(JSON.stringify(res));
-									res = JSON.parse(res);
-									res.headImgUrl = imgUrl + res.headImgUrl;
-									_this.user = res;
-									GetUserOK = true;
-								},
-								error: function(xhr, type, errorThrown){
-									console.log("获取用户信息失败");
-									GetUserOK = true;
-								}
-							})						
-						
-						//请求最近聊天列表
-						mui.ajax({
-							url: 'http://118.24.34.244:8080/test1/SelectChatListById?id=' + _this.loginID,
-							type: 'GET',
-							timeout: 7000,
-							success: function(res){
-								res = JSON.parse(res);
-								for(var i =0; i<res.length; i++){
-									res[i].headImgUrl = imgUrl + res[i].headImgUrl; 										
-								}
-								_this.chatList1 = res;
-								var k = 0;
-//								console.log("单聊长度："  + res.length);
-								_this.ChatListOKTotal = _this.chatList1.length;
-								for(var j = 0; j<_this.chatList1.length; j++){
-									var tempID = _this.chatList1[j].id;
-									mui.ajax({
-										url: 'http://118.24.34.244:8080/test1/GetLastMsgByTwoId?id1=' + _this.loginID + '&id2=' + tempID,
-										type: 'GET',
-										timeout: 7000,
-										async: true,
-										success: function(data){
-											if(data == ""){mui.toast('没有任何数据');return}
-											data = JSON.parse(data);
-											for(var j1 = 0; j1<_this.chatList1.length; j1++){
-												if(_this.chatList1[j1].id == data[0].senderId || _this.chatList1[j1].id == data[0].receiverId){
-													_this.$set(_this.chatList1[j1], 'record', data);
-													_this.$set(_this.chatList1[j1], 'lastRecord', data[0].content);
-													_this.$set(_this.chatList1[j1], 'lastRecordDate', (data[0].dateTime).slice(0,19));
-													_this.$set(_this.chatList1[j1], 'lastRecordDay', (data[0].dateTime).slice(5,10));
-													_this.$set(_this.chatList1[j1], 'lastRecordTime', (data[0].dateTime).slice(11,16));
-													_this.$set(_this.chatList1[j1], 'type', 1);
-		//											console.log(JSON.stringify(data));
-													k++;
-													_this.ChatListOKCount++;
-													break;
-												}
-											}
-											
-										},
-										error: function(xhr, type, errorThrown){
-											console.log("获取最后一条聊天记录失败");
-											_this.ChatListOKCount++;
-											anyChatGetFail = true;
+							_this.chatList1 = res;
+							var k = 0;
+							//								console.log("单聊长度："  + res.length);
+							_this.ChatListOKTotal = _this.chatList1.length;
+							for(var j = 0; j < _this.chatList1.length; j++) {
+								var tempID = _this.chatList1[j].id;
+								mui.ajax({
+									url: 'http://118.24.34.244:8080/test1/GetLastMsgByTwoId?id1=' + _this.loginID + '&id2=' + tempID,
+									type: 'GET',
+									timeout: 7000,
+									async: true,
+									success: function(data) {
+										if(data == "") {
+											mui.toast('没有任何数据');
+											return
 										}
-									})	
-								}
-							},
-							error: function(xhr, type, errorThrown){
-								console.log("获取聊天列表失败");
-							}
-						});	
-						mui.ajax({
-							url: 'http://118.24.34.244:8080/test1/SelectGroupChatListById?id=' + _this.loginID,
-							type: 'GET',
-							timeout: 5000,
-							success: function(res){
-								res = JSON.parse(res);
-								for(var i =0; i<res.length; i++){
-									res[i].headImgUrl = imgUrl + res[i].headImgUrl; 										
-								}
-								_this.groupChatList = res;
-								var kk = 0;
-//								console.log("群聊长度："  + res.length);
-								_this.GroupChatListOKTotal = _this.groupChatList.length;
-								
-								for(var jj = 0; jj<_this.groupChatList.length; jj++){
-									var tempID = _this.groupChatList[jj].id;
-									mui.ajax({
-										url: 'http://118.24.34.244:8080/test1/GetLastGroupMsgById?groupId=' + tempID,
-										type: 'GET',
-										timeout: 7000,
-										async: true,
-										success: function(data){
-											data = JSON.parse(data);
-											for(var j1 = 0; j1<_this.groupChatList.length; j1++){
-												if(_this.groupChatList[j1].id == data[0].groupId){
-													_this.$set(_this.groupChatList[j1], 'record', data);
-													_this.$set(_this.groupChatList[j1], 'lastRecord', data[0].content);
-													_this.$set(_this.groupChatList[j1], 'lastRecordUser', data[0].senderName + '：');
-													_this.$set(_this.groupChatList[j1], 'lastRecordDate', (data[0].dateTime).slice(0,19));
-													_this.$set(_this.groupChatList[j1], 'lastRecordDay', (data[0].dateTime).slice(5,10));
-													_this.$set(_this.groupChatList[j1], 'lastRecordTime', (data[0].dateTime).slice(11,16));
-													_this.$set(_this.groupChatList[j1], 'type', 2);
-		//											console.log(JSON.stringify(data));
-													kk++;
-													_this.GroupChatListOKCount++;
-													break;
-												}
+										data = JSON.parse(data);
+										for(var j1 = 0; j1 < _this.chatList1.length; j1++) {
+											if(_this.chatList1[j1].id == data[0].senderId || _this.chatList1[j1].id == data[0].receiverId) {
+												_this.$set(_this.chatList1[j1], 'record', data);
+												_this.$set(_this.chatList1[j1], 'lastRecord', data[0].content);
+												_this.$set(_this.chatList1[j1], 'lastRecordDate', (data[0].dateTime).slice(0, 19));
+												_this.$set(_this.chatList1[j1], 'lastRecordDay', (data[0].dateTime).slice(5, 10));
+												_this.$set(_this.chatList1[j1], 'lastRecordTime', (data[0].dateTime).slice(11, 16));
+												_this.$set(_this.chatList1[j1], 'type', 1);
+												//											console.log(JSON.stringify(data));
+												k++;
+												_this.ChatListOKCount++;
+												break;
 											}
-										},
-										error: function(xhr, type, errorThrown){
+										}
+
+									},
+									error: function(xhr, type, errorThrown) {
+										console.log("获取最后一条聊天记录失败");
+										_this.ChatListOKCount++;
+										anyChatGetFail = true;
+									}
+								})
+							}
+						},
+						error: function(xhr, type, errorThrown) {
+							console.log("获取聊天列表失败");
+						}
+					});
+					mui.ajax({
+						url: 'http://118.24.34.244:8080/test1/SelectGroupChatListById?id=' + _this.loginID,
+						type: 'GET',
+						timeout: 5000,
+						success: function(res) {
+							res = JSON.parse(res);
+							for(var i = 0; i < res.length; i++) {
+								res[i].headImgUrl = imgUrl + res[i].headImgUrl;
+							}
+							_this.groupChatList = res;
+							var kk = 0;
+							//								console.log("群聊长度："  + res.length);
+							_this.GroupChatListOKTotal = _this.groupChatList.length;
+
+							for(var jj = 0; jj < _this.groupChatList.length; jj++) {
+								var tempID = _this.groupChatList[jj].id;
+								mui.ajax({
+									url: 'http://118.24.34.244:8080/test1/GetLastGroupMsgById?groupId=' + tempID,
+									type: 'GET',
+									timeout: 7000,
+									async: true,
+									success: function(data) {
+										data = JSON.parse(data);
+										for(var j1 = 0; j1 < _this.groupChatList.length; j1++) {
+											if(_this.groupChatList[j1].id == data[0].groupId) {
+												_this.$set(_this.groupChatList[j1], 'record', data);
+												_this.$set(_this.groupChatList[j1], 'lastRecord', data[0].content);
+												_this.$set(_this.groupChatList[j1], 'lastRecordUser', data[0].senderName + '：');
+												_this.$set(_this.groupChatList[j1], 'lastRecordDate', (data[0].dateTime).slice(0, 19));
+												_this.$set(_this.groupChatList[j1], 'lastRecordDay', (data[0].dateTime).slice(5, 10));
+												_this.$set(_this.groupChatList[j1], 'lastRecordTime', (data[0].dateTime).slice(11, 16));
+												_this.$set(_this.groupChatList[j1], 'type', 2);
+												//											console.log(JSON.stringify(data));
+												kk++;
+												_this.GroupChatListOKCount++;
+												break;
+											}
+										}
+									},
+									error: function(xhr, type, errorThrown) {
 										//	console.log("获取最后一条群聊天记录失败");
-											_this.GroupChatListOKCount++;
-											anyChatGetFail = true;
-										}
-									})	
-								}
-							},
-							error: function(xhr, type, errorThrown){
+										_this.GroupChatListOKCount++;
+										anyChatGetFail = true;
+									}
+								})
+							}
+						},
+						error: function(xhr, type, errorThrown) {
 							//	console.log("获取群聊天列表失败");
-							}
-						});
-						
-						//判断完成所有请求后再进行：数组合并，时间排序，再次请求
-						var intervalCkeck = setInterval(function(){
+						}
+					});
+
+					//判断完成所有请求后再进行：数组合并，时间排序，再次请求
+					var intervalCkeck = setInterval(function() {
 						//	console.log("单聊长度:"+_this.ChatListOKTotal+",单聊请求:"+_this.ChatListOKCount + "群聊长度:"+_this.GroupChatListOKTotal+",群聊请求:"+_this.GroupChatListOKCount);
-							if(GetUserOK && _this.ChatListOKCount==_this.ChatListOKTotal && _this.GroupChatListOKCount==_this.GroupChatListOKTotal){
-						//		console.log("已完成");
-								//结束定时器
-								clearInterval(intervalCkeck);
-								//如果有任何一条聊天记录获取失败，放弃渲染
-								if(anyChatGetFail == false){
-									//数组合并
-									_this.chatList = _this.chatList1;
-									_this.chatList = _this.chatList.concat(_this.groupChatList);
-									//时间排序
-									_this.chatList.sort(function(a, b){
-										return Date.parse(a.lastRecordDate) - Date.parse(b.lastRecordDate);
-									})
-									_this.chatList.reverse();
-								}
-								//再次请求
-								_this.getChatLiat();
-							}else{
-							//	console.log("还未完成");
-								
+						if(GetUserOK && _this.ChatListOKCount == _this.ChatListOKTotal && _this.GroupChatListOKCount == _this.GroupChatListOKTotal) {
+							//		console.log("已完成");
+							//结束定时器
+							clearInterval(intervalCkeck);
+							//如果有任何一条聊天记录获取失败，放弃渲染
+							if(anyChatGetFail == false) {
+								//数组合并
+								_this.chatList = _this.chatList1;
+								_this.chatList = _this.chatList.concat(_this.groupChatList);
+								//时间排序
+								_this.chatList.sort(function(a, b) {
+									return Date.parse(a.lastRecordDate) - Date.parse(b.lastRecordDate);
+								})
+								_this.chatList.reverse();
 							}
-						}, 2000);
-					
-					},
-					//初始化
-					InitMain: function(){
-						var _this = this;
-						(function() {
-							var settings = app.getSettings();
-							var account = document.getElementById('account');
-							//获取当前时间
-							var nowDate = new Date();
-							var monthStr = (nowDate.getMonth() + 1).toString();
-							if(monthStr.length == 1){
-								monthStr = '0' + monthStr;
-							};
-							var dateStr = (nowDate.getDate()).toString();
-							if(dateStr.length == 1){
-								dateStr = '0' + dateStr;
-							};
-							_this.nowDay = monthStr + '-' + dateStr;
-								
-							//手机文件加载完毕
-							mui.plusReady(function() {
+							//再次请求
+							_this.getChatLiat();
+						} else {
+							//	console.log("还未完成");
+
+						}
+					}, 2000);
+
+				},
+				//初始化
+				InitMain: function() {
+					var _this = this;
+					(function() {
+						var settings = app.getSettings();
+						var account = document.getElementById('account');
+						//获取当前时间
+						var nowDate = new Date();
+						var monthStr = (nowDate.getMonth() + 1).toString();
+						if(monthStr.length == 1) {
+							monthStr = '0' + monthStr;
+						};
+						var dateStr = (nowDate.getDate()).toString();
+						if(dateStr.length == 1) {
+							dateStr = '0' + dateStr;
+						};
+						_this.nowDay = monthStr + '-' + dateStr;
+
+						//手机文件加载完毕
+						mui.plusReady(function() {
 							document.getElementById('addShow').style.opacity = 1;
-								// ===========================================百度地图API功能
-								var winWidth = document.documentElement.clientWidth;
-								var winHeight = document.documentElement.clientHeight;
-								document.getElementById('map').style.height = (winHeight - 97)+'px';
-								
-								var map = new BMap.Map("map"); // 创建Map实例
-								//等待状态
-//								plus.nativeUI.showWaiting();
-								var MyPoi = new BMap.Point(103.9587,30.7819);
-								map.centerAndZoom(MyPoi, 17); // 初始化地图,设置中心点坐标和地图级别
-								map.enableScrollWheelZoom();
-								//添加一个marker对象
-								var marker = new BMap.Marker(MyPoi);
-								map.addOverlay(marker);                     // 将标注添加到地图中 
-								marker.getIcon().setImageUrl("images/direction.png");
-								marker.getIcon().setSize(new BMap.Size(33, 33));
-								marker.getShadow().setSize(new BMap.Size(0, 0));
-								marker.disableMassClear();
-								
-								function moveToMyPoi(scale) {
-									map.setZoom(scale);
-									map.panTo(MyPoi);
-								};
-								var geolocation = new BMap.Geolocation();
-								geolocation.getCurrentPosition(function(r) {
+							// ===========================================百度地图API功能
+							var winWidth = document.documentElement.clientWidth;
+							var winHeight = document.documentElement.clientHeight;
+							document.getElementById('map').style.height = (winHeight - 97) + 'px';
+
+							var map = new BMap.Map("map"); // 创建Map实例
+							//等待状态
+							//								plus.nativeUI.showWaiting();
+							var MyPoi = new BMap.Point(103.9587, 30.7819);
+							var OldMyPoi = new BMap.Point(103.9587, 30.7819);
+							map.centerAndZoom(MyPoi, 17); // 初始化地图,设置中心点坐标和地图级别
+							map.enableScrollWheelZoom();
+							//添加一个marker对象
+							var marker = new BMap.Marker(MyPoi);
+							map.addOverlay(marker); // 将标注添加到地图中 
+							marker.getIcon().setImageUrl("images/direction.png");
+							marker.getIcon().setSize(new BMap.Size(33, 33));
+							marker.getShadow().setSize(new BMap.Size(0, 0));
+							marker.disableMassClear();
+
+							function moveToMyPoi(scale) {
+								map.setZoom(scale);
+								map.panTo(MyPoi);
+							};
+							var geolocation = new BMap.Geolocation();
+							geolocation.getCurrentPosition(function(r) {
+								if(this.getStatus() == BMAP_STATUS_SUCCESS) {
+									MyPoi = r.point;
+									marker.setPosition(MyPoi);
+									moveToMyPoi(17);
+								} else {
+									console.log('failed' + this.getStatus());
+								}
+							}, {
+								enableHighAccuracy: true
+							})
+
+							var geolocation2 = new BMap.Geolocation();
+							//获取定位
+							function getMyPosition() {
+								geolocation2.getCurrentPosition(function(r) {
 									if(this.getStatus() == BMAP_STATUS_SUCCESS) {
 										MyPoi = r.point;
 										marker.setPosition(MyPoi);
-										moveToMyPoi(17);
+
+										if(r.point.lng) {
+											plus.nativeUI.closeWaiting();
+										};
+										//	map.panTo(MyPoi);
 									} else {
 										console.log('failed' + this.getStatus());
 									}
+									mui.toast(MyPoi.lng + "," + MyPoi.lat);
+									console.log("定位完成");
+									//定时再获取位置
+									setTimeout(function() {
+										getMyPosition();
+									}, 3000);
 								}, {
-									enableHighAccuracy: false
+									enableHighAccuracy: true
 								})
-								//获取定位
-								function getMyPosition() {
-									geolocation.getCurrentPosition(function(r) {
-										if(this.getStatus() == BMAP_STATUS_SUCCESS) {
-											MyPoi = r.point;
-											marker.setPosition(MyPoi);
-											if(r.point.lng){plus.nativeUI.closeWaiting();};
-											//	map.panTo(MyPoi);
-											//	alert('您的位置：' + r.point.lng + ',' + r.point.lat);
-											
-										} else {
-											console.log('failed' + this.getStatus());
-										}
-										//定时再获取位置
-										setTimeout(function() {
-											getMyPosition();
-										}, 3000);
-									}, {
-										enableHighAccuracy: false
-									})
-								};
-								getMyPosition();	
-									plus.orientation.watchOrientation(function(o) {
-										marker.setRotation(o.alpha);
-									}, function(e) {
-										alert("Orientation error: " + e.message);
-									}, {
-										frequency: 100
-									});
+							};
+							getMyPosition();
 
-								function SearchControl(posIndex, left, top) {
-									var position = [BMAP_ANCHOR_TOP_LEFT, BMAP_ANCHOR_TOP_RIGHT, BMAP_ANCHOR_BOTTOM_LEFT, BMAP_ANCHOR_BOTTOM_RIGHT];
-									this.defaultAnchor = position[posIndex];
-									this.defaultOffset = new BMap.Size(left, top);
+							//预防断网等导致定位中断，如果位置长时间未更新，再次调用getMyPosition()
+							function checkGeo() {
+
+								if(MyPoi.lng - OldMyPoi.lng < 0.0000001) {
+									console.log("位置没变");
+									getMyPosition();
+								} else {
+									console.log("位置变了");
 								}
-								SearchControl.prototype = new BMap.Control();
-								SearchControl.prototype.initialize = function(map) {
-									var div = document.createElement("div");
-									$(div).css({
-										width: "85%",
-//										opacity: '0.7'
-									});
-									$(div).addClass("mui-input-row mui-search");
-									$(div).html("<input id='suggestId' type='search' class='mui-input-clear' placeholder='请输入关键字'>");
-									map.getContainer().appendChild(div);
-									return div;
-								}	
-								
-								function MyLoControl(posIndex, left, top) {
-									var position = [BMAP_ANCHOR_TOP_LEFT, BMAP_ANCHOR_TOP_RIGHT, BMAP_ANCHOR_BOTTOM_LEFT, BMAP_ANCHOR_BOTTOM_RIGHT];
-									this.defaultAnchor = position[posIndex];
-									this.defaultOffset = new BMap.Size(left, top);
-								}
-								MyLoControl.prototype = new BMap.Control();
-								MyLoControl.prototype.initialize = function(map) {
-									var div = document.createElement("div");
-									$(div).css({
-										color: "#999"
-									});
-									$(div).html("<div style='display: inline-block;background: #fff;padding: 4px;padding-top: 8px;border-radius: 2px;box-shadow: 0 0 2px #ccc;'><i class='iconfont icon-msnui-foresight' style='font-size: 26px;'></i></div>");
+								OldMyPoi.lng = MyPoi.lng;
 
-									$(div).click(function() {
-										moveToMyPoi(17);
-									});
-									map.getContainer().appendChild(div);
-									return div;
-								}
-								//定义控件：开始导航
-								function MyNaviControl(posIndex, left, top) {
-									var position = [BMAP_ANCHOR_TOP_LEFT, BMAP_ANCHOR_TOP_RIGHT, BMAP_ANCHOR_BOTTOM_LEFT, BMAP_ANCHOR_BOTTOM_RIGHT];
-									this.defaultAnchor = position[posIndex];
-									this.defaultOffset = new BMap.Size(left, top);
-								}
-								MyNaviControl.prototype = new BMap.Control();
-								MyNaviControl.prototype.initialize = function(map) {
-									var div = document.createElement("div");
-									$(div).html('<div id="startNaviBtn" class="mui-btn mui-btn-primary">开始导航</div>');
-									$(div).click(function(){
-										startNavi();
-									});
-									map.getContainer().appendChild(div);
-									return div;
-								}
-								//定义函数：重选目的地
-								function reGetRoute() {
-									map.removeControl(myNaviControl);
-									map.clearOverlays();
-								};
-
-								//定义控件：结束导航
-								function MyEndNaviControl(posIndex, left, top) {
-									var position = [BMAP_ANCHOR_TOP_LEFT, BMAP_ANCHOR_TOP_RIGHT, BMAP_ANCHOR_BOTTOM_LEFT, BMAP_ANCHOR_BOTTOM_RIGHT];
-									this.defaultAnchor = position[posIndex];
-									this.defaultOffset = new BMap.Size(left, top);
-								}
-								MyEndNaviControl.prototype = new BMap.Control();
-								MyEndNaviControl.prototype.initialize = function(map) {
-									var div = document.createElement("div");
-									$(div).html('<div class="mui-btn mui-btn-primary">结束导航</div>');
-
-									$(div).click(function() {
-										endNavi();
-									});
-									map.getContainer().appendChild(div);
-									return div;
-								}
-
-								function MyStepControl(posIndex, left, top) {
-									var position = [BMAP_ANCHOR_TOP_LEFT, BMAP_ANCHOR_TOP_RIGHT, BMAP_ANCHOR_BOTTOM_LEFT, BMAP_ANCHOR_BOTTOM_RIGHT];
-									this.defaultAnchor = position[posIndex];
-									this.defaultOffset = new BMap.Size(left, top);
-								}
-								MyStepControl.prototype = new BMap.Control();
-								MyStepControl.prototype.initialize = function(map) {
-									var div = document.createElement("div");
-									$(div).css({
-										width: "90%"
-									});
-									$(div).html('<div class="mui-card"><ul class="mui-table-view"><li id="step" class="mui-table-view-cell"></li></ul></div>');
-									map.getContainer().appendChild(div);
-									return div;
-								}
-
-								//定义控件：路径规划《去这里》
-								function MyRouteControl(posIndex, left, top) {
-									var position = [BMAP_ANCHOR_TOP_LEFT, BMAP_ANCHOR_TOP_RIGHT, BMAP_ANCHOR_BOTTOM_LEFT, BMAP_ANCHOR_BOTTOM_RIGHT];
-									this.defaultAnchor = position[posIndex];
-									this.defaultOffset = new BMap.Size(left, top);
-								}
-								MyRouteControl.prototype = new BMap.Control();
-								MyRouteControl.prototype.initialize = function(map) {
-									var div = document.createElement("div");
-									$(div).html('<div class="mui-btn mui-btn-primary">去这里</div>');
-									$(div).click(function() {
-										walk();
-									});
-									map.getContainer().appendChild(div);
-									return div;
-								}
-								//创建控件并添加到地图中
-								var searchCtrl = new SearchControl(0, 30, 10);//搜索框
-								var myLoControl = new MyLoControl(2, 10, 40);//定位当前位置
-								var myNaviControl = new MyNaviControl(3, 10, 40);//开始导航
-								var myEndNaviControl = new MyEndNaviControl(3, 10, 40);//结束导航
-								var myRouteControl = new MyRouteControl(3, 10, 40);//去这里
-								var myStepControl = new MyStepControl(3, -5, 90);//路线提醒
-								map.addControl(searchCtrl);
-								map.addControl(myLoControl);
-								
-								//地图点击和移动搜索框失去焦点
-								map.addEventListener("click", function() {
-									$("#suggestId").blur();
-								});
-								map.addEventListener("moving", function() {
-									$("#suggestId").blur();
-								});
-								
-								var ac = new BMap.Autocomplete( //建立一个自动完成的对象
-									{
-										"input": "suggestId",
-										"location": map
-									});
-
-								ac.addEventListener("onhighlight", function(e) { //鼠标放在下拉列表上的事件
-									var str = "";
-									var _value = e.fromitem.value;
-									var value = "";
-									if(e.fromitem.index > -1) {
-										value = _value.province + _value.city + _value.district + _value.street + _value.business;
-									}
-									str = "FromItem<br />index = " + e.fromitem.index + "<br />value = " + value;
-
-									value = "";
-									if(e.toitem.index > -1) {
-										_value = e.toitem.value;
-										value = _value.province + _value.city + _value.district + _value.street + _value.business;
-									}
-									str += "<br />ToItem<br />index = " + e.toitem.index + "<br />value = " + value;
-									$("#searchResultPanel").html(str);
-								});
-
-								var myValue;
-								ac.addEventListener("onconfirm", function(e) { //鼠标点击下拉列表后的事件
-									var _value = e.item.value;
-									myValue = _value.province + _value.city + _value.district + _value.street + _value.business;
-									$("#searchResultPanel").html("onconfirm<br />index = " + e.item.index + "<br />myValue = " + myValue);
-									setPlace();
-								});
-								
-//								设置位置中心,跳转到搜索的位置
-								function setPlace() {
-									$("#suggestId").blur();
-									isNavi = 0;
-									map.removeControl(myNaviControl);
-									map.removeControl(myEndNaviControl);
-									map.removeControl(myStepControl);
-									map.clearOverlays(); //清除地图上所有覆盖物
-									function myFun() {
-										dest = local.getResults().getPoi(0).point; //获取第一个智能搜索的结果
-										map.centerAndZoom(dest, 17);
-										m1 = new BMap.Marker(dest);
-										m1.getIcon().setImageUrl("images/sprite.png");
-										map.addOverlay(m1); //添加标注
-										map.addControl(myRouteControl);
-										/*m1.addEventListener("click", function() {
-											searchInfoWindow.open(m1);
-										});
-										searchInfoWindow.open(m1);*/
-									}
-									var local = new BMap.LocalSearch(map, { //智能搜索
-										onSearchComplete: myFun
-									});
-									local.search(myValue);
-								};	
-								
-								var content = '<button id="bt1" type="button" class="mui-btn mui-btn-primary mui-btn-block" onclick="walk()">到这里去</button>';
-								//创建检索信息窗口对象
-								var searchInfoWindow = null;
-								searchInfoWindow = new BMapLib.SearchInfoWindow(map, content, {
-									title: "路径规划", //标题
-									width: 100, //宽度
-									//	panel: "panel", //检索结果面板
-									enableAutoPan: true, //自动平移
-									searchTypes: [
-										//	BMAPLIB_TAB_TO_HERE //到这里去
-									]
-								});
-
-								var walking = new BMap.WalkingRoute(map, {
-									renderOptions: {
-										map: map,
-									//	panel: "r-result",
-										autoViewport: true
-									},
-									onPolylinesSet: function(routes) {
-										routes[0].getPolyline().setStrokeStyle("solid");
-									}
-								});
-
-								//规划步行路径
-								function walk() {
-									walking.search(MyPoi, dest);
-
-									walking.setSearchCompleteCallback(function() {
-										map.removeControl(myRouteControl);
-										map.addControl(myNaviControl);
-										/*var result = walking.getResults();
-										console.log("方案总数：" + result.getNumPlans());
-										for(var i = 0; i < result.getNumPlans(); i++) {
-											console.log("方案" + i + ":");
-											var plan = result.getPlan(i);
-											console.log("方案" + i + "的总距离：" + plan.getDistance());
-											console.log("方案" + i + "的路线个数：" + plan.getNumRoutes());
-											for(var j = 0; j < plan.getNumRoutes(); j++) {
-												console.log("方案" + i + "，路线" + j + ":");
-												var route = plan.getRoute(j);
-												console.log("方案" + i + "，路线" + j + "的距离:" + route.getDistance());
-												console.log("方案" + i + "，路线" + j + "的关键点个数:" + route.getNumSteps());
-												for(var k = 0; k < route.getNumSteps(); k++) {
-													console.log("方案" + i + "，路线" + j + "，关键点" + k + ":");
-													var step = route.getStep(k);
-													console.log("方案" + i + "，路线" + j + "，关键点" + k + "的描述：" + step.getDescription(false));
-													console.log("方案" + i + "，路线" + j + "，关键点" + k + "到下一个关键点的距离：" + step.getDistance());
-
-												}
-											}
-										}*/
-									});
-
-								};
-
-								var cur_route = null;
-								var cur_step_index = 0;
-								var isNavi = 0;
-
-								//开始步行导航
-								function startNavi() {
-									map.removeControl(myNaviControl);
-									map.addControl(myEndNaviControl);
-									moveToMyPoi(19);
-									cur_route = walking.getResults().getPlan(0).getRoute(0);
-									cur_step_index = 0;
-									map.addControl(myStepControl);
-									isNavi = 1;
-									checkStep();
-								};
-								
-								//语音合成，并播放
-								function speak(text) {
-									var dtask = plus.downloader.createDownload("http://tsn.baidu.com/text2audio?tex=" + text + "&lan=zh&cuid=cuid0001&ctp=1&tok=24.767e62f3abdcd1581a6bc26164e31d46.2592000.1528437715.282335-11213698", {
-										filename: "_downloads/voice.map3"
-									}, function(d, status) {
-										// 下载完成
-										if(status == 200) {
-											var p = plus.audio.createPlayer(d.filename);
-											p.play(function() {
-												console("播放成功");
-											}, function(e) {
-												console("播放失败");
-											});
-										} else {
-											console("下载失败");
-										}
-									});
-									dtask.start();
-								};
-
-								//结束步行导航
-								function endNavi() {
-									isNavi = 0;
-									map.removeControl(myEndNaviControl);
-									map.removeControl(myStepControl);
-									map.clearOverlays();
-								};
-
-								//跟踪关键点
-								function checkStep() {
-									if(isNavi == 0) {
-										return;
-									}
-									if(map.getDistance(MyPoi, cur_route.getStep(cur_step_index).getPosition()) < 10) {
-										cur_step_index++;
-										if(cur_step_index == cur_route.getNumSteps()) {
-											$("#step").text("已到达终点附近");
-											return;
-										}
-										console.log("到达关键点");
-										var curText = cur_route.getStep(cur_step_index).getDescription(false);
-										$("#step").text(curText);
-										speak(curText);
-									}
-									setTimeout(function() {
-										checkStep();
-									}, 5000);
-								}
-								
-								//定义控件：开始记录轨迹
-								function StartPathControl(posIndex, left, top) {
-									var position = [BMAP_ANCHOR_TOP_LEFT, BMAP_ANCHOR_TOP_RIGHT, BMAP_ANCHOR_BOTTOM_LEFT, BMAP_ANCHOR_BOTTOM_RIGHT];
-									this.defaultAnchor = position[posIndex];
-									this.defaultOffset = new BMap.Size(left, top);
-								}
-								StartPathControl.prototype = new BMap.Control();
-								StartPathControl.prototype.initialize = function(map) {
-									var div = document.createElement("div");
-									$(div).html("<div style='display: inline-block;background: #fff;padding: 4px;padding-top: 8px;border-radius: 2px;box-shadow: 0 0 2px #999;'><i class='iconfont icon-zuji' style='font-size: 26px;color: #999;'></i></div>");
-									$(div).click(function() {
-										startPath();
-									});
-									map.getContainer().appendChild(div);
-									return div;
-								}
+								setTimeout(function() {
+									checkGeo();
+								}, 5000);
+							};
 						
-								var startPathControl = new StartPathControl(2, 10, 82);
-								map.addControl(startPathControl);
-						
-								var pathPointIndex = 0;
-								var pathId = null;
-								var isDrawPath = 0;
-								//开始记录轨迹
-								function startPath() {
-									pathId = '';
-									pathPointIndex = 0;
-									if(!_this.loginID){mui.toast("您还未登陆");return;}
-									mui.ajax({
-										url: 'http://118.24.34.244:8080/test1/AddPath?userId=' + _this.loginID,
-										type: 'GET',
-										beforeSend: function() {
-											plus.nativeUI.showWaiting();
-										},
-										complete: function() {
-											plus.nativeUI.closeWaiting();
-										},
-										success: function(res) {
-											map.removeControl(startPathControl);
-											map.addControl(endPathControl);
-						
-											pathId = res;
-											console.log(pathId);
-											isDrawPath = 1;
-											addPointToPath();
-										},
-										error: function(xhr, type, errorThrown) {
-											mui.toast("Error: 创建路径失败");
-										}
-									});
-								};
-						
-								function addPointToPath() {
-									if(isDrawPath == 0) {
-										return;
-									}
-									mui.ajax({
-										url: 'http://118.24.34.244:8080/test1/AddPointToPath?pathId=' + pathId + '&lng=' + MyPoi.lng + '&lat=' + MyPoi.lat + '&index=' + pathPointIndex,
-										type: 'GET',
-										beforeSend: function() {
-											plus.nativeUI.showWaiting();
-										},
-										complete: function() {
-											plus.nativeUI.closeWaiting();
-										},
-										success: function(res) {
-											console.log(res);
-											pathPointIndex++;
-						
-											setTimeout(function() {
-												addPointToPath();
-											}, 5000);
-										},
-										error: function(xhr, type, errorThrown) {
-											console.log("Error: 上传位置失败");
-											setTimeout(function() {
-												addPointToPath();
-											}, 5000);
-										}
-									});
-								};
-						
-								//定义控件：结束记录轨迹
-								function EndPathControl(posIndex, left, top) {
-									var position = [BMAP_ANCHOR_TOP_LEFT, BMAP_ANCHOR_TOP_RIGHT, BMAP_ANCHOR_BOTTOM_LEFT, BMAP_ANCHOR_BOTTOM_RIGHT];
-									this.defaultAnchor = position[posIndex];
-									this.defaultOffset = new BMap.Size(left, top);
-								}
-								EndPathControl.prototype = new BMap.Control();
-								EndPathControl.prototype.initialize = function(map) {
-									var div = document.createElement("div");
-									$(div).html("<div style='display: inline-block;background: #fff;padding: 4px;padding-top: 8px;border-radius: 2px;box-shadow: 0 0 2px #999;'><i class='iconfont icon-zuji' style='font-size: 26px;color: #007aff;'></i></div>");
-									$(div).click(function() {
-										endPath();
-									});
-									map.getContainer().appendChild(div);
-									return div;
-								}
-								var endPathControl = new EndPathControl(2, 10, 82);
-								
-								function endPath(){
-									isDrawPath = 0;
-									map.removeControl(endPathControl);
-									map.addControl(startPathControl);
-								};
-								
-								//调用百度地图==============================================end
-								
-								//登陆成功跳转首页
-								window.addEventListener('show', function() {
-									var state = app.getState();
-	//								console.log(JSON.stringify(state));
-//									account.innerText = state.account.nickname || state.account.account;
-									//第三方使用qq或微信头像，否则使用默认头像
-									if(state.account.figureurl_qq_2 || state.account.headimgurl){
-										account.innerText = state.account.nickname;
-//										headImg2.src = headImg.src = state.account.figureurl_qq_2 || state.account.headimgurl;
-									} else {
-//										headImg.src = headImg.src;
-//										headImg2.src = headImg2.src;
-									}
-									//用户已登陆，隐藏登陆按钮
-									if(state.account.account){
-//										account.innerText = state.account.account;
-										document.getElementById("login").style.display = 'none';
-										_this.logined = true;
-										_this.loginID = state.account.account;
-									}else{
-										document.getElementById("login").style.display = 'block';
-										_this.logined = false;
-									}						
-									//获取聊天列表数据
-									_this.getChatLiat();
-									//定义下拉刷新
-//									setInterval(function() {
-//										_this.getChatLiat()
-//									}, 3000);
-								}, false);
-								//底部导航按钮点击事件==================================
-								mui(".mui-bar-tab").on('tap','.mui-tab-item',function(){
-									var thisId = this.getAttribute("id");
-									switch(thisId){
-										case "meBtn": _this.showHeadImage = false;break;
-										case "loctionBtn" : _this.showHeadImage = true;break;
-										case "chatBtn" : _this.showHeadImage = true;break;
-									}
-								})								
-								//预加载设置界面-login.html
-								var settingPage = mui.preload({
-									"id": 'login',
-									"url": 'login.html'
-								});
-								var settingPage = mui.preload({
-									"id": 'setting',
-									"url": 'setting.html'
-								});
-								
-								//登陆
-								var loginPage = document.getElementById("login");
-								loginPage.addEventListener("tap",function(){
-									mui.openWindow({
-										url: 'login.html',
-										id: 'login.html'
-									});
-								});
-								//新的朋友
-								var newFriend = document.getElementById("newFriend");
-								newFriend.addEventListener('tap', function(){
-									if(_this.logined){
-										mui.openWindow({
-											id: "newFriend.html",
-											url: "newFriend.html",
-											extras: {
-												loginId : _this.loginID
-											}
-										})										
-									}else{
-										mui.confirm('您还未登陆，是否前往登陆？',"提示",new Array('是','否'),function(e){
-											if(e.index == 0){
-//												mui.toast('是');
-												mui.openWindow({
-													url: 'login.html',
-													id: 'login.html'
-												})
-											}
-										});
-									}
-								});
-								//群聊
-								var groupBtn = document.getElementById("group");
-								groupBtn.addEventListener('tap', function(){
-									if(_this.logined){
-										mui.openWindow({
-											id: "group-list.html",
-											url: "group-list.html",
-											extras: {
-												loginID: _this.loginID,
-												user: _this.user
-											}
-										})										
-									}else{
-										mui.confirm('您还未登陆，是否前往登陆？',"提示",new Array('是','否'),function(e){
-											if(e.index == 0){
-//												mui.toast('是');
-												mui.openWindow({
-													url: 'login.html',
-													id: 'login.html'
-												})
-											}
-										});
-									}
-								});
-								//通讯录
-								var contactBtn = document.getElementById("contact");
-								contactBtn.addEventListener('tap', function(){
-									if(_this.logined){
-										mui.openWindow({
-											id: "contact-list.html",
-											url: "contact-list.html",
-											extras: {
-												loginID : _this.loginID,
-												user: _this.user
-											}
-										})
-									}else{
-										mui.confirm('您还未登陆，是否前往登陆？',"提示",new Array('是','否'),function(e){
-											if(e.index == 0){
-												mui.openWindow({
-													url: 'login.html',
-													id: 'login.html'
-												})
-											}
-										});
-									}
-								});
-								//个人信息
-								var userInfo = document.getElementById("userInfo");
-								var userInfo2 = document.getElementById("userInfo2");
-								userInfo.addEventListener('tap', function(){
-									if(_this.logined){
-										mui.openWindow({
-											id: "userInfo.html",
-											url: "userInfo.html",
-											extras: {
-												user: _this.user,
-												loginID : _this.loginID
-											}
-										})
-									}else{
-										mui.confirm('您还未登陆，是否前往登陆？',"提示",new Array('是','否'),function(e){
-											if(e.index == 0){
-												mui.openWindow({
-													url: 'login.html',
-													id: 'login.html'
-												})
-											}
-										});
-									}
-								});
-								//我的路径
-								var userInfo = document.getElementById("myRound");
-								userInfo.addEventListener('tap', function(){
-									if(_this.logined){
-										mui.openWindow({
-											id: "myRound.html",
-											url: "myRound.html",
-											extras: {
-												user: _this.user,
-												loginID : _this.loginID
-											}
-										})
-									}else{
-										mui.confirm('您还未登陆，是否前往登陆？',"提示",new Array('是','否'),function(e){
-											if(e.index == 0){
-												mui.openWindow({
-													url: 'login.html',
-													id: 'login.html'
-												})
-											}
-										});
-									}
-								});
-								//头像账号处点击进去个人信息界面
-								userInfo2.addEventListener('tap', function(){
-									if(_this.logined){
-										mui.openWindow({
-											id: "userInfo.html",
-											url: "userInfo.html",
-											extras: {
-												user: _this.user,
-												loginID : _this.loginID
-											}
-										})
-									}else{
-										mui.confirm('您还未登陆，是否前往登陆？',"提示",new Array('是','否'),function(e){
-											if(e.index == 0){
-												mui.openWindow({
-													url: 'login.html',
-													id: 'login.html'
-												})
-											}
-										});
-									}
-								});
-								//打开新页面===========================================end
-								//设置
-								var settingButton = document.getElementById('setting');
-								//settingButton.style.display = settings.autoLogin ? 'block' : 'none';
-								settingButton.addEventListener('tap', function(event) {
-									if(_this.logined){
-										mui.openWindow({
-											id: "setting",
-											url: "setting.html",
-											extras: {
-												user: _this.user,
-												loginID : _this.loginID
-											}
-										})
-									}else{
-										mui.confirm('您还未登陆，是否前往登陆？',"提示",new Array('是','否'),function(e){
-											if(e.index == 0){
-												mui.openWindow({
-													url: 'login.html',
-													id: 'login.html'
-												})
-											}
-										});
-									}
-								});
-								//--
-								mui.oldBack = mui.back;
-								var backButtonPress = 0;
-								mui.back = function(event) {
-									backButtonPress++;
-									if (backButtonPress > 1) {
-										plus.runtime.quit();
-									} else {
-										plus.nativeUI.toast('再按一次退出应用');
-									}
-									setTimeout(function() {
-										backButtonPress = 0;
-									}, 1000);
-									return false;
-								};
+
+							plus.orientation.watchOrientation(function(o) {
+								marker.setRotation(o.alpha);
+							}, function(e) {
+								alert("Orientation error: " + e.message);
+							}, {
+								frequency: 100
 							});
-						}());						
-					}
-				}
-			});					
-//			Vue===end============
 
-		</script>
+							function SearchControl(posIndex, left, top) {
+								var position = [BMAP_ANCHOR_TOP_LEFT, BMAP_ANCHOR_TOP_RIGHT, BMAP_ANCHOR_BOTTOM_LEFT, BMAP_ANCHOR_BOTTOM_RIGHT];
+								this.defaultAnchor = position[posIndex];
+								this.defaultOffset = new BMap.Size(left, top);
+							}
+							SearchControl.prototype = new BMap.Control();
+							SearchControl.prototype.initialize = function(map) {
+								var div = document.createElement("div");
+								$(div).css({
+									width: "85%",
+									//										opacity: '0.7'
+								});
+								$(div).addClass("mui-input-row mui-search");
+								$(div).html("<input id='suggestId' type='search' class='mui-input-clear' placeholder='请输入关键字'>");
+								map.getContainer().appendChild(div);
+								return div;
+							}
+
+							function MyLoControl(posIndex, left, top) {
+								var position = [BMAP_ANCHOR_TOP_LEFT, BMAP_ANCHOR_TOP_RIGHT, BMAP_ANCHOR_BOTTOM_LEFT, BMAP_ANCHOR_BOTTOM_RIGHT];
+								this.defaultAnchor = position[posIndex];
+								this.defaultOffset = new BMap.Size(left, top);
+							}
+							MyLoControl.prototype = new BMap.Control();
+							MyLoControl.prototype.initialize = function(map) {
+								var div = document.createElement("div");
+								$(div).css({
+									color: "#999"
+								});
+								$(div).html("<div style='display: inline-block;background: #fff;padding: 4px;padding-top: 8px;border-radius: 2px;box-shadow: 0 0 2px #ccc;'><i class='iconfont icon-msnui-foresight' style='font-size: 26px;'></i></div>");
+
+								$(div).click(function() {
+									moveToMyPoi(17);
+								});
+								map.getContainer().appendChild(div);
+								return div;
+							}
+							//定义控件：开始导航
+							function MyNaviControl(posIndex, left, top) {
+								var position = [BMAP_ANCHOR_TOP_LEFT, BMAP_ANCHOR_TOP_RIGHT, BMAP_ANCHOR_BOTTOM_LEFT, BMAP_ANCHOR_BOTTOM_RIGHT];
+								this.defaultAnchor = position[posIndex];
+								this.defaultOffset = new BMap.Size(left, top);
+							}
+							MyNaviControl.prototype = new BMap.Control();
+							MyNaviControl.prototype.initialize = function(map) {
+								var div = document.createElement("div");
+								$(div).html('<div id="startNaviBtn" class="mui-btn mui-btn-primary">开始导航</div>');
+								$(div).click(function() {
+									startNavi();
+								});
+								map.getContainer().appendChild(div);
+								return div;
+							}
+							//定义函数：重选目的地
+							function reGetRoute() {
+								map.removeControl(myNaviControl);
+								map.clearOverlays();
+							};
+
+							//定义控件：结束导航
+							function MyEndNaviControl(posIndex, left, top) {
+								var position = [BMAP_ANCHOR_TOP_LEFT, BMAP_ANCHOR_TOP_RIGHT, BMAP_ANCHOR_BOTTOM_LEFT, BMAP_ANCHOR_BOTTOM_RIGHT];
+								this.defaultAnchor = position[posIndex];
+								this.defaultOffset = new BMap.Size(left, top);
+							}
+							MyEndNaviControl.prototype = new BMap.Control();
+							MyEndNaviControl.prototype.initialize = function(map) {
+								var div = document.createElement("div");
+								$(div).html('<div class="mui-btn mui-btn-primary">结束导航</div>');
+
+								$(div).click(function() {
+									endNavi();
+								});
+								map.getContainer().appendChild(div);
+								return div;
+							}
+
+							function MyStepControl(posIndex, left, top) {
+								var position = [BMAP_ANCHOR_TOP_LEFT, BMAP_ANCHOR_TOP_RIGHT, BMAP_ANCHOR_BOTTOM_LEFT, BMAP_ANCHOR_BOTTOM_RIGHT];
+								this.defaultAnchor = position[posIndex];
+								this.defaultOffset = new BMap.Size(left, top);
+							}
+							MyStepControl.prototype = new BMap.Control();
+							MyStepControl.prototype.initialize = function(map) {
+								var div = document.createElement("div");
+								$(div).css({
+									width: "90%"
+								});
+								$(div).html('<div class="mui-card"><ul class="mui-table-view"><li id="step" class="mui-table-view-cell"></li></ul></div>');
+								map.getContainer().appendChild(div);
+								return div;
+							}
+
+							//定义控件：路径规划《去这里》
+							function MyRouteControl(posIndex, left, top) {
+								var position = [BMAP_ANCHOR_TOP_LEFT, BMAP_ANCHOR_TOP_RIGHT, BMAP_ANCHOR_BOTTOM_LEFT, BMAP_ANCHOR_BOTTOM_RIGHT];
+								this.defaultAnchor = position[posIndex];
+								this.defaultOffset = new BMap.Size(left, top);
+							}
+							MyRouteControl.prototype = new BMap.Control();
+							MyRouteControl.prototype.initialize = function(map) {
+								var div = document.createElement("div");
+								$(div).html('<div class="mui-btn mui-btn-primary">去这里</div>');
+								$(div).click(function() {
+									walk();
+								});
+								map.getContainer().appendChild(div);
+								return div;
+							}
+							//创建控件并添加到地图中
+							var searchCtrl = new SearchControl(0, 30, 10); //搜索框
+							var myLoControl = new MyLoControl(2, 10, 40); //定位当前位置
+							var myNaviControl = new MyNaviControl(3, 10, 40); //开始导航
+							var myEndNaviControl = new MyEndNaviControl(3, 10, 40); //结束导航
+							var myRouteControl = new MyRouteControl(3, 10, 40); //去这里
+							var myStepControl = new MyStepControl(3, -5, 90); //路线提醒
+							map.addControl(searchCtrl);
+							map.addControl(myLoControl);
+
+							//地图点击和移动搜索框失去焦点
+							map.addEventListener("click", function() {
+								$("#suggestId").blur();
+							});
+							map.addEventListener("moving", function() {
+								$("#suggestId").blur();
+							});
+
+							var ac = new BMap.Autocomplete( //建立一个自动完成的对象
+								{
+									"input": "suggestId",
+									"location": map
+								});
+
+							ac.addEventListener("onhighlight", function(e) { //鼠标放在下拉列表上的事件
+								var str = "";
+								var _value = e.fromitem.value;
+								var value = "";
+								if(e.fromitem.index > -1) {
+									value = _value.province + _value.city + _value.district + _value.street + _value.business;
+								}
+								str = "FromItem<br />index = " + e.fromitem.index + "<br />value = " + value;
+
+								value = "";
+								if(e.toitem.index > -1) {
+									_value = e.toitem.value;
+									value = _value.province + _value.city + _value.district + _value.street + _value.business;
+								}
+								str += "<br />ToItem<br />index = " + e.toitem.index + "<br />value = " + value;
+								$("#searchResultPanel").html(str);
+							});
+
+							var myValue;
+							ac.addEventListener("onconfirm", function(e) { //鼠标点击下拉列表后的事件
+								var _value = e.item.value;
+								myValue = _value.province + _value.city + _value.district + _value.street + _value.business;
+								$("#searchResultPanel").html("onconfirm<br />index = " + e.item.index + "<br />myValue = " + myValue);
+								setPlace();
+							});
+
+							//								设置位置中心,跳转到搜索的位置
+							function setPlace() {
+								$("#suggestId").blur();
+								isNavi = 0;
+								map.removeControl(myNaviControl);
+								map.removeControl(myEndNaviControl);
+								map.removeControl(myStepControl);
+								map.clearOverlays(); //清除地图上所有覆盖物
+								function myFun() {
+									dest = local.getResults().getPoi(0).point; //获取第一个智能搜索的结果
+									map.centerAndZoom(dest, 17);
+									m1 = new BMap.Marker(dest);
+									m1.getIcon().setImageUrl("images/sprite.png");
+									map.addOverlay(m1); //添加标注
+									map.addControl(myRouteControl);
+									/*m1.addEventListener("click", function() {
+										searchInfoWindow.open(m1);
+									});
+									searchInfoWindow.open(m1);*/
+								}
+								var local = new BMap.LocalSearch(map, { //智能搜索
+									onSearchComplete: myFun
+								});
+								local.search(myValue);
+							};
+
+							var content = '<button id="bt1" type="button" class="mui-btn mui-btn-primary mui-btn-block" onclick="walk()">到这里去</button>';
+							//创建检索信息窗口对象
+							var searchInfoWindow = null;
+							searchInfoWindow = new BMapLib.SearchInfoWindow(map, content, {
+								title: "路径规划", //标题
+								width: 100, //宽度
+								//	panel: "panel", //检索结果面板
+								enableAutoPan: true, //自动平移
+								searchTypes: [
+									//	BMAPLIB_TAB_TO_HERE //到这里去
+								]
+							});
+
+							var walking = new BMap.WalkingRoute(map, {
+								renderOptions: {
+									map: map,
+									//	panel: "r-result",
+									autoViewport: true
+								},
+								onPolylinesSet: function(routes) {
+									routes[0].getPolyline().setStrokeStyle("solid");
+								}
+							});
+
+							//规划步行路径
+							function walk() {
+								walking.search(MyPoi, dest);
+
+								walking.setSearchCompleteCallback(function() {
+									map.removeControl(myRouteControl);
+									map.addControl(myNaviControl);
+									/*var result = walking.getResults();
+									console.log("方案总数：" + result.getNumPlans());
+									for(var i = 0; i < result.getNumPlans(); i++) {
+										console.log("方案" + i + ":");
+										var plan = result.getPlan(i);
+										console.log("方案" + i + "的总距离：" + plan.getDistance());
+										console.log("方案" + i + "的路线个数：" + plan.getNumRoutes());
+										for(var j = 0; j < plan.getNumRoutes(); j++) {
+											console.log("方案" + i + "，路线" + j + ":");
+											var route = plan.getRoute(j);
+											console.log("方案" + i + "，路线" + j + "的距离:" + route.getDistance());
+											console.log("方案" + i + "，路线" + j + "的关键点个数:" + route.getNumSteps());
+											for(var k = 0; k < route.getNumSteps(); k++) {
+												console.log("方案" + i + "，路线" + j + "，关键点" + k + ":");
+												var step = route.getStep(k);
+												console.log("方案" + i + "，路线" + j + "，关键点" + k + "的描述：" + step.getDescription(false));
+												console.log("方案" + i + "，路线" + j + "，关键点" + k + "到下一个关键点的距离：" + step.getDistance());
+
+											}
+										}
+									}*/
+								});
+
+							};
+
+							var cur_route = null;
+							var cur_step_index = 0;
+							var isNavi = 0;
+
+							//开始步行导航
+							function startNavi() {
+								map.removeControl(myNaviControl);
+								map.addControl(myEndNaviControl);
+								moveToMyPoi(19);
+								cur_route = walking.getResults().getPlan(0).getRoute(0);
+								cur_step_index = 0;
+								map.addControl(myStepControl);
+								isNavi = 1;
+								checkStep();
+							};
+
+							//语音合成，并播放
+							function speak(text) {
+								var dtask = plus.downloader.createDownload("http://tsn.baidu.com/text2audio?tex=" + text + "&lan=zh&cuid=cuid0001&ctp=1&tok=24.767e62f3abdcd1581a6bc26164e31d46.2592000.1528437715.282335-11213698", {
+									filename: "_downloads/voice.map3"
+								}, function(d, status) {
+									// 下载完成
+									if(status == 200) {
+										var p = plus.audio.createPlayer(d.filename);
+										p.play(function() {
+											console("播放成功");
+										}, function(e) {
+											console("播放失败");
+										});
+									} else {
+										console("下载失败");
+									}
+								});
+								dtask.start();
+							};
+
+							//结束步行导航
+							function endNavi() {
+								isNavi = 0;
+								map.removeControl(myEndNaviControl);
+								map.removeControl(myStepControl);
+								map.clearOverlays();
+							};
+
+							//跟踪关键点
+							function checkStep() {
+								if(isNavi == 0) {
+									return;
+								}
+								if(map.getDistance(MyPoi, cur_route.getStep(cur_step_index).getPosition()) < 10) {
+									cur_step_index++;
+									if(cur_step_index == cur_route.getNumSteps()) {
+										$("#step").text("已到达终点附近");
+										return;
+									}
+									console.log("到达关键点");
+									var curText = cur_route.getStep(cur_step_index).getDescription(false);
+									$("#step").text(curText);
+									speak(curText);
+								}
+								setTimeout(function() {
+									checkStep();
+								}, 5000);
+							}
+
+							//定义控件：开始记录轨迹
+							function StartPathControl(posIndex, left, top) {
+								var position = [BMAP_ANCHOR_TOP_LEFT, BMAP_ANCHOR_TOP_RIGHT, BMAP_ANCHOR_BOTTOM_LEFT, BMAP_ANCHOR_BOTTOM_RIGHT];
+								this.defaultAnchor = position[posIndex];
+								this.defaultOffset = new BMap.Size(left, top);
+							}
+							StartPathControl.prototype = new BMap.Control();
+							StartPathControl.prototype.initialize = function(map) {
+								var div = document.createElement("div");
+								$(div).html("<div style='display: inline-block;background: #fff;padding: 4px;padding-top: 8px;border-radius: 2px;box-shadow: 0 0 2px #999;'><i class='iconfont icon-zuji' style='font-size: 26px;color: #999;'></i></div>");
+								$(div).click(function() {
+									startPath();
+								});
+								map.getContainer().appendChild(div);
+								return div;
+							}
+
+							var startPathControl = new StartPathControl(2, 10, 82);
+							map.addControl(startPathControl);
+
+							var pathPointIndex = 0;
+							var pathId = null;
+							var isDrawPath = 0;
+							//开始记录轨迹
+							function startPath() {
+								pathId = '';
+								pathPointIndex = 0;
+								if(!_this.loginID) {
+									mui.toast("您还未登陆");
+									return;
+								}
+								mui.ajax({
+									url: 'http://118.24.34.244:8080/test1/AddPath?userId=' + _this.loginID,
+									type: 'GET',
+									beforeSend: function() {
+										plus.nativeUI.showWaiting();
+									},
+									complete: function() {
+										plus.nativeUI.closeWaiting();
+									},
+									success: function(res) {
+										map.removeControl(startPathControl);
+										map.addControl(endPathControl);
+
+										pathId = res;
+										console.log(pathId);
+										isDrawPath = 1;
+										addPointToPath();
+									},
+									error: function(xhr, type, errorThrown) {
+										mui.toast("Error: 创建路径失败");
+									}
+								});
+							};
+
+							function addPointToPath() {
+								if(isDrawPath == 0) {
+									return;
+								}
+								mui.ajax({
+									url: 'http://118.24.34.244:8080/test1/AddPointToPath?pathId=' + pathId + '&lng=' + MyPoi.lng + '&lat=' + MyPoi.lat + '&index=' + pathPointIndex,
+									type: 'GET',
+									beforeSend: function() {
+										plus.nativeUI.showWaiting();
+									},
+									complete: function() {
+										plus.nativeUI.closeWaiting();
+									},
+									success: function(res) {
+										console.log(res);
+										pathPointIndex++;
+
+										setTimeout(function() {
+											addPointToPath();
+										}, 5000);
+									},
+									error: function(xhr, type, errorThrown) {
+										console.log("Error: 上传位置失败");
+										setTimeout(function() {
+											addPointToPath();
+										}, 5000);
+									}
+								});
+							};
+
+							//定义控件：结束记录轨迹
+							function EndPathControl(posIndex, left, top) {
+								var position = [BMAP_ANCHOR_TOP_LEFT, BMAP_ANCHOR_TOP_RIGHT, BMAP_ANCHOR_BOTTOM_LEFT, BMAP_ANCHOR_BOTTOM_RIGHT];
+								this.defaultAnchor = position[posIndex];
+								this.defaultOffset = new BMap.Size(left, top);
+							}
+							EndPathControl.prototype = new BMap.Control();
+							EndPathControl.prototype.initialize = function(map) {
+								var div = document.createElement("div");
+								$(div).html("<div style='display: inline-block;background: #fff;padding: 4px;padding-top: 8px;border-radius: 2px;box-shadow: 0 0 2px #999;'><i class='iconfont icon-zuji' style='font-size: 26px;color: #007aff;'></i></div>");
+								$(div).click(function() {
+									endPath();
+								});
+								map.getContainer().appendChild(div);
+								return div;
+							}
+							var endPathControl = new EndPathControl(2, 10, 82);
+
+							function endPath() {
+								isDrawPath = 0;
+								map.removeControl(endPathControl);
+								map.addControl(startPathControl);
+							};
+
+							//调用百度地图==============================================end
+
+							//登陆成功跳转首页
+							window.addEventListener('show', function() {
+								var state = app.getState();
+								//								console.log(JSON.stringify(state));
+								//									account.innerText = state.account.nickname || state.account.account;
+								//第三方使用qq或微信头像，否则使用默认头像
+								if(state.account.figureurl_qq_2 || state.account.headimgurl) {
+									account.innerText = state.account.nickname;
+									//										headImg2.src = headImg.src = state.account.figureurl_qq_2 || state.account.headimgurl;
+								} else {
+									//										headImg.src = headImg.src;
+									//										headImg2.src = headImg2.src;
+								}
+								//用户已登陆，隐藏登陆按钮
+								if(state.account.account) {
+									//										account.innerText = state.account.account;
+									document.getElementById("login").style.display = 'none';
+									_this.logined = true;
+									_this.loginID = state.account.account;
+								} else {
+									document.getElementById("login").style.display = 'block';
+									_this.logined = false;
+								}
+								//获取聊天列表数据
+								_this.getChatLiat();
+								//定义下拉刷新
+								//									setInterval(function() {
+								//										_this.getChatLiat()
+								//									}, 3000);
+							}, false);
+							//底部导航按钮点击事件==================================
+							mui(".mui-bar-tab").on('tap', '.mui-tab-item', function() {
+								var thisId = this.getAttribute("id");
+								switch(thisId) {
+									case "meBtn":
+										_this.showHeadImage = false;
+										break;
+									case "loctionBtn":
+										_this.showHeadImage = true;
+										break;
+									case "chatBtn":
+										_this.showHeadImage = true;
+										break;
+								}
+							})
+							//预加载设置界面-login.html
+							var settingPage = mui.preload({
+								"id": 'login',
+								"url": 'login.html'
+							});
+							var settingPage = mui.preload({
+								"id": 'setting',
+								"url": 'setting.html'
+							});
+
+							//登陆
+							var loginPage = document.getElementById("login");
+							loginPage.addEventListener("tap", function() {
+								mui.openWindow({
+									url: 'login.html',
+									id: 'login.html'
+								});
+							});
+							//新的朋友
+							var newFriend = document.getElementById("newFriend");
+							newFriend.addEventListener('tap', function() {
+								if(_this.logined) {
+									mui.openWindow({
+										id: "newFriend.html",
+										url: "newFriend.html",
+										extras: {
+											loginId: _this.loginID
+										}
+									})
+								} else {
+									mui.confirm('您还未登陆，是否前往登陆？', "提示", new Array('是', '否'), function(e) {
+										if(e.index == 0) {
+											//												mui.toast('是');
+											mui.openWindow({
+												url: 'login.html',
+												id: 'login.html'
+											})
+										}
+									});
+								}
+							});
+							//群聊
+							var groupBtn = document.getElementById("group");
+							groupBtn.addEventListener('tap', function() {
+								if(_this.logined) {
+									mui.openWindow({
+										id: "group-list.html",
+										url: "group-list.html",
+										extras: {
+											loginID: _this.loginID,
+											user: _this.user
+										}
+									})
+								} else {
+									mui.confirm('您还未登陆，是否前往登陆？', "提示", new Array('是', '否'), function(e) {
+										if(e.index == 0) {
+											//												mui.toast('是');
+											mui.openWindow({
+												url: 'login.html',
+												id: 'login.html'
+											})
+										}
+									});
+								}
+							});
+							//通讯录
+							var contactBtn = document.getElementById("contact");
+							contactBtn.addEventListener('tap', function() {
+								if(_this.logined) {
+									mui.openWindow({
+										id: "contact-list.html",
+										url: "contact-list.html",
+										extras: {
+											loginID: _this.loginID,
+											user: _this.user
+										}
+									})
+								} else {
+									mui.confirm('您还未登陆，是否前往登陆？', "提示", new Array('是', '否'), function(e) {
+										if(e.index == 0) {
+											mui.openWindow({
+												url: 'login.html',
+												id: 'login.html'
+											})
+										}
+									});
+								}
+							});
+							//个人信息
+							var userInfo = document.getElementById("userInfo");
+							var userInfo2 = document.getElementById("userInfo2");
+							userInfo.addEventListener('tap', function() {
+								if(_this.logined) {
+									mui.openWindow({
+										id: "userInfo.html",
+										url: "userInfo.html",
+										extras: {
+											user: _this.user,
+											loginID: _this.loginID
+										}
+									})
+								} else {
+									mui.confirm('您还未登陆，是否前往登陆？', "提示", new Array('是', '否'), function(e) {
+										if(e.index == 0) {
+											mui.openWindow({
+												url: 'login.html',
+												id: 'login.html'
+											})
+										}
+									});
+								}
+							});
+							//我的路径
+							var userInfo = document.getElementById("myRound");
+							userInfo.addEventListener('tap', function() {
+								if(_this.logined) {
+									mui.openWindow({
+										id: "myRound.html",
+										url: "myRound.html",
+										extras: {
+											user: _this.user,
+											loginID: _this.loginID
+										}
+									})
+								} else {
+									mui.confirm('您还未登陆，是否前往登陆？', "提示", new Array('是', '否'), function(e) {
+										if(e.index == 0) {
+											mui.openWindow({
+												url: 'login.html',
+												id: 'login.html'
+											})
+										}
+									});
+								}
+							});
+							//头像账号处点击进去个人信息界面
+							userInfo2.addEventListener('tap', function() {
+								if(_this.logined) {
+									mui.openWindow({
+										id: "userInfo.html",
+										url: "userInfo.html",
+										extras: {
+											user: _this.user,
+											loginID: _this.loginID
+										}
+									})
+								} else {
+									mui.confirm('您还未登陆，是否前往登陆？', "提示", new Array('是', '否'), function(e) {
+										if(e.index == 0) {
+											mui.openWindow({
+												url: 'login.html',
+												id: 'login.html'
+											})
+										}
+									});
+								}
+							});
+							//打开新页面===========================================end
+							//设置
+							var settingButton = document.getElementById('setting');
+							//settingButton.style.display = settings.autoLogin ? 'block' : 'none';
+							settingButton.addEventListener('tap', function(event) {
+								if(_this.logined) {
+									mui.openWindow({
+										id: "setting",
+										url: "setting.html",
+										extras: {
+											user: _this.user,
+											loginID: _this.loginID
+										}
+									})
+								} else {
+									mui.confirm('您还未登陆，是否前往登陆？', "提示", new Array('是', '否'), function(e) {
+										if(e.index == 0) {
+											mui.openWindow({
+												url: 'login.html',
+												id: 'login.html'
+											})
+										}
+									});
+								}
+							});
+							//--
+							mui.oldBack = mui.back;
+							var backButtonPress = 0;
+							mui.back = function(event) {
+								backButtonPress++;
+								if(backButtonPress > 1) {
+									plus.runtime.quit();
+								} else {
+									plus.nativeUI.toast('再按一次退出应用');
+								}
+								setTimeout(function() {
+									backButtonPress = 0;
+								}, 1000);
+								return false;
+							};
+						});
+					}());
+				}
+			}
+		});
+		//			Vue===end============
+	</script>
+
 </html>
