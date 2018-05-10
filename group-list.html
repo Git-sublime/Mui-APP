@@ -26,7 +26,7 @@
 		</header>
 		<div class="mui-content" id="app">
 			<div id='list' class="mui-indexed-list">
-				<div class="mui-indexed-list-search mui-input-row mui-search">
+				<div class="mui-indexed-list-search mui-input-row mui-search" style="display: none;">
 					<input type="search" class="mui-input-clear mui-indexed-list-search-input" placeholder="搜索">
 				</div>
 				<div class="mui-indexed-list-bar" style="display: none;">
@@ -35,7 +35,7 @@
 				<div class="mui-indexed-list-alert"></div>
 				<div class="mui-indexed-list-inner">
 					<div class="mui-indexed-list-empty-alert">没有数据</div>
-					<ul class="mui-table-view">
+					<ul class="mui-table-view topHave">
 						<li v-for="item in groups" class="mui-table-view-cell mui-indexed-list-item mui-media" @click="gotoChat(item)">
 							<!--<a href="javascript:;">-->
 							<img class="mui-media-object mui-pull-left" :src="item.headImgUrl" style="height: 35px;max-width: 35px;line-height: 35px;">
