@@ -124,10 +124,11 @@
 
 		function addOneClick(ii) {
 			console.log(userMarkers[ii].userId);
-
-			//不知道为什么无法添加上事件
+			
+			//点击好友marker,规划会和路径
 			userMarkers[ii].addEventListener("click", function(evt) {
-				alert(ii);
+				dest = userMarkers[ii].getPosition();
+				map.addControl(myRouteControl);
 			});
 		};
 
