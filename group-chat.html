@@ -667,6 +667,9 @@
 				            },
 				            error    : function(xhr,type,errorThrown){
 				                console.log(errorThrown);
+				                setTimeout(function(){
+				            		getNewMsg(groupId, messageNum);
+				            	},1000);
 				            }
 				        });
 					};

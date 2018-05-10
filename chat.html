@@ -625,6 +625,9 @@
 				            },
 				            error    : function(xhr,type,errorThrown){
 				                console.log(errorThrown);
+				                setTimeout(function(){
+				            		getNewMsg(senderId,receiverId,messageNum);
+				            	},1000);
 				            }
 				        });
 					};
