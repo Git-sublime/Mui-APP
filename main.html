@@ -184,8 +184,7 @@
 							</div>
 						</a>
 					</li>
-				</ul>				
-				
+				</ul>
 				<ul class="mui-table-view topHave">
 				<li class="mui-table-view-cell" id="userInfo">
 					<a class="mui-navigate-right">
@@ -194,16 +193,16 @@
 				</li>
 				<li class="mui-table-view-cell" id="myRound">
 					<a class="mui-navigate-right">
-						我的轨迹
+						我的足迹
 					</a>
 				</li>
-				<li class="mui-table-view-cell">
+				<!--<li class="mui-table-view-cell">
 					<a class="mui-navigate-right">
 						标记地址
 					</a>
-				</li>
+				</li>-->
 			</ul>
-			<ul v-show="loginID" class="mui-table-view" style="margin-top: 25px;">
+			<ul class="mui-table-view">
 				<li class="mui-table-view-cell">
 					<a class="mui-navigate-right" id="setting">
 						设置
@@ -250,7 +249,13 @@
 					groupChatList: [],
 					recordList: [],
 					lastChatList: [],
-					nowDay: ''
+					nowDay: '',
+					
+					ChatListOKTotal : 0,//需要请求多少次"GetLastMsgByTwoId"
+					ChatListOKCount : 0,//已请求多少次"GetLastMsgByTwoId"
+						
+					GroupChatListOKTotal : 0,//需要请求多少次"GetLastGroupMsgById"
+					GroupChatListOKCount : 0//已请求多少次"GetLastGroupMsgById"						
 				},
 				mounted: function(){
 					this.$nextTick(function(){
@@ -328,11 +333,11 @@
 						
 						var GetUserOK = false;//GetUserByIdServlet是否完成
 						
-						var ChatListOKTotal = 0;//需要请求多少次"GetLastMsgByTwoId"
-						var ChatListOKCount = 0;//已请求多少次"GetLastMsgByTwoId"
-						
-						var GroupChatListOKTotal = 0;//需要请求多少次"GetLastGroupMsgById"
-						var GroupChatListOKCount = 0;//已请求多少次"GetLastGroupMsgById"
+
+									this.ChatListOKTotal = 0;
+									this.ChatListOKCount = 0;
+									this.GroupChatListOKTotal = 0;
+									this.GroupChatListOKCount = 0;
 						
 						var anyChatGetFail = false;//有任何一条聊天记录获取失败
 						
@@ -346,7 +351,6 @@
 									res = JSON.parse(res);
 									res.headImgUrl = imgUrl + res.headImgUrl;
 									_this.user = res;
-									
 									GetUserOK = true;
 								},
 								error: function(xhr, type, errorThrown){
@@ -367,9 +371,8 @@
 								}
 								_this.chatList1 = res;
 								var k = 0;
-								
-								ChatListOKTotal = _this.chatList1.length;
-								
+								console.log("单聊长度："  + res.length);
+								_this.ChatListOKTotal = _this.chatList1.length;
 								for(var j = 0; j<_this.chatList1.length; j++){
 									var tempID = _this.chatList1[j].id;
 									mui.ajax({
@@ -390,7 +393,7 @@
 													_this.$set(_this.chatList1[j1], 'type', 1);
 		//											console.log(JSON.stringify(data));
 													k++;
-													ChatListOKCount++;
+													_this.ChatListOKCount++;
 													break;
 												}
 											}
@@ -398,7 +401,7 @@
 										},
 										error: function(xhr, type, errorThrown){
 											console.log("获取最后一条聊天记录失败");
-											ChatListOKCount++;
+											_this.ChatListOKCount++;
 											anyChatGetFail = true;
 										}
 									})	
@@ -420,7 +423,8 @@
 								_this.groupChatList = res;
 								var kk = 0;
 								
-								GroupChatListOKTotal = _this.groupChatList.length;
+								console.log("群聊长度："  + res.length);
+								_this.GroupChatListOKTotal = _this.groupChatList.length;
 								
 								for(var jj = 0; jj<_this.groupChatList.length; jj++){
 									var tempID = _this.groupChatList[jj].id;
@@ -443,16 +447,14 @@
 													_this.$set(_this.groupChatList[j1], 'type', 2);
 		//											console.log(JSON.stringify(data));
 													kk++;
-													GroupChatListOKCount++;
+													_this.GroupChatListOKCount++;
 													break;
 												}
 											}
-											
-											
 										},
 										error: function(xhr, type, errorThrown){
 											console.log("获取最后一条群聊天记录失败");
-											GroupChatListOKCount++;
+											_this.GroupChatListOKCount++;
 											anyChatGetFail = true;
 										}
 									})	
@@ -465,8 +467,8 @@
 						
 						//判断完成所有请求后再进行：数组合并，时间排序，再次请求
 						var intervalCkeck = setInterval(function(){
-							console.log("ChatListOKTotal:"+ChatListOKTotal+",ChatListOKCount:"+ChatListOKCount);
-							if(GetUserOK && ChatListOKCount==ChatListOKTotal && GroupChatListOKCount==GroupChatListOKTotal){
+							console.log("单聊长度:"+_this.ChatListOKTotal+",单聊请求:"+_this.ChatListOKCount + "群聊长度:"+_this.GroupChatListOKTotal+",群聊请求:"+_this.GroupChatListOKCount);
+							if(GetUserOK && _this.ChatListOKCount==_this.ChatListOKTotal && _this.GroupChatListOKCount==_this.GroupChatListOKTotal){
 								console.log("已完成");
 								//结束定时器
 								clearInterval(intervalCkeck);
@@ -497,8 +499,6 @@
 						(function() {
 							var settings = app.getSettings();
 							var account = document.getElementById('account');
-//							var headImg = document.getElementById("head-img");
-//							var headImg2 = document.getElementById("headImage");
 							//获取当前时间
 							var nowDate = new Date();
 							var monthStr = (nowDate.getMonth() + 1).toString();
@@ -1011,7 +1011,7 @@
 									}else{
 										document.getElementById("login").style.display = 'block';
 										_this.logined = false;
-									}
+									}						
 									//获取聊天列表数据
 									_this.getChatLiat();
 									//定义下拉刷新
@@ -1190,18 +1190,25 @@
 								var settingButton = document.getElementById('setting');
 								//settingButton.style.display = settings.autoLogin ? 'block' : 'none';
 								settingButton.addEventListener('tap', function(event) {
-									mui.openWindow({
-										id: 'setting',
-										show: {
-											aniShow: 'pop-in'
-										},
-										styles: {
-											popGesture: 'hide'
-										},
-										waiting: {
-											autoShow: false
-										}
-									});
+									if(_this.logined){
+										mui.openWindow({
+											id: "setting",
+											url: "setting.html",
+											extras: {
+												user: _this.user,
+												loginID : _this.loginID
+											}
+										})
+									}else{
+										mui.confirm('您还未登陆，是否前往登陆？',"提示",new Array('是','否'),function(e){
+											if(e.index == 0){
+												mui.openWindow({
+													url: 'login.html',
+													id: 'login.html'
+												})
+											}
+										});
+									}
 								});
 								//--
 								mui.oldBack = mui.back;
