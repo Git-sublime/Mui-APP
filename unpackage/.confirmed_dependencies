@@ -53,7 +53,8 @@
 	},
 	"group-chat.html": {
 		"refer": [
-			"group-info.html"
+			"group-info.html",
+			"chatMap.html"
 		]
 	},
 	"group-list.html": {

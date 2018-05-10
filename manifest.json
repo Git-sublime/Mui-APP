@@ -323,7 +323,8 @@
 			"group-chat.html": {
 				"resources": [],
 				"refer": [
-					"group-info.html"
+					"group-info.html",
+					"chatMap.html"
 				],
 				"priority": 0
 			},

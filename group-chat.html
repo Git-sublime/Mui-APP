@@ -293,6 +293,41 @@
 			.cancel {
 				background-color: darkred;
 			}
+			#ShareLocation{
+				position: fixed;
+				left: 0;
+				top: 50%;
+				width: 10px;
+				height: 50px;
+				background: #fff;
+				border-top-right-radius: 3px;
+				border-bottom-right-radius: 3px;
+				border-bottom: 1px solid #999;
+				border-right: 1px solid #999;
+				line-height: 50px;
+				color: #999;
+				z-index: 10;
+			}
+			.openShareLocation{
+				z-index: 10;
+				position: fixed;
+				left: 13px;
+				top: 50%;
+				display: inline-block;
+				/*width: 10px;*/
+				height: 50px;
+				background: #fff;
+				border-radius: 5px;
+				border-bottom: 1px solid #999;
+				border-right: 1px solid #999;
+				line-height: 50px;
+				color: #444;
+				padding: 0 10px;
+				display: none;
+			}
+			.show{
+				display: block;
+			}
 		</style>
 	</head>
 
@@ -302,6 +337,9 @@
 			<h1 class="mui-title" id="chatName"></h1>
 			<span id="openGroupMemberInfo" class="mui-icon-extra mui-icon-extra-peoples mui-pull-right" style="font-size: 22px;padding-top: 12px; font-weight: bold;color: #757474;"></span>
 		</header>
+		
+		<div id="ShareLocation">&gt;</div>
+		<span class="openShareLocation" id="showShareLocation">查看群成员位置</span>
 		<pre id='h'></pre>
 		<script id='msg-template' type="text/template">
 			<% for(var i in record){ var item=record[i]; %>
@@ -377,6 +415,21 @@
 					var realGroupId = sData.chatObj.id;
 					console.log(realSenderId);
 					console.log(realGroupId);
+					
+					//查看群成员位置显示隐藏
+					var shareLocationBtn = document.getElementById('showShareLocation');
+					document.getElementById("ShareLocation").addEventListener('tap', function(){
+						shareLocationBtn.classList.toggle('show');
+					})
+					shareLocationBtn.addEventListener('tap', function(){
+						mui.openWindow({
+							url: 'chatMap.html',
+							id: 'chatMap.html',
+							extras: {
+								groupID: realGroupId
+							}
+						})
+					})
 					
 					//过去聊天记录
 					var record = [];

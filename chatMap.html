@@ -6,13 +6,15 @@
 		<meta name="viewport" content="initial-scale=1.0, user-scalable=no width=device-width" />
 		<style type="text/css">
 			#allmap {
-				height: 1000px;
 				overflow: hidden;
 				margin: 0;
 				font-family: "微软雅黑";
+				margin-top: 46px;
+				/*height: 600px;*/
 			}
 		</style>
 		<script type="text/javascript" src="js/jquery-3.3.1.min.js"></script>
+		<script type="text/javascript" src="js/mui.min.js"></script>
 		<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=1GFjszMOqSYX1Ny1Y5NPWE4G2wGB0Ghx"></script>
 		<script type="text/javascript" src="http://api.map.baidu.com/library/SearchInfoWindow/1.5/src/SearchInfoWindow_min.js"></script>
 		<link rel="stylesheet" href="css/font-awesome.css" />
@@ -26,11 +28,24 @@
 		<!--<div class="mui-input-row mui-search" style="width: 70%;height: 40px;">
 			<input type="search" class="mui-input-clear" placeholder="请输入关键字">
 		</div>-->
-		<div id="searchResultPanel" style="border:1px solid #C0C0C0;width:150px;height:auto; display:none;"></div>
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 class="mui-title">群共享位置</h1>
+		</header>
+		<div id="searchResultPanel" style="border:1px solid #C0C0C0;width:150px;height:auto; display:none;top: 60px;"></div>
 		<div id="allmap"></div>
 		<div id="r-result"></div>
 	</body>
 	<script>
+		mui.plusReady(function(){
+			var sData = plus.webview.currentWebview();
+			var groupID = sData.groupID;
+			console.log(groupID)
+		});
+
+		var winWidth = document.documentElement.clientWidth;
+		var winHeight = document.documentElement.clientHeight;
+		document.getElementById('allmap').style.height = (winHeight - 46)+'px';		
 		var map = new BMap.Map("allmap"); // 创建Map实例
 		//等待状态
 	//	plus.nativeUI.showWaiting();
