@@ -451,7 +451,7 @@
 											}
 										},
 										error: function(xhr, type, errorThrown){
-											console.log("获取最后一条群聊天记录失败");
+										//	console.log("获取最后一条群聊天记录失败");
 											_this.GroupChatListOKCount++;
 											anyChatGetFail = true;
 										}
@@ -459,15 +459,15 @@
 								}
 							},
 							error: function(xhr, type, errorThrown){
-								console.log("获取群聊天列表失败");
+							//	console.log("获取群聊天列表失败");
 							}
 						});
 						
 						//判断完成所有请求后再进行：数组合并，时间排序，再次请求
 						var intervalCkeck = setInterval(function(){
-							console.log("单聊长度:"+_this.ChatListOKTotal+",单聊请求:"+_this.ChatListOKCount + "群聊长度:"+_this.GroupChatListOKTotal+",群聊请求:"+_this.GroupChatListOKCount);
+						//	console.log("单聊长度:"+_this.ChatListOKTotal+",单聊请求:"+_this.ChatListOKCount + "群聊长度:"+_this.GroupChatListOKTotal+",群聊请求:"+_this.GroupChatListOKCount);
 							if(GetUserOK && _this.ChatListOKCount==_this.ChatListOKTotal && _this.GroupChatListOKCount==_this.GroupChatListOKTotal){
-								console.log("已完成");
+						//		console.log("已完成");
 								//结束定时器
 								clearInterval(intervalCkeck);
 								//如果有任何一条聊天记录获取失败，放弃渲染
@@ -484,7 +484,7 @@
 								//再次请求
 								_this.getChatLiat();
 							}else{
-								console.log("还未完成");
+							//	console.log("还未完成");
 								
 							}
 						}, 2000);
@@ -541,7 +541,7 @@
 										marker.setPosition(MyPoi);
 										moveToMyPoi(17);
 									} else {
-										alert('failed' + this.getStatus());
+										console.log('failed' + this.getStatus());
 									}
 								}, {
 									enableHighAccuracy: false
@@ -555,13 +555,14 @@
 											if(r.point.lng){plus.nativeUI.closeWaiting();};
 											//	map.panTo(MyPoi);
 											//	alert('您的位置：' + r.point.lng + ',' + r.point.lat);
-											//定时再获取位置
-											setTimeout(function() {
-												getMyPosition();
-											}, 3000);
+											
 										} else {
-											alert('failed' + this.getStatus());
+											console.log('failed' + this.getStatus());
 										}
+										//定时再获取位置
+										setTimeout(function() {
+											getMyPosition();
+										}, 3000);
 									}, {
 										enableHighAccuracy: false
 									})
@@ -955,7 +956,10 @@
 											}, 5000);
 										},
 										error: function(xhr, type, errorThrown) {
-											mui.toast("Error: 上传位置失败");
+											console.log("Error: 上传位置失败");
+											setTimeout(function() {
+												addPointToPath();
+											}, 5000);
 										}
 									});
 								};

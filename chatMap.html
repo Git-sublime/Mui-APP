@@ -18,6 +18,8 @@
 		<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=1GFjszMOqSYX1Ny1Y5NPWE4G2wGB0Ghx"></script>
 		<script type="text/javascript" src="http://api.map.baidu.com/library/SearchInfoWindow/1.5/src/SearchInfoWindow_min.js"></script>
 		<link rel="stylesheet" href="css/font-awesome.css" />
+		<link rel="stylesheet" type="text/css" href="http://at.alicdn.com/t/font_650380_9dxpvvaexb8lrf6r.css" />
+
 		<link rel="stylesheet" href="css/mui.min.css">
 		<link rel="stylesheet" href="http://api.map.baidu.com/library/SearchInfoWindow/1.5/src/SearchInfoWindow_min.css" />
 
@@ -37,20 +39,147 @@
 		<div id="r-result"></div>
 	</body>
 	<script>
-		mui.plusReady(function(){
+		var groupID = '';
+		var loginId = '';
+		mui.plusReady(function() {
 			var sData = plus.webview.currentWebview();
-			var groupID = sData.groupID;
+			groupID = sData.groupID;
+			loginId = sData.loginId;
 			document.getElementById("groupName").innerHTML = sData.groupName;
-			console.log(groupID)
+			console.log(groupID);
+			MyWatchOrientation();
+			getUserPoints();
 		});
+
+		function getUserPoints() {
+			mui.ajax({
+				url: 'http://118.24.34.244:8080/test1/GetUserPointListByGroupId?groupId=' + groupID,
+				type: 'GET',
+				success: function(res) {
+					var objs = JSON.parse(res);
+					getUsers(objs);
+				},
+				error: function(xhr, type, errorThrown) {
+					mui.toast("Error: 获取成员失败");
+				}
+			});
+		};
+
+		function getUsers(objs) {
+			mui.ajax({
+				url: 'http://118.24.34.244:8080/test1/SelectUsersByGroupId?groupId=' + groupID,
+				type: 'GET',
+				success: function(res) {
+					var userObjs = JSON.parse(res);
+					for(var i = 0; i < objs.length; i++) {
+						for(var j = 0; j < userObjs.length; j++) {
+							if(objs[i].userId == userObjs[j].id) {
+								objs[i].name = userObjs[j].name;
+								objs[i].headImgUrl = userObjs[j].headImgUrl;
+								break;
+							}
+						}
+					}
+
+					drawUserMarks(objs);
+				},
+				error: function(xhr, type, errorThrown) {
+					mui.toast("Error: 获取成员失败");
+				}
+			});
+		};
+
+		var userMarkers = new Array();
+
+		//画出成员marker
+		function drawUserMarks(userObjs) {
+			for(var i = 0; i < userObjs.length; i++) {
+				if(userObjs[i].userId == loginId) {
+					continue;
+				}
+				var p = new BMap.Point(userObjs[i].lng, userObjs[i].lat);
+				var m = new BMap.Marker(p);
+				m.userId = userObjs[i].userId;
+				userMarkers.push(m);
+				m.getIcon().setImageUrl("http://118.24.34.244:8080/test1" + userObjs[i].headImgUrl);
+				m.getIcon().setSize(new BMap.Size(55, 55));
+				m.disableMassClear();
+
+				map.addOverlay(m);
+				//	searchInfoWindow.open(m);
+			}
+			addClickEvent();
+		};
+
+		function addClickEvent() {
+			for(var i = 0; i < userMarkers.length; i++) {
+				(function(arg) {
+					addOneClick(arg);
+				})(i)
+
+			}
+			//定时获取所有人位置
+			getAllPoints();
+		};
+
+		function addOneClick(ii) {
+			console.log(userMarkers[ii].userId);
+
+			//不知道为什么无法添加上事件
+			userMarkers[ii].addEventListener("click", function(evt) {
+				alert(ii);
+			});
+		};
+
+		//定义函数：定时获取所有人位置
+		function getAllPoints() {
+			mui.ajax({
+				url: 'http://118.24.34.244:8080/test1/GetUserPointListByGroupId?groupId=' + groupID,
+				type: 'GET',
+				success: function(res) {
+					var objs = JSON.parse(res);
+					for(var i = 0; i < objs.length; i++) {
+						for(var j = 0; j < userMarkers.length; j++) {
+							if(objs[i].userId == userMarkers[j].userId) {
+								userMarkers[j].setPosition(new BMap.Point(objs[i].lng, objs[i].lat));
+								break;
+							}
+						}
+					}
+					setTimeout("getAllPoints()", 5000);
+				},
+				error: function(xhr, type, errorThrown) {
+					console.log("Error: 获取成员位置失败");
+					setTimeout("getAllPoints()", 5000);
+				}
+			});
+		};
+
+		//定时上传自己位置
+		//	sendMyPoint();
+
+		//定义函数：定时上传自己位置
+		function sendMyPoint() {
+			mui.ajax({
+				url: 'http://118.24.34.244:8080/test1/sendUserPoint?userId=' + loginId + '&lng=' + MyPoi.lng + '&lat=' + MyPoi.lat,
+				type: 'GET',
+				success: function(res) {
+					setTimeout("sendMyPoint()", 5000);
+				},
+				error: function(xhr, type, errorThrown) {
+					console.log("Error: 上传位置失败");
+					setTimeout("sendMyPoint()", 5000);
+				}
+			});
+		};
 
 		var winWidth = document.documentElement.clientWidth;
 		var winHeight = document.documentElement.clientHeight;
-		document.getElementById('allmap').style.height = (winHeight - 46)+'px';		
+		document.getElementById('allmap').style.height = (winHeight - 46) + 'px';
 		var map = new BMap.Map("allmap"); // 创建Map实例
 		//等待状态
-	//	plus.nativeUI.showWaiting();
-		var MyPoi = new BMap.Point(103.9587, 30.7819); 
+		//	plus.nativeUI.showWaiting();
+		var MyPoi = new BMap.Point(103.9587, 30.7819);
 		map.centerAndZoom(MyPoi, 17); // 初始化地图,设置中心点坐标和地图级别
 		map.enableScrollWheelZoom();
 		//添加一个marker对象
@@ -70,9 +199,11 @@
 			if(this.getStatus() == BMAP_STATUS_SUCCESS) {
 				MyPoi = r.point;
 				marker.setPosition(MyPoi);
-				moveToMyPoi(17);
+				moveToMyPoi(14);
+
+				sendMyPoint();
 			} else {
-				alert('failed' + this.getStatus());
+				console.log('failed' + this.getStatus());
 			}
 		}, {
 			enableHighAccuracy: false
@@ -83,26 +214,29 @@
 				if(this.getStatus() == BMAP_STATUS_SUCCESS) {
 					MyPoi = r.point;
 					marker.setPosition(MyPoi);
-					
-					//定时再获取位置
-					setTimeout(function() {
-						getMyPosition();
-					}, 3000);
+
 				} else {
-					alert('failed' + this.getStatus());
+					console.log('failed' + this.getStatus());
 				}
+				//定时再获取位置
+				setTimeout(function() {
+					getMyPosition();
+				}, 3000);
 			}, {
 				enableHighAccuracy: false
 			})
 		};
 		getMyPosition();
-		/*plus.orientation.watchOrientation(function(o) {
-			marker.setRotation(o.alpha);
-		}, function(e) {
-			alert("Orientation error: " + e.message);
-		}, {
-			frequency: 1
-		});*/
+
+		function MyWatchOrientation() {
+			plus.orientation.watchOrientation(function(o) {
+				marker.setRotation(o.alpha);
+			}, function(e) {
+				alert("Orientation error: " + e.message);
+			}, {
+				frequency: 1
+			});
+		};
 
 		function SearchControl(posIndex, left, top) {
 			var position = [BMAP_ANCHOR_TOP_LEFT, BMAP_ANCHOR_TOP_RIGHT, BMAP_ANCHOR_BOTTOM_LEFT, BMAP_ANCHOR_BOTTOM_RIGHT];
@@ -152,14 +286,7 @@
 			var div = document.createElement("div");
 			$(div).html('<div id="startNaviBtn" class="mui-btn mui-btn-primary">开始导航</div>');
 			$(div).click(function() {
-				map.removeControl(myNaviControl);
-				map.addControl(myEndNaviControl);
-				moveToMyPoi(24);
-				cur_route = walking.getResults().getPlan(0).getRoute(0);
-				cur_step_index = 0;
-				map.addControl(myStepControl);
-				$("#step").text(cur_route.getStep(0).getDescription(false));
-				checkStep();
+				startNavi();
 			});
 			map.getContainer().appendChild(div);
 			return div;
@@ -270,7 +397,7 @@
 			setPlace();
 		});
 
-		//								设置位置中心,跳转到搜索的位置
+		//设置位置中心,跳转到搜索的位置
 		function setPlace() {
 			$("#suggestId").blur();
 			isNavi = 0;
@@ -296,13 +423,12 @@
 			local.search(myValue);
 		};
 
-		var content = '<button id="bt1" type="button" class="mui-btn mui-btn-primary mui-btn-block" onclick="walk()">到这里去</button>';
+		var content = 'aaaa';
 		//创建检索信息窗口对象
 		var searchInfoWindow = null;
 		searchInfoWindow = new BMapLib.SearchInfoWindow(map, content, {
 			title: "路径规划", //标题
-			width: 100, //宽度
-			//	panel: "panel", //检索结果面板
+			width: 50, //宽度
 			enableAutoPan: true, //自动平移
 			searchTypes: [
 				//	BMAPLIB_TAB_TO_HERE //到这里去
@@ -312,7 +438,7 @@
 		var walking = new BMap.WalkingRoute(map, {
 			renderOptions: {
 				map: map,
-				panel: "r-result",
+				//	panel: "r-result",
 				autoViewport: true
 			},
 			onPolylinesSet: function(routes) {
@@ -364,9 +490,28 @@
 			cur_route = walking.getResults().getPlan(0).getRoute(0);
 			cur_step_index = 0;
 			map.addControl(myStepControl);
-			$("#step").text(cur_route.getStep(0).getDescription(false));
 			isNavi = 1;
 			checkStep();
+		};
+
+		//语音合成，并播放
+		function speak(text) {
+			var dtask = plus.downloader.createDownload("http://tsn.baidu.com/text2audio?tex=" + text + "&lan=zh&cuid=cuid0001&ctp=1&tok=24.767e62f3abdcd1581a6bc26164e31d46.2592000.1528437715.282335-11213698", {
+				filename: "_downloads/voice.map3"
+			}, function(d, status) {
+				// 下载完成
+				if(status == 200) {
+					var p = plus.audio.createPlayer(d.filename);
+					p.play(function() {
+						console("播放成功");
+					}, function(e) {
+						console("播放失败");
+					});
+				} else {
+					console("下载失败");
+				}
+			});
+			dtask.start();
 		};
 
 		//结束步行导航
@@ -388,8 +533,10 @@
 					$("#step").text("已到达终点附近");
 					return;
 				}
-				$("#step").text(cur_route.getStep(cur_step_index).getDescription(false));
 				console.log("到达关键点");
+				var curText = cur_route.getStep(cur_step_index).getDescription(false);
+				$("#step").text(curText);
+				speak(curText);
 			}
 			setTimeout(function() {
 				checkStep();
@@ -423,12 +570,12 @@
 		function startPath() {
 			pathId = '';
 			pathPointIndex = 0;
-			if(!_this.loginID) {
+			if(loginId == '' || loginId == null) {
 				mui.toast("您还未登陆");
 				return;
 			}
 			mui.ajax({
-				url: 'http://118.24.34.244:8080/test1/AddPath?userId=' + _this.loginID,
+				url: 'http://118.24.34.244:8080/test1/AddPath?userId=' + loginId,
 				type: 'GET',
 				beforeSend: function() {
 					plus.nativeUI.showWaiting();
@@ -473,7 +620,10 @@
 					}, 5000);
 				},
 				error: function(xhr, type, errorThrown) {
-					mui.toast("Error: 上传位置失败");
+					console.log("Error: 上传位置失败");
+					setTimeout(function() {
+						addPointToPath();
+					}, 5000);
 				}
 			});
 		};

@@ -431,6 +431,7 @@
 							url: 'chatMap.html',
 							id: 'chatMap.html',
 							extras: {
+								loginId: sData.loginId,
 								groupID: realGroupId,
 								groupName: sData.chatObj.name
 							}
@@ -620,7 +621,7 @@
 				            type     : 'GET',
 				            contentType: "application/x-www-form-urlencoded; charset=utf-8",
 				            success  : function(res){
-				            	console.log(JSON.stringify(res));
+				            //	console.log(JSON.stringify(res));
 				            	messageNum = res;
 				            	getNewMsg(realGroupId, messageNum);
 				            },
@@ -641,9 +642,9 @@
 				            type     : 'GET',
 				            contentType: "application/x-www-form-urlencoded; charset=utf-8",
 				            success  : function(res){
-				            	console.log(res);
+				            //	console.log(res);
 				            	var list = JSON.parse(res);
-				            	console.log("新消息数："+list.length);
+				            //	console.log("新消息数："+list.length);
 				            	messageNum = Number(messageNum) + Number(list.length);
 				            	for(var i in list){
 				            		//自己的消息不显示
