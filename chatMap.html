@@ -30,7 +30,7 @@
 		</div>-->
 		<header class="mui-bar mui-bar-nav">
 			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
-			<h1 class="mui-title">群共享位置</h1>
+			<h1 class="mui-title" id="groupName">群共享位置</h1>
 		</header>
 		<div id="searchResultPanel" style="border:1px solid #C0C0C0;width:150px;height:auto; display:none;top: 60px;"></div>
 		<div id="allmap"></div>
@@ -40,6 +40,7 @@
 		mui.plusReady(function(){
 			var sData = plus.webview.currentWebview();
 			var groupID = sData.groupID;
+			document.getElementById("groupName").innerHTML = sData.groupName;
 			console.log(groupID)
 		});
 

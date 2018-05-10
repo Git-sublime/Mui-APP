@@ -308,6 +308,11 @@
 				color: #999;
 				z-index: 10;
 			}
+			.rightIcon{
+				line-height: 50px;
+				display: block;
+				margin-left: -1px;
+			}
 			.openShareLocation{
 				z-index: 10;
 				position: fixed;
@@ -338,7 +343,7 @@
 			<span id="openGroupMemberInfo" class="mui-icon-extra mui-icon-extra-peoples mui-pull-right" style="font-size: 22px;padding-top: 12px; font-weight: bold;color: #757474;"></span>
 		</header>
 		
-		<div id="ShareLocation">&gt;</div>
+		<div id="ShareLocation"><span class="rightIcon">&gt;</span></div>
 		<span class="openShareLocation" id="showShareLocation">查看群成员位置</span>
 		<pre id='h'></pre>
 		<script id='msg-template' type="text/template">
@@ -426,7 +431,8 @@
 							url: 'chatMap.html',
 							id: 'chatMap.html',
 							extras: {
-								groupID: realGroupId
+								groupID: realGroupId,
+								groupName: sData.chatObj.name
 							}
 						})
 					})
