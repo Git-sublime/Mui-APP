@@ -1,5 +1,5 @@
 ## 简单概述
-这是我的毕业设计，使用H5 Runtime + Mui + HBuilder结合开发
+这是我的毕业设计，使用H5 Runtime + Mui + HBuilder结合开发,混合开发得APP（微定位)。
 
 ## 核心功能
 1. 多人定位、导航；
@@ -19,3 +19,8 @@
 - 页面组件 Mui组件 [dev.dcloud.net](http://dev.dcloud.net.cn/mui/ui/)
 - 界面逻辑处理 + 数据渲染 [Vue.JS](https://cn.vuejs.org/v2/guide/index.html)
 - 图标提供 （阿里巴巴矢量图标） [http://www.iconfont.cn](http://www.iconfont.cn/)
+
+## 安装包更新
+- 微定位 0.7.0  [下载地址>>](https://github.com/Git-sublime/Mui-APP/blob/master/unpackage/release/H51CB4E94_20180511_070.apk)
+- 微定位 0.6.0  [下载地址>>](https://github.com/Git-sublime/Mui-APP/blob/master/unpackage/release/H51CB4E94_20180507_060.apk)
+- 微定位 0.5.0  [下载地址>>](https://github.com/Git-sublime/Mui-APP/blob/master/unpackage/release/H51CB4E94_20180501_050.apk)
