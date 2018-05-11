@@ -483,7 +483,7 @@
 							//结束定时器
 							clearInterval(intervalCkeck);
 							//如果有任何一条聊天记录获取失败，放弃渲染
-							if(anyChatGetFail == false) {
+							if(anyChatGetFail == false && _this.ChatListOKTotal > 0 && _this.GroupChatListOKTotal > 0) {
 								//数组合并
 								_this.chatList = _this.chatList1;
 								_this.chatList = _this.chatList.concat(_this.groupChatList);
