@@ -50,7 +50,8 @@
 			</ul>	
 			<!--聊天界面跳转过来个人信息-->
 			<ul v-if="flag == 3" class="topHave" style="padding: 0 15px;">
-				<li @click="deleteFriend()" class="mui-btn mui-btn-block mui-btn-danger" style="padding: 11px 0;">删除好友</li>
+				<li v-if="!isFriend && !addContact" @click="addFriend()" class="mui-btn mui-btn-block mui-btn-primary" style="padding: 11px 0;">添加到通讯录</li>
+				<li v-if="!isFriend && addContact" @click="deleteFriend()" class="mui-btn mui-btn-block mui-btn-danger" style="padding: 11px 0;">删除好友</li>
 			</ul>			
 		</div>
 	</body>
