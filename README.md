@@ -1,5 +1,5 @@
 ## 简单概述
-这是我的毕业设计，使用H5 Runtime + Mui + HBuilder结合开发,混合开发得APP（微定位)。
+这是我的毕业设计，使用H5 Runtime + Mui + HBuilder结合开发，混合开发得APP（微定位)。
 
 ## 核心功能
 1. 多人定位、导航；
@@ -10,9 +10,9 @@
 - 开发工具： **HBuilder**
 - 数据请求： **Ajax**
 - 页面渲染： **Vue**
-- UI 框 架： **Mui**
-- 后    台： **Java**
-- 数 据 库： **MySQL**
+- 数 据 库：&nbsp;&nbsp;**MySQL**
+- UI&nbsp;框&nbsp;架：&nbsp; **Mui**
+- 后 &nbsp;台：&nbsp;&nbsp;&nbsp;&nbsp; **Java**
 
 ## 文档查阅
 - Mui + HBuilder + H5 Plus混合开发 [www.dcloud.io](http://www.dcloud.io/)
