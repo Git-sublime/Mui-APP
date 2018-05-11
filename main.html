@@ -483,10 +483,14 @@
 							//结束定时器
 							clearInterval(intervalCkeck);
 							//如果有任何一条聊天记录获取失败，放弃渲染
-							if(anyChatGetFail == false && _this.ChatListOKTotal > 0 && _this.GroupChatListOKTotal > 0) {
+							if(anyChatGetFail == false) {
 								//数组合并
-								_this.chatList = _this.chatList1;
-								_this.chatList = _this.chatList.concat(_this.groupChatList);
+								if(_this.ChatListOKTotal > 0){
+									_this.chatList = _this.chatList1;
+								}
+								if(_this.GroupChatListOKTotal > 0){
+									_this.chatList = _this.chatList.concat(_this.groupChatList);
+								}
 								//时间排序
 								_this.chatList.sort(function(a, b) {
 									return Date.parse(a.lastRecordDate) - Date.parse(b.lastRecordDate);
@@ -504,6 +508,7 @@
 				},
 				//初始化
 				InitMain: function() {
+					console.log("InitMain");
 					var _this = this;
 					(function() {
 						var settings = app.getSettings();
