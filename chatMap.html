@@ -23,7 +23,7 @@
 		<link rel="stylesheet" href="css/mui.min.css">
 		<link rel="stylesheet" href="http://api.map.baidu.com/library/SearchInfoWindow/1.5/src/SearchInfoWindow_min.css" />
 
-		<title>位置共享</title>
+		<title></title>
 	</head>
 
 	<body>
@@ -50,7 +50,7 @@
 			MyWatchOrientation();
 			getUserPoints();
 		});
-
+		//获取用户位置信息（账号、经度、纬度）
 		function getUserPoints() {
 			mui.ajax({
 				url: 'http://118.24.34.244:8080/test1/GetUserPointListByGroupId?groupId=' + groupID,
@@ -101,11 +101,15 @@
 				var m = new BMap.Marker(p);
 				m.userId = userObjs[i].userId;
 				userMarkers.push(m);
-				m.getIcon().setImageUrl("http://118.24.34.244:8080/test1" + userObjs[i].headImgUrl);
-				m.getIcon().setSize(new BMap.Size(55, 55));
+				m.getIcon().setImageUrl("images/sprite.png");
+				m.getIcon().setSize(new BMap.Size(30, 30));
 				m.disableMassClear();
-
+				var label = new BMap.Label(userObjs[i].name, {
+					position: p,
+					offset: new BMap.Size(-12, -50)
+				});
 				map.addOverlay(m);
+				map.addOverlay(label);
 				//	searchInfoWindow.open(m);
 			}
 			addClickEvent();
@@ -138,6 +142,7 @@
 				url: 'http://118.24.34.244:8080/test1/GetUserPointListByGroupId?groupId=' + groupID,
 				type: 'GET',
 				success: function(res) {
+//					console.log(res);
 					var objs = JSON.parse(res);
 					for(var i = 0; i < objs.length; i++) {
 						for(var j = 0; j < userMarkers.length; j++) {
@@ -178,7 +183,9 @@
 		var winHeight = document.documentElement.clientHeight;
 		document.getElementById('allmap').style.height = (winHeight - 46) + 'px';
 		var map = new BMap.Map("allmap"); // 创建Map实例
-		//等待状态
+		//缩放比例控件
+		var opts = {offset: new BMap.Size(winWidth - 80, 10)}
+		map.addControl(new BMap.ScaleControl(opts));
 		//	plus.nativeUI.showWaiting();
 		var MyPoi = new BMap.Point(103.9587, 30.7819);
 		map.centerAndZoom(MyPoi, 17); // 初始化地图,设置中心点坐标和地图级别
