@@ -57,7 +57,7 @@
 					<img class="mui-media-object mui-pull-left" :src="item.headImgUrl" style="height: 35px;max-width: 35px;line-height: 35px;">
 							
 					<div class="mui-media-body" style="padding-left: 10px;">
-						<span v-text="item.id" style="padding-top: 7px;display: inline-block; color: #007aff;"></span>
+						<!--<span v-text="item.id" style="padding-top: 7px;display: inline-block; color: #007aff;"></span>-->
 						<span v-show="item.name != '未填'" v-text="item.name" style="padding-top: 7px;display: inline-block; color: #007aff;"></span>
 						<!--<span class="mui-btn mui-pull-right mui-btn-default" @click="addFriend(item, index)" v-if="!item.added">添加</span>
 						<span class="mui-btn mui-pull-right" v-if="item.added" style="border: none;">待回复</span>-->
@@ -80,7 +80,8 @@
 				data: {
 					searchVal: '',
 					searchList: {},
-					loginID: ''
+					loginID: '',
+					user: {}
 				},
 				mounted: function(){
 					this.$nextTick(function(){
@@ -93,6 +94,7 @@
 						mui.plusReady(function(){
 							var sData = plus.webview.currentWebview();
 							_this.loginID = sData.loginID;
+							_this.user = sData.loginer
 						})
 					},
 					getData: function(){
@@ -112,6 +114,7 @@
 //								mask.close();
 							},
 							success: function(res){
+								if(res == '[]'){mui.toast("没有任何数据！");return}
 								res = JSON.parse(res);
 								for( var i =0; i < res.length; i++){
 				            		res[i].headImgUrl = imgUrl + res[i].headImgUrl;
@@ -162,6 +165,7 @@
 							extras: {
 								user: item,
 								loginID: _this.loginID,
+								loginer: _this.user,
 								flag : 1
 							}
 						})

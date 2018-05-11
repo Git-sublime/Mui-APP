@@ -46,7 +46,8 @@
 					groupID: '',
 					groupName: '',
 					memNumber: 0,
-					members: []
+					members: [],
+					loginer: {}
 				},
 				mounted: function(){
 					this.$nextTick(function(){
@@ -65,6 +66,7 @@
 						_this.groupName = sData.groupName;
 						_this.loginID = sData.loginID;
 						_this.groupID = sData.groupID;
+						_this.loginer = sData.loginer;
 						//请求接口判断该用户是否已经是我的好友
 						mui.ajax({
 							url: 'http://118.24.34.244:8080/test1/SelectUsersByGroupId?groupId=' + sData.groupID,
@@ -127,6 +129,7 @@
 							extras: {
 								user:  item,
 								loginID: _this.loginID,
+								loginer: _this.loginer,
 								flag: 1
 							}
 						})

@@ -418,8 +418,6 @@
 					document.getElementById("chatName").innerHTML = sData.chatObj.name;
 					var realSenderId = sData.loginId;
 					var realGroupId = sData.chatObj.id;
-					console.log(realSenderId);
-					console.log(realGroupId);
 					
 					//查看群成员位置显示隐藏
 					var shareLocationBtn = document.getElementById('showShareLocation');
@@ -440,43 +438,67 @@
 					
 					//过去聊天记录
 					var record = [];
-					mui.ajax({
-						url: 'http://118.24.34.244:8080/test1/GetLastGroupMsgById?groupId=' + realGroupId,
-						type: 'GET',
-						timeout: 5000,
-						async: false,
-						beforeSend: function(){
-							plus.nativeUI.showWaiting();
-						},
-						complete: function(){
-							plus.nativeUI.closeWaiting();
-						},
-						success: function(data){
-							if(data != '[]'){
-								data = JSON.parse(data);
-//								console.log(JSON.stringify(data));
-								data = data.reverse();
-								for(var i = 0; i<data.length; i++){
-									data[i].senderHeadImg = imgUrl + data[i].senderHeadImg;
-									if(data[i].senderId == sData.loginer.id){
-										record.push({
-											sender: 'self',
-											type: 'text',
-											content: data[i].content,
-											headImgUrl: sData.loginer.headImgUrl
-										});										
-									}else{
-										record.push({
-											sender: 'zs',
-											type: 'text',
-											content: data[i].content,
-											headImgUrl: data[i].senderHeadImg
-										});	
+					if(sData.flag == 1){
+						var data = sData.chatObj.record;
+						data = data.reverse();
+						for(var i = 0; i<data.length; i++){
+							data[i].senderHeadImg = imgUrl + data[i].senderHeadImg;
+							if(data[i].senderId == sData.loginer.id){
+								record.push({
+									sender: 'self',
+									type: 'text',
+									content: data[i].content,
+									headImgUrl: sData.loginer.headImgUrl
+								});										
+							}else{
+								record.push({
+									sender: 'zs',
+									type: 'text',
+									content: data[i].content,
+									headImgUrl: data[i].senderHeadImg
+								});	
+							}
+						}						
+					}else {
+						mui.ajax({
+							url: 'http://118.24.34.244:8080/test1/GetLastGroupMsgById?groupId=' + realGroupId,
+							type: 'GET',
+							timeout: 5000,
+							async: false,
+							beforeSend: function(){
+								plus.nativeUI.showWaiting();
+							},
+							complete: function(){
+								plus.nativeUI.closeWaiting();
+							},
+							success: function(data){
+								if(data != '[]'){
+									data = JSON.parse(data);
+	//								console.log(JSON.stringify(data));
+									data = data.reverse();
+									for(var i = 0; i<data.length; i++){
+										data[i].senderHeadImg = imgUrl + data[i].senderHeadImg;
+										if(data[i].senderId == sData.loginer.id){
+											record.push({
+												sender: 'self',
+												type: 'text',
+												content: data[i].content,
+												headImgUrl: sData.loginer.headImgUrl
+											});										
+										}else{
+											record.push({
+												sender: 'zs',
+												type: 'text',
+												content: data[i].content,
+												headImgUrl: data[i].senderHeadImg
+											});	
+										}
 									}
 								}
 							}
-						}
-					})
+						})						
+					}
+
 //					document.getElementById("head-img").src = sData.chatObj.headImg;
 					//打开群详细信息
 					doc.getElementById("openGroupMemberInfo").addEventListener('tap', function(){
@@ -486,7 +508,8 @@
 							extras: {
 								groupID : realGroupId,
 								groupName: sData.chatObj.name,
-								loginID: sData.loginId
+								loginID: sData.loginId,
+								loginer: sData.loginer
 							}
 						})
 					});

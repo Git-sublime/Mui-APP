@@ -67,7 +67,8 @@
 					addContact: false,
 					isValidate: false,
 					agree: '同意',
-					refuse: '拒绝'
+					refuse: '拒绝',
+					loginer: {}
 				},
 				mounted: function(){
 					this.$nextTick(function(){
@@ -86,6 +87,7 @@
 						this.user = sData.user;
 						this.loginID = sData.loginID;
 						this.flag = sData.flag;
+						this.loginer = sData.loginer;
 						//如果用户信息为本人
 						if(sData.user.id == sData.loginID){
 							_this.flag = 0;
@@ -144,7 +146,9 @@
 							id: 'chat.html',
 							extras: {
 								chatObj: _this.user,
-								loginId: _this.loginID
+								loginId: _this.loginID,
+								loginer: _this.loginer,
+								flag: 2
 							}
 						})
 					},

@@ -252,14 +252,6 @@
 				logined: false,
 				showHeadImage: true,//左上角头像显示
 				showAddFriend: false,//添加朋友、群
-				robot:{//机器人
-					name: 'MUI',
-					chatUser: "",
-					headImg: "images/logo.png",
-					lastAsk: "Hi,我是MUI小管家",
-					dataTime: "12:31",
-					dataDay: '05-01'
-				},
 				chatList: [],//最近聊天列表
 				chatList1: [],//最近单人聊天列表
 				groupChatList: [],//最近群聊列表
@@ -269,7 +261,15 @@
 				ChatListOKTotal : 0,//需要请求多少次"GetLastMsgByTwoId"
 				ChatListOKCount : 0,//已请求多少次"GetLastMsgByTwoId"
 				GroupChatListOKTotal : 0,//需要请求多少次"GetLastGroupMsgById"
-				GroupChatListOKCount : 0//已请求多少次"GetLastGroupMsgById"						
+				GroupChatListOKCount : 0,//已请求多少次"GetLastGroupMsgById"	
+				robot:{//机器人
+					name: 'MUI',
+					chatUser: "",
+					headImg: "images/logo.png",
+					lastAsk: "Hi,我是MUI小管家",
+					dataTime: "12:31",
+					dataDay: '05-01'
+				}					
 			},
 			mounted: function() {
 				this.$nextTick(function() {
@@ -298,7 +298,8 @@
 							extras: {
 								chatObj: item,
 								loginId: _this.loginID,
-								loginer: _this.user
+								loginer: _this.user,
+								flag: 1
 							}
 						})
 					}
@@ -326,7 +327,8 @@
 						url: 'add-friend.html',
 						id: 'add-friend.html',
 						extras: {
-							loginID: _this.loginID
+							loginID: _this.loginID,
+							loginer: _this.user							
 						}
 					});
 					this.showAddFriend = false;
@@ -501,10 +503,8 @@
 							_this.getChatLiat();
 						} else {
 							//	console.log("还未完成");
-
 						}
 					}, 2000);
-
 				},
 				//初始化
 				InitMain: function() {
