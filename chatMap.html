@@ -515,9 +515,9 @@
 				if(status == 200) {
 					var p = plus.audio.createPlayer(d.filename);
 					p.play(function() {
-						console("播放成功");
+						console.log("播放成功");
 					}, function(e) {
-						console("播放失败");
+						console.log("播放失败");
 					});
 				} else {
 					console("下载失败");
