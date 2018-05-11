@@ -100,7 +100,6 @@
 				var p = new BMap.Point(userObjs[i].lng, userObjs[i].lat);
 				var m = new BMap.Marker(p);
 				m.userId = userObjs[i].userId;
-				userMarkers.push(m);
 				m.getIcon().setImageUrl("images/sprite.png");
 				m.getIcon().setSize(new BMap.Size(30, 30));
 				m.disableMassClear();
@@ -109,6 +108,8 @@
 					offset: new BMap.Size(-12, -50)
 				});
 				label.disableMassClear();
+				m.lab = label;
+				userMarkers.push(m);
 				map.addOverlay(m);
 				map.addOverlay(label);
 				//	searchInfoWindow.open(m);
@@ -148,7 +149,9 @@
 					for(var i = 0; i < objs.length; i++) {
 						for(var j = 0; j < userMarkers.length; j++) {
 							if(objs[i].userId == userMarkers[j].userId) {
-								userMarkers[j].setPosition(new BMap.Point(objs[i].lng, objs[i].lat));
+								var p = new BMap.Point(objs[i].lng, objs[i].lat);
+								userMarkers[j].setPosition(p);
+								userMarkers[j].lab.setPosition(p);
 								break;
 							}
 						}
