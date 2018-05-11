@@ -247,12 +247,12 @@
 		var vue = new Vue({
 			el: "#app",
 			data: {
-				loginID: '',
-				user: {},
+				loginID: '',//登陆者ID
+				user:{},//登陆者信息
 				logined: false,
-				showHeadImage: true,
-				showAddFriend: false,
-				robot: {
+				showHeadImage: true,//左上角头像显示
+				showAddFriend: false,//添加朋友、群
+				robot:{//机器人
 					name: 'MUI',
 					chatUser: "",
 					headImg: "images/logo.png",
@@ -260,18 +260,16 @@
 					dataTime: "12:31",
 					dataDay: '05-01'
 				},
-				chatList: [],
-				chatList1: [],
-				groupChatList: [],
-				recordList: [],
-				lastChatList: [],
-				nowDay: '',
-
-				ChatListOKTotal: 0, //需要请求多少次"GetLastMsgByTwoId"
-				ChatListOKCount: 0, //已请求多少次"GetLastMsgByTwoId"
-
-				GroupChatListOKTotal: 0, //需要请求多少次"GetLastGroupMsgById"
-				GroupChatListOKCount: 0 //已请求多少次"GetLastGroupMsgById"						
+				chatList: [],//最近聊天列表
+				chatList1: [],//最近单人聊天列表
+				groupChatList: [],//最近群聊列表
+				recordList: [],//聊天记录列表
+				lastChatList: [],//最后一条聊天记录
+				nowDay: '',//当前时间
+				ChatListOKTotal : 0,//需要请求多少次"GetLastMsgByTwoId"
+				ChatListOKCount : 0,//已请求多少次"GetLastMsgByTwoId"
+				GroupChatListOKTotal : 0,//需要请求多少次"GetLastGroupMsgById"
+				GroupChatListOKCount : 0//已请求多少次"GetLastGroupMsgById"						
 			},
 			mounted: function() {
 				this.$nextTick(function() {
@@ -346,16 +344,12 @@
 				},
 				getChatLiat: function() {
 					//让请求同步的变量
-
 					var GetUserOK = false; //GetUserByIdServlet是否完成
-
 					this.ChatListOKTotal = 0;
 					this.ChatListOKCount = 0;
 					this.GroupChatListOKTotal = 0;
 					this.GroupChatListOKCount = 0;
-
 					var anyChatGetFail = false; //有任何一条聊天记录获取失败
-
 					var _this = this;
 					mui.ajax({
 						url: 'http://118.24.34.244:8080/test1/GetUserByIdServlet?id=' + _this.loginID,
@@ -581,7 +575,7 @@
 									} else {
 										console.log('failed' + this.getStatus());
 									}
-									mui.toast(MyPoi.lng + "," + MyPoi.lat);
+//									mui.toast(MyPoi.lng + "," + MyPoi.lat);
 									console.log("定位完成");
 									//定时再获取位置
 									setTimeout(function() {
