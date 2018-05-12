@@ -142,6 +142,7 @@
         <div id="tabbar" class="mui-control-content mui-active">
           <div id="searchResultPanel" style="border:1px solid #C0C0C0;width:150px;height:auto; display:none;"></div>
           <div id="map"></div>
+          <div id="h5map" style="display: none;height: 200px;margin-top: 46px;"></div>
           <div id="r-result"></div>
         </div>
 
@@ -267,7 +268,11 @@
           lastAsk: "Hi,我是MUI小管家",
           dataTime: "12:31",
           dataDay: '05-01'
-        }          
+        },
+        userLocation: {
+        	lng: 103.958552,
+          lat: 30.782023
+        }
       },
       mounted: function() {
         this.$nextTick(function() {
@@ -395,9 +400,9 @@
                   timeout: 7000,
                   async: true,
                   success: function(data) {
-                    if(data == "") {
+                    if(data == "[]") {
                       mui.toast('没有任何数据');
-                      return
+                      return;
                     }
                     data = JSON.parse(data);
                     for(var j1 = 0; j1 < _this.chatList1.length; j1++) {
@@ -541,8 +546,8 @@
               var opts = {offset: new BMap.Size(winWidth - 80, 10)}
               map.addControl(new BMap.ScaleControl(opts));              
               //plus.nativeUI.showWaiting();
-              var MyPoi = new BMap.Point(103.9587, 30.7819);
-              var OldMyPoi = new BMap.Point(103.9587, 30.7819);
+              var MyPoi = new BMap.Point(_this.userLocation.lng, _this.userLocation.lat);
+              var OldMyPoi = new BMap.Point(_this.userLocation.lng, _this.userLocation.lat);
               map.centerAndZoom(MyPoi, 17); // 初始化地图,设置中心点坐标和地图级别
               map.enableScrollWheelZoom();
               //添加一个marker对象
@@ -557,10 +562,49 @@
                 map.setZoom(scale);
                 map.panTo(MyPoi);
               };
+ 
+//var h5map = new plus.maps.Map('h5map');
+//h5map.setZoom(17);	
+//function userLocation() {  
+//  h5map.showUserLocation(true);  
+//  h5map.getUserLocation(function(state, pos) {  
+//      if (0 == state) {  
+//          h5map.setCenter(pos);  
+////          $("#hdlat").val(pos.getLat());  
+////          $("#hdlongt").val(pos.getLng());  
+//          if(_this.userLocation.lat != pos.getLat() || _this.userLocation.lng != pos.getLng()){
+//          	mui.toast(_this.userLocation.lat + ","+pos.getLat() + ","+_this.userLocation.lng + "--" + pos.getLng())
+//          	console.log(_this.userLocation.lat + ","+pos.getLat() + ","+_this.userLocation.lng + "--" + pos.getLng())
+////							mui.toast("位置变了")
+//          }
+//          _this.userLocation.lat = pos.getLat();
+//          _this.userLocation.lng = pos.getLng();
+//          
+//          
+//          MyPoi = _this.userLocation;
+//          marker.setPosition(MyPoi);
+//          moveToMyPoi(21);
+//          
+//          
+////          console.log(_this.lat+","+_this.lng);  
+//          setTimeout(function(){  
+//              userLocation();  
+//          },1000);  
+//      }  
+//      else{  
+//          mui.toast("定位失败，请确保GPS已经开启");  
+//      }  
+//  });  
+//}  
+//userLocation(); 
+ 
               var geolocation = new BMap.Geolocation();
               geolocation.getCurrentPosition(function(r) {
-                if(this.getStatus() == BMAP_STATUS_SUCCESS) {
+              	console.log(this.getStatus());
+                if(this.getStatus() == 0) {
                   MyPoi = r.point;
+                  console.log(r.point);
+//                console.log(JSON.stringify(r.point))
                   marker.setPosition(MyPoi);
                   moveToMyPoi(17);
                 } else {
@@ -574,10 +618,10 @@
               //获取定位
               function getMyPosition() {
                 geolocation2.getCurrentPosition(function(r) {
-                  if(this.getStatus() == BMAP_STATUS_SUCCESS) {
+                  if(this.getStatus() == 0) {
                     MyPoi = r.point;
                     marker.setPosition(MyPoi);
-
+//                  console.log(JSON.stringify(r.point))
                     if(r.point.lng) {
                       plus.nativeUI.closeWaiting();
                     };

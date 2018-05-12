@@ -208,7 +208,7 @@
 		};
 		var geolocation = new BMap.Geolocation();
 		geolocation.getCurrentPosition(function(r) {
-			if(this.getStatus() == BMAP_STATUS_SUCCESS) {
+			if(this.getStatus() == 0) {
 				MyPoi = r.point;
 				marker.setPosition(MyPoi);
 				moveToMyPoi(14);
@@ -223,7 +223,7 @@
 		//获取定位
 		function getMyPosition() {
 			geolocation.getCurrentPosition(function(r) {
-				if(this.getStatus() == BMAP_STATUS_SUCCESS) {
+				if(this.getStatus() == 0) {
 					MyPoi = r.point;
 					marker.setPosition(MyPoi);
 
