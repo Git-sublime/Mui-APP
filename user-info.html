@@ -97,7 +97,7 @@
 						mui.ajax({
 							url: 'http://118.24.34.244:8080/test1/IsFriend?id1=' + _this.loginID +'&id2=' + _this.user.id,
 							type: 'GET',
-							timeout: 700,
+							timeout: 7000,
 				            contentType: "application/x-www-form-urlencoded; charset=utf-8",
 				            beforeSend: function(){
 				            	plus.nativeUI.showWaiting();
@@ -184,7 +184,7 @@
 						mui.ajax({
 							url: 'http://118.24.34.244:8080/test1/DeleteFriend?senderId=' + _this.loginID + '&receiverId=' + _this.user.id,
 							type: 'GET',
-							timeout: 700,
+							timeout: 7000,
 							beforeSend: function(){
 								plus.nativeUI.showWaiting();
 							},

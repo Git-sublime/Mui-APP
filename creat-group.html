@@ -146,7 +146,7 @@
 							mui.ajax({
 								url: 'http://118.24.34.244:8080/test1/selectFriendsByIdServlet?id=' + _this.loginID,
 								type: 'GET',
-								timeout: 700,
+								timeout: 7000,
 								beforeSend: function(){
 									plus.nativeUI.showWaiting();
 								},
@@ -172,7 +172,7 @@
 									mui.ajax({
 										url: 'http://118.24.34.244:8080/test1/AddGroup?id=&name=' + _this.creatVal + '&masterId=' + _this.loginID,
 										type: 'GET',
-										timeout: 700,
+										timeout: 7000,
 										beforeSend: function(){
 											plus.nativeUI.showWaiting();
 										},
@@ -186,7 +186,7 @@
 											mui.ajax({
 												url: 'http://118.24.34.244:8080/test1/AddUsersToGroup',
 												type: 'GET',
-												timeout: 700,
+												timeout: 7000,
 												data : {groupId:groupID, userIds:userList},
 												contentType: "application/x-www-form-urlencoded; charset=utf-8",
 												beforeSend: function(){

@@ -71,7 +71,7 @@
 						mui.ajax({
 							url: 'http://118.24.34.244:8080/test1/SelectUsersByGroupId?groupId=' + sData.groupID,
 							type: 'GET',
-							timeout: 700,
+							timeout: 7000,
 				            contentType: "application/x-www-form-urlencoded; charset=utf-8",
 				            beforeSend: function(){
 				            	plus.nativeUI.showWaiting();
@@ -97,7 +97,7 @@
 						mui.ajax({
 							url: 'http://118.24.34.244:8080/test1/QuitGroup?userId='+ _this.loginID + '&groupId=' + _this.groupID,
 							type: 'GET',
-							timeout: 700,
+							timeout: 7000,
 							beforeSend: function(){
 								plus.nativeUI.showWaiting();
 							},
