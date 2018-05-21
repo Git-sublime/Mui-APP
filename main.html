@@ -366,14 +366,13 @@
             type: 'GET',
             timeout: 5000,
             success: function(res) {
-              //console.log(JSON.stringify(res));
               res = JSON.parse(res);
               res.headImgUrl = imgUrl + res.headImgUrl;
               _this.user = res;
               GetUserOK = true;
             },
             error: function(xhr, type, errorThrown) {
-              console.log("获取用户信息失败");
+//            console.log("获取用户信息失败");
               GetUserOK = true;
             }
           })
@@ -430,7 +429,7 @@
               }
             },
             error: function(xhr, type, errorThrown) {
-              console.log("获取聊天列表失败");
+//            console.log("获取聊天列表失败");
             }
           });
           mui.ajax({
