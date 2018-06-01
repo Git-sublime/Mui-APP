@@ -169,7 +169,7 @@
             </li>
           </ul>
           <ul v-if="!logined" class="mui-table-view topHave" id="freshChat">
-            <li class="mui-table-view-cell mui-media" @click="gotoChat(robot)">
+            <li class="mui-table-view-cell mui-media" @click="gotoRobotChat(robot)">
               <a href="javascript:;">
                 <img class="mui-media-object mui-pull-left" :src="robot.headImg">
                 <div class="mui-media-body">
@@ -265,7 +265,7 @@
           name: 'MUI',
           chatUser: "",
           headImg: "images/logo.png",
-          lastAsk: "Hi,我是MUI小管家",
+          lastAsk: "你好，我是MUI小管家",
           dataTime: "12:31",
           dataDay: '05-01'
         },
@@ -310,7 +310,16 @@
               }
             })
           }
-
+        },
+        gotoRobotChat: function(item) {
+          var _this = this;
+            mui.openWindow({
+              url: "robot-chat.html",
+              id: "robot-chat.html",
+              extras: {
+                chatObj: item
+              }
+            })
         },
         //右上角 加 按钮
         addFriend: function() {

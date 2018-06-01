@@ -188,7 +188,8 @@
 					"newFriend.html",
 					"navigationMap.html",
 					"myRound.html",
-					"group-chat.html"
+					"group-chat.html",
+					"robot-chat.html"
 				],
 				"priority": 1
 			},

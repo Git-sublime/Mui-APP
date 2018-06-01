@@ -1,75 +1,76 @@
 {
-  "main.html": {
-    "refer": [
-      "login.html",
-      "setting.html",
-      "contact-list.html",
-      "newFriend.html",
-      "group-list.html",
-      "userInfo.html",
-      "chat.html",
-      "add-friend.html",
-      "navigationMap.html",
-      "myRound.html",
-      "group-chat.html",
-      "creat-group.html"
-    ],
-    "resources": [
-      "images/direction.png"
-    ]
-  },
-  "login.html": {
-    "refer": [
-      "main.html",
-      "reg.html",
-      "forget_password.html"
-    ]
-  },
-  "contact-list.html": {
-    "refer": [
-      "chat.html"
-    ]
-  },
-  "chat.html": {
-    "refer": [
-      "user-info.html"
-    ]
-  },
-  "add-friend.html": {
-    "refer": [
-      "user-info.html"
-    ]
-  },
-  "user-info.html": {
-    "refer": [
-      "contact-list.html",
-      "chat.html"
-    ]
-  },
-  "group-info.html": {
-    "refer": [
-      "user-info.html"
-    ]
-  },
-  "group-chat.html": {
-    "refer": [
-      "group-info.html",
-      "chatMap.html"
-    ]
-  },
-  "group-list.html": {
-    "refer": [
-      "group-chat.html"
-    ]
-  },
-  "newFriend.html": {
-    "refer": [
-      "user-info.html"
-    ]
-  },
-  "myRound.html": {
-    "refer": [
-      "indexMap.html"
-    ]
-  }
+	"main.html": {
+		"refer": [
+			"login.html",
+			"setting.html",
+			"contact-list.html",
+			"newFriend.html",
+			"group-list.html",
+			"userInfo.html",
+			"chat.html",
+			"add-friend.html",
+			"navigationMap.html",
+			"myRound.html",
+			"group-chat.html",
+			"creat-group.html",
+			"robot-chat.html"
+		],
+		"resources": [
+			"images/direction.png"
+		]
+	},
+	"login.html": {
+		"refer": [
+			"main.html",
+			"reg.html",
+			"forget_password.html"
+		]
+	},
+	"contact-list.html": {
+		"refer": [
+			"chat.html"
+		]
+	},
+	"chat.html": {
+		"refer": [
+			"user-info.html"
+		]
+	},
+	"add-friend.html": {
+		"refer": [
+			"user-info.html"
+		]
+	},
+	"user-info.html": {
+		"refer": [
+			"contact-list.html",
+			"chat.html"
+		]
+	},
+	"group-info.html": {
+		"refer": [
+			"user-info.html"
+		]
+	},
+	"group-chat.html": {
+		"refer": [
+			"group-info.html",
+			"chatMap.html"
+		]
+	},
+	"group-list.html": {
+		"refer": [
+			"group-chat.html"
+		]
+	},
+	"newFriend.html": {
+		"refer": [
+			"user-info.html"
+		]
+	},
+	"myRound.html": {
+		"refer": [
+			"indexMap.html"
+		]
+	}
 }
