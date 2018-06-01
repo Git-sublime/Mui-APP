@@ -68,11 +68,15 @@
 								</span>
 								</a>
 							</li>
-							<!--<li class="mui-table-view-cell">
-								<a>账号<input type="text" class="mui-pull-right" id="accountInfo"/></a>
-							</li>-->
 						</ul>
 						<ul class="mui-table-view topHave">
+							<li class="mui-table-view-cell">
+								<!-- 蓝色开关打开状态 <-->
+								LBS服务
+								<div class="mui-switch mui-switch-blue mui-active">
+								  <div class="mui-switch-handle"></div>
+								</div>
+							</li>
 							<li class="mui-table-view-cell">
 								<a>姓名：<input type="text" class="mui-pull-right" :value='userName' id="userName"/></a>
 							</li>
@@ -306,7 +310,6 @@
 		document.getElementById("head-img1").addEventListener('tap', function(e) {
 			e.stopPropagation();
 		});
-
 		function initImgPreview() {
 			var imgs = document.querySelectorAll("img.mui-action-preview");
 			imgs = mui.slice.call(imgs);
