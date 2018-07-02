@@ -21,6 +21,7 @@
 - 图标提供 （阿里巴巴矢量图标） [http://www.iconfont.cn](http://www.iconfont.cn/)
 
 ## 安装包更新
+- 微定位 0.9.0  [下载地址>>](https://github.com/Git-sublime/Mui-APP/blob/master/unpackage/release/H51CB4E94_0604192208.apk)
 - 微定位 0.8.0  [下载地址>>](https://github.com/Git-sublime/Mui-APP/blob/master/unpackage/release/H51CB4E94_0601160528.apk)
 - 微定位 0.7.0  [下载地址>>](https://github.com/Git-sublime/Mui-APP/blob/master/unpackage/release/H51CB4E94_20180511_070.apk)
 - 微定位 0.6.0  [下载地址>>](https://github.com/Git-sublime/Mui-APP/blob/master/unpackage/release/H51CB4E94_20180507_060.apk)
